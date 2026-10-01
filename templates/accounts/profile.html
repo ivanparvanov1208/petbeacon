@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Моят профил | PetCare{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto space-y-6">
+
+    <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <i class="fa-regular fa-user text-brand-600"></i> Моят профил
+        </h1>
+        <p class="text-sm text-slate-500 mt-1">
+            Управление на личните данни и контактна информация.
+        </p>
+    </div>
+
+    <form method="POST" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
+        {% csrf_token %}
+
+        <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
+            <div class="w-16 h-16 rounded-2xl bg-brand-100 text-brand-800 font-extrabold text-2xl flex items-center justify-center border border-brand-200">
+                {{ user.first_name|default:user.username|slice:":1"|upper }}
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-900">{{ user.get_full_name|default:user.username }}</h2>
+                <p class="text-xs text-slate-500 font-mono">@{{ user.username }} • Регистриран на {{ user.date_joined|date:"d.m.Y" }} г.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.last_name.label }}</label>
+                {{ form.last_name }}
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.email.label }}</label>
+            {{ form.email }}
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.phone.label }}</label>
+                {{ form.phone }}
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.city.label }}</label>
+                {{ form.city }}
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs transition">
+                Обнови профила
+            </button>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

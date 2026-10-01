@@ -1,0 +1,338 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="bg" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PetCare — Грижа и здраве за твоя домашен любимец{% endblock %}</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50:  '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'xs': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-screen bg-slate-50 text-slate-800 antialiased font-sans">
+
+    <!-- ===== TOP NAVIGATION BAR ===== -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-xs no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+
+                <!-- Brand Logo -->
+                <a href="{% if user.is_authenticated %}{% url 'pets:dashboard' %}{% else %}{% url 'pets:home' %}{% endif %}"
+                   class="flex items-center gap-2.5 shrink-0 group">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-400 flex items-center justify-center text-white shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200">
+                        <i class="fa-solid fa-paw text-base"></i>
+                    </div>
+                    <span class="font-extrabold text-xl text-slate-900 tracking-tight hidden sm:block">
+                        Pet<span class="text-brand-600">Care</span>
+                    </span>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                {% if user.is_authenticated %}
+                <nav class="hidden md:flex items-center gap-1 flex-1 ml-4">
+                    <a href="{% url 'pets:dashboard' %}"
+                       class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors
+                       {% if request.resolver_match.url_name == 'dashboard' %}bg-brand-50 text-brand-700{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100{% endif %}">
+                        <i class="fa-solid fa-gauge-high text-xs opacity-75"></i> Табло
+                    </a>
+                    <a href="{% url 'pets:pet_list' %}"
+                       class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors
+                       {% if 'pet' in request.resolver_match.url_name and 'reminder' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}bg-brand-50 text-brand-700{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100{% endif %}">
+                        <i class="fa-solid fa-paw text-xs opacity-75"></i> Любимци
+                        {% if nav_total_pets %}
+                        <span class="ml-0.5 min-w-[20px] h-5 px-1.5 text-xs rounded-full bg-slate-200 text-slate-700 font-bold inline-flex items-center justify-center">{{ nav_total_pets }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'pets:reminder_list' %}"
+                       class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors
+                       {% if 'reminder' in request.resolver_match.url_name %}bg-brand-50 text-brand-700{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100{% endif %}">
+                        <i class="fa-solid fa-bell text-xs opacity-75"></i> Напомняния
+                        {% if badge_urgent_total > 0 %}
+                        <span class="ml-0.5 min-w-[20px] h-5 px-1.5 text-xs rounded-full font-bold inline-flex items-center justify-center
+                            {% if badge_overdue_count > 0 %}bg-rose-500 text-white animate-pulse{% else %}bg-amber-400 text-amber-900{% endif %}">
+                            {{ badge_urgent_total }}
+                        </span>
+                        {% endif %}
+                    </a>
+                </nav>
+                {% endif %}
+
+                <!-- Right side actions -->
+                <div class="flex items-center gap-2 ml-auto">
+                    {% if user.is_authenticated %}
+                        <!-- Quick "New Pet" CTA -->
+                        <a href="{% url 'pets:pet_create' %}"
+                           class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-xs hover:shadow transition-all duration-150">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span class="hidden lg:inline">Нов любимец</span>
+                            <span class="lg:hidden">Нов</span>
+                        </a>
+
+                        <!-- User Dropdown -->
+                        <div class="relative" id="userMenuContainer">
+                            <button id="userMenuButton" type="button"
+                                    class="flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-slate-100 transition focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
+                                    aria-expanded="false" aria-haspopup="true">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white font-bold text-sm flex items-center justify-center shadow-xs">
+                                    {{ user.first_name|default:user.username|slice:":1"|upper }}
+                                </div>
+                                <span class="hidden md:block text-sm font-semibold text-slate-700 max-w-[100px] truncate">
+                                    {{ user.first_name|default:user.username }}
+                                </span>
+                                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200" id="userChevron"></i>
+                            </button>
+
+                            <!-- Dropdown panel -->
+                            <div id="userMenuDropdown"
+                                 class="absolute right-0 top-full pt-2 w-56 hidden z-50">
+                                <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                                    <!-- User info header -->
+                                    <div class="px-4 py-3 bg-gradient-to-r from-brand-50 to-slate-50 border-b border-slate-100">
+                                        <p class="text-xs text-slate-400 font-medium">Влязъл като</p>
+                                        <p class="text-sm font-bold text-slate-800 truncate">{{ user.get_full_name|default:user.username }}</p>
+                                        {% if user.email %}
+                                        <p class="text-xs text-slate-400 truncate">{{ user.email }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <!-- Menu links -->
+                                    <div class="py-1">
+                                        <a href="{% url 'accounts:profile' %}"
+                                           class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium transition-colors">
+                                            <i class="fa-regular fa-user w-4 text-slate-400"></i> Моят профил
+                                        </a>
+                                        <a href="{% url 'pets:reminder_create' %}"
+                                           class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium transition-colors">
+                                            <i class="fa-solid fa-bell-plus w-4 text-slate-400"></i> Ново напомняне
+                                        </a>
+                                        {% if user.is_staff %}
+                                        <a href="{% url 'admin:index' %}" target="_blank" rel="noopener"
+                                           class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium transition-colors">
+                                            <i class="fa-solid fa-shield-halved w-4 text-slate-400"></i> Админ панел
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400 ml-auto"></i>
+                                        </a>
+                                        {% endif %}
+                                        <div class="border-t border-slate-100 mt-1 pt-1">
+                                            <!-- Logout: POST form for CSRF security -->
+                                            <form method="POST" action="{% url 'accounts:logout' %}">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50 font-medium transition-colors text-left">
+                                                    <i class="fa-solid fa-arrow-right-from-bracket w-4"></i> Изход
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 transition rounded-lg hover:bg-slate-100">Вход</a>
+                        <a href="{% url 'accounts:register' %}" class="px-4 py-2 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-xs hover:shadow transition-all duration-150">Регистрация</a>
+                    {% endif %}
+
+                    <!-- Mobile hamburger -->
+                    <button id="mobileMenuBtn" type="button"
+                            class="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition focus:outline-none">
+                        <i class="fa-solid fa-bars text-base" id="mobileMenuIcon"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white">
+            <div class="px-4 py-3 space-y-1">
+                {% if user.is_authenticated %}
+                    <!-- User info row -->
+                    <div class="flex items-center gap-3 px-2 py-3 border-b border-slate-100 mb-2">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white font-bold flex items-center justify-center shadow-xs shrink-0">
+                            {{ user.first_name|default:user.username|slice:":1"|upper }}
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-800">{{ user.get_full_name|default:user.username }}</p>
+                            <p class="text-xs text-slate-400">{{ user.email|default:"" }}</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'pets:dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
+                        <i class="fa-solid fa-gauge-high w-5 text-brand-600"></i> Табло
+                    </a>
+                    <a href="{% url 'pets:pet_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
+                        <i class="fa-solid fa-paw w-5 text-brand-600"></i> Моите любимци
+                        {% if nav_total_pets %}<span class="ml-auto text-xs font-bold bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full">{{ nav_total_pets }}</span>{% endif %}
+                    </a>
+                    <a href="{% url 'pets:reminder_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
+                        <i class="fa-solid fa-bell w-5 text-brand-600"></i> Напомняния
+                        {% if badge_urgent_total > 0 %}<span class="ml-auto text-xs font-bold bg-rose-500 text-white px-2 py-0.5 rounded-full">{{ badge_urgent_total }}</span>{% endif %}
+                    </a>
+                    <a href="{% url 'pets:pet_create' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 transition mt-2">
+                        <i class="fa-solid fa-plus w-5"></i> Добави любимец
+                    </a>
+                    <a href="{% url 'accounts:profile' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">
+                        <i class="fa-regular fa-user w-5 text-slate-400"></i> Моят профил
+                    </a>
+                    {% if user.is_staff %}
+                    <a href="{% url 'admin:index' %}" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-shield-halved w-5 text-slate-400"></i> Админ панел
+                    </a>
+                    {% endif %}
+                    <!-- POST logout -->
+                    <form method="POST" action="{% url 'accounts:logout' %}" class="pt-1 border-t border-slate-100">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition">
+                            <i class="fa-solid fa-arrow-right-from-bracket w-5"></i> Изход
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition">Вход</a>
+                    <a href="{% url 'accounts:register' %}" class="block px-3 py-2.5 text-sm font-bold text-white bg-brand-600 text-center rounded-xl">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== FLASH MESSAGES ===== -->
+    {% if messages %}
+    <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 space-y-2 no-print" role="alert" aria-live="polite">
+        {% for message in messages %}
+        <div class="flex items-start justify-between gap-3 px-4 py-3.5 rounded-2xl border text-sm font-medium shadow-xs
+            {% if message.tags == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800
+            {% elif message.tags == 'error' %}bg-rose-50 border-rose-200 text-rose-800
+            {% elif message.tags == 'warning' %}bg-amber-50 border-amber-200 text-amber-800
+            {% else %}bg-sky-50 border-sky-200 text-sky-800{% endif %}">
+            <div class="flex items-start gap-3">
+                {% if message.tags == 'success' %}<i class="fa-solid fa-circle-check text-emerald-500 text-base mt-0.5 shrink-0"></i>
+                {% elif message.tags == 'error' %}<i class="fa-solid fa-circle-exclamation text-rose-500 text-base mt-0.5 shrink-0"></i>
+                {% elif message.tags == 'warning' %}<i class="fa-solid fa-triangle-exclamation text-amber-500 text-base mt-0.5 shrink-0"></i>
+                {% else %}<i class="fa-solid fa-circle-info text-sky-500 text-base mt-0.5 shrink-0"></i>{% endif %}
+                <span>{{ message }}</span>
+            </div>
+            <button onclick="this.parentElement.remove()"
+                    class="shrink-0 p-0.5 rounded-lg opacity-60 hover:opacity-100 transition"
+                    aria-label="Затвори">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="mt-auto border-t border-slate-200 bg-white no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+            <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center text-xs shadow-xs">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+                <span class="font-bold text-slate-700">PetCare</span>
+                <span class="text-slate-300">•</span>
+                <span>Платформа за грижа за домашни любимци</span>
+            </div>
+            <p class="text-xs text-slate-400">Изградено с Python &amp; Django</p>
+        </div>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuIcon = document.getElementById('mobileMenuIcon');
+
+        mobileMenuBtn?.addEventListener('click', () => {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden', isOpen);
+            mobileMenuIcon.className = isOpen
+                ? 'fa-solid fa-bars text-base'
+                : 'fa-solid fa-xmark text-base';
+        });
+
+        // User profile dropdown
+        const userMenuBtn = document.getElementById('userMenuButton');
+        const userMenuDrop = document.getElementById('userMenuDropdown');
+        const userChevron = document.getElementById('userChevron');
+
+        function openDropdown() {
+            userMenuDrop?.classList.remove('hidden');
+            userMenuBtn?.setAttribute('aria-expanded', 'true');
+            userChevron?.classList.add('rotate-180');
+        }
+        function closeDropdown() {
+            userMenuDrop?.classList.add('hidden');
+            userMenuBtn?.setAttribute('aria-expanded', 'false');
+            userChevron?.classList.remove('rotate-180');
+        }
+
+        if (userMenuBtn && userMenuDrop) {
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userMenuDrop.classList.contains('hidden') ? openDropdown() : closeDropdown();
+            });
+            document.addEventListener('click', (e) => {
+                if (!userMenuDrop.contains(e.target) && !userMenuBtn.contains(e.target)) {
+                    closeDropdown();
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeDropdown();
+            });
+        }
+
+        // Auto-dismiss flash messages after 6 seconds
+        setTimeout(() => {
+            document.querySelectorAll('[role="alert"] > div').forEach(el => {
+                el.style.transition = 'opacity 0.5s ease';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 500);
+            });
+        }, 6000);
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

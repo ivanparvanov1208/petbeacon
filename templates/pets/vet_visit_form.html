@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} | PetCare{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+
+    <div>
+        <a href="{% url 'pets:pet_detail' pet.pk %}?tab=visits" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition mb-1">
+            <i class="fa-solid fa-arrow-left"></i> Назад към визитите на {{ pet.name }}
+        </a>
+        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ title }}</h1>
+    </div>
+
+    <form method="POST" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
+            <p class="font-bold">Моля, коригирайте следните грешки:</p>
+            <ul class="list-disc list-inside mt-1 text-xs">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.visit_date.label }} *</label>
+                {{ form.visit_date }}
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.clinic_name.label }} *</label>
+                {{ form.clinic_name }}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.vet_name.label }}</label>
+                {{ form.vet_name }}
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.phone.label }}</label>
+                {{ form.phone }}
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.total_cost.label }}</label>
+                {{ form.total_cost }}
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.reason.label }} *</label>
+            {{ form.reason }}
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.examination_summary.label }}</label>
+            {{ form.examination_summary }}
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.recommendations.label }}</label>
+            {{ form.recommendations }}
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+            <a href="{% url 'pets:pet_detail' pet.pk %}?tab=visits" class="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition">
+                Отказ
+            </a>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs transition">
+                Запази посещението
+            </button>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

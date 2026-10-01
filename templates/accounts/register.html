@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Регистрация на нов профил | PetCare{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto py-8 space-y-6">
+
+    <div class="text-center space-y-2">
+        <div class="w-14 h-14 rounded-2xl bg-brand-600 text-white flex items-center justify-center text-2xl mx-auto shadow-md">
+            <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Регистрация в PetCare</h1>
+        <p class="text-sm text-slate-500">Създайте профил и организирайте грижата за любимците си.</p>
+    </div>
+
+    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+
+            {% if form.errors %}
+            <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-1">
+                <p class="font-bold">Моля, проверете следните полета:</p>
+                <ul class="list-disc list-inside">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.username.label }} *</label>
+                {{ form.username }}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.first_name.label }}</label>
+                    {{ form.first_name }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.last_name.label }}</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.phone.label }}</label>
+                    {{ form.phone }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.city.label }}</label>
+                    {{ form.city }}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.password.label }} *</label>
+                    {{ form.password }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.password_confirm.label }} *</label>
+                    {{ form.password_confirm }}
+                </div>
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs hover:shadow transition transform hover:-translate-y-0.5 mt-2">
+                Създай профил
+            </button>
+        </form>
+
+        <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
+            Вече имате профил? <a href="{% url 'accounts:login' %}" class="font-bold text-brand-600 hover:underline">Влезте оттук</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
