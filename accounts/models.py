@@ -19,11 +19,11 @@ class UserProfile(models.Model):
 
 
 @receiver(post_save, sender=User)
-def create_or_update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-    else:
-        if hasattr(instance, 'profile'):
-            instance.profile.save()
-        else:
-            UserProfile.objects.create(user=instance)
+def create_user_profile(sender, instance, created, **kwargs):
+    """Guarantee a profile row exists for every user.
+
+    Uses ``get_or_create`` and never touches existing rows: ``User.save()`` runs
+    on every login (``update_last_login``), and an unconditional write here
+    turned each sign-in into an extra UPDATE against the profile table.
+    """
+    UserProfile.objects.get_or_create(user=instance)

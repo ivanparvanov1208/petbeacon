@@ -12,6 +12,21 @@ body {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Action buttons (reminder/medication toggles, delete, logout) are real
+   <button type="submit"> elements rather than anchors so they can carry a CSRF
+   token. Browsers give <button> the default arrow cursor while <a> gets a
+   pointer, and Tailwind's preflight does not reset that — restore it so the
+   clickable affordance matches the previous anchor-based markup. */
+button[type="submit"],
+button[type="button"] {
+    cursor: pointer;
+}
+
+button[type="submit"]:disabled,
+button[type="button"]:disabled {
+    cursor: not-allowed;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
     width: 8px;

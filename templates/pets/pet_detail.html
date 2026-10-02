@@ -221,9 +221,13 @@
                             <a href="{% url 'pets:vaccination_update' vac.pk %}" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs transition" title="Редактирай">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <a href="{% url 'pets:vaccination_delete' vac.pk %}" onclick="return confirm('Сигурни ли сте, че искате да изтриете тази ваксинация?')" class="p-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs transition" title="Изтрий">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
+                            <form method="POST" action="{% url 'pets:vaccination_delete' vac.pk %}" onsubmit="return confirm('Сигурни ли сте, че искате да изтриете тази ваксинация?')">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="p-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs transition" title="Изтрий">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                     {% endfor %}
@@ -274,9 +278,13 @@
                             <a href="{% url 'pets:medical_record_update' rec.pk %}" class="p-1.5 text-slate-400 hover:text-slate-600 text-xs">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <a href="{% url 'pets:medical_record_delete' rec.pk %}" onclick="return confirm('Изтриване на записа?')" class="p-1.5 text-rose-400 hover:text-rose-600 text-xs">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
+                            <form method="POST" action="{% url 'pets:medical_record_delete' rec.pk %}" onsubmit="return confirm('Изтриване на записа?')">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="p-1.5 text-rose-400 hover:text-rose-600 text-xs">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
 
@@ -358,16 +366,24 @@
                     </div>
 
                     <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
-                        <a href="{% url 'pets:medication_toggle_active' med.pk %}" class="px-3 py-1.5 rounded-lg border {% if med.is_active %}border-slate-300 hover:bg-slate-100 text-slate-700{% else %}border-purple-300 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold{% endif %} transition">
-                            {% if med.is_active %}Маркирай като приключило{% else %}Активирай отново{% endif %}
-                        </a>
+                        <form method="POST" action="{% url 'pets:medication_toggle_active' med.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="px-3 py-1.5 rounded-lg border {% if med.is_active %}border-slate-300 hover:bg-slate-100 text-slate-700{% else %}border-purple-300 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold{% endif %} transition">
+                                {% if med.is_active %}Маркирай като приключило{% else %}Активирай отново{% endif %}
+                            </button>
+                        </form>
                         <div class="flex items-center gap-1.5">
                             <a href="{% url 'pets:medication_update' med.pk %}" class="p-1.5 text-slate-400 hover:text-slate-600" title="Редактирай">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <a href="{% url 'pets:medication_delete' med.pk %}" onclick="return confirm('Изтриване на медикамента?')" class="p-1.5 text-rose-400 hover:text-rose-600" title="Изтрий">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
+                            <form method="POST" action="{% url 'pets:medication_delete' med.pk %}" onsubmit="return confirm('Изтриване на медикамента?')">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="p-1.5 text-rose-400 hover:text-rose-600" title="Изтрий">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -419,9 +435,13 @@
                             <a href="{% url 'pets:vet_visit_update' visit.pk %}" class="p-1.5 text-slate-400 hover:text-slate-600 text-xs">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <a href="{% url 'pets:vet_visit_delete' visit.pk %}" onclick="return confirm('Изтриване на посещението?')" class="p-1.5 text-rose-400 hover:text-rose-600 text-xs">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
+                            <form method="POST" action="{% url 'pets:vet_visit_delete' visit.pk %}" onsubmit="return confirm('Изтриване на посещението?')">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="p-1.5 text-rose-400 hover:text-rose-600 text-xs">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
 
@@ -464,9 +484,13 @@
                 {% for reminder in reminders %}
                 <div class="p-4 flex items-center justify-between gap-3 {% if reminder.is_completed %}opacity-60 bg-slate-50/50{% endif %}">
                     <div class="flex items-start gap-3">
-                        <a href="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="w-6 h-6 rounded-lg border-2 {% if reminder.is_completed %}bg-emerald-500 border-emerald-500 text-white{% else %}border-slate-300 hover:border-emerald-500 text-transparent hover:text-emerald-500{% endif %} flex items-center justify-center transition mt-0.5">
-                            <i class="fa-solid fa-check text-xs"></i>
-                        </a>
+                        <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="w-6 h-6 rounded-lg border-2 {% if reminder.is_completed %}bg-emerald-500 border-emerald-500 text-white{% else %}border-slate-300 hover:border-emerald-500 text-transparent hover:text-emerald-500{% endif %} flex items-center justify-center transition">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </button>
+                        </form>
                         <div class="space-y-0.5">
                             <p class="text-sm font-bold {% if reminder.is_completed %}line-through text-slate-500{% else %}text-slate-800{% endif %}">
                                 {{ reminder.title }}
@@ -489,9 +513,13 @@
                         <a href="{% url 'pets:reminder_update' reminder.pk %}" class="p-1.5 text-slate-400 hover:text-slate-600 text-xs">
                             <i class="fa-solid fa-pen"></i>
                         </a>
-                        <a href="{% url 'pets:reminder_delete' reminder.pk %}" onclick="return confirm('Изтриване на напомнянето?')" class="p-1.5 text-rose-400 hover:text-rose-600 text-xs">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>
+                        <form method="POST" action="{% url 'pets:reminder_delete' reminder.pk %}" onsubmit="return confirm('Изтриване на напомнянето?')">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="p-1.5 text-rose-400 hover:text-rose-600 text-xs">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
                 {% endfor %}

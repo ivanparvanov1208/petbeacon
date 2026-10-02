@@ -5,20 +5,32 @@ Django settings for PetCare project.
 from pathlib import Path
 import os
 
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --------------------------------------------------------------------------
 # SECURITY — Secret Key
-# In production: set the environment variable DJANGO_SECRET_KEY
+# Generate one with:
+#   python -c "from django.core.management.utils import get_random_secret_key as k; print(k())"
 # --------------------------------------------------------------------------
-SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY',
-    'django-insecure-change-this-before-deploying-to-production-!!!!'
-)
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
+if not SECRET_KEY:
+    if not DEBUG:
+        raise ImproperlyConfigured(
+            "DJANGO_SECRET_KEY environment variable must be set when DEBUG is False."
+        )
+    # Development only: an ephemeral key means sessions are invalidated on every
+    # restart, which is preferable to shipping a hard-coded key to production.
+    SECRET_KEY = 'django-insecure-dev-only-key-do-not-use-in-production-0000'
+
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+
+if not DEBUG and ALLOWED_HOSTS == ['']:
+    raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS must be set when DEBUG is False.")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -101,16 +113,40 @@ CSRF_COOKIE_HTTPONLY = False            # Must be False so JS AJAX can read it
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_USE_SESSIONS = False              # Keep default cookie-based CSRF
 
-# In production with HTTPS, uncomment these:
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+# Only ever transmitted over HTTPS (automatically enabled when DEBUG is False).
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
 # --------------------------------------------------------------------------
 # SECURITY — HTTP Headers
 # --------------------------------------------------------------------------
-X_FRAME_OPTIONS = 'SAMEORIGIN'        # Prevents clickjacking (allow same-origin for admin)
-SECURE_CONTENT_TYPE_NOSNIFF = True    # X-Content-Type-Options: nosniff
-SECURE_BROWSER_XSS_FILTER = True      # Legacy X-XSS-Protection header
+X_FRAME_OPTIONS = 'DENY'                # Blocks all clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True     # X-Content-Type-Options: nosniff
+SECURE_REFERRER_POLICY = 'same-origin'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_SECURE_HSTS_SECONDS', 31536000))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    if os.environ.get('DJANGO_BEHIND_TLS_PROXY') == '1':
+        SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# --------------------------------------------------------------------------
+# CACHES
+#
+# Used by the login rate limiter. The default local-memory backend is per
+# process; switch to Redis/Memcached (e.g. via DJANGO_CACHE_URL) before running
+# multiple workers or containers, otherwise the lockout counters are not shared.
+# --------------------------------------------------------------------------
+if os.environ.get('DJANGO_CACHE_URL'):
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': os.environ['DJANGO_CACHE_URL'],
+        }
+    }
 
 # --------------------------------------------------------------------------
 # SECURITY — File upload restrictions

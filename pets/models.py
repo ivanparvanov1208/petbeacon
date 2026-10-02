@@ -44,6 +44,15 @@ class Pet(models.Model):
         verbose_name = "Домашен любимец"
         verbose_name_plural = "Домашни любимци"
         ordering = ['name']
+        indexes = [
+            models.Index(fields=['microchip_number'], name='pet_microchip_idx'),
+        ]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(weight__isnull=True) | models.Q(weight__gte=0),
+                name='pet_weight_non_negative',
+            ),
+        ]
 
     def __str__(self):
         return f"{self.name} ({self.get_species_display()})"
@@ -54,23 +63,20 @@ class Pet(models.Model):
             return self.approximate_age or "Не е посочена"
 
         today = date.today()
-        years = today.year - self.birth_date.year - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
-        
-        # Calculate months
+        if self.birth_date > today:
+            return "Невалидна дата"
+
         months = (today.year - self.birth_date.year) * 12 + today.month - self.birth_date.month
         if today.day < self.birth_date.day:
             months -= 1
-        
-        if years >= 1:
-            rem_months = months % 12
-            if rem_months > 0:
-                return f"{years} г. и {rem_months} мес."
-            return f"{years} г."
-        elif months > 0:
+        months = max(months, 0)
+
+        years, rem_months = divmod(months, 12)
+        if years:
+            return f"{years} г. и {rem_months} мес." if rem_months else f"{years} г."
+        if months:
             return f"{months} мес."
-        else:
-            days = (today - self.birth_date).days
-            return f"{days} дни"
+        return f"{(today - self.birth_date).days} дни"
 
     @property
     def species_icon(self):
@@ -107,6 +113,18 @@ class Vaccination(models.Model):
         verbose_name = "Ваксинация"
         verbose_name_plural = "Ваксинации"
         ordering = ['-date_administered']
+        indexes = [
+            models.Index(fields=['next_due_date'], name='vacc_next_due_idx'),
+        ]
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    models.Q(next_due_date__isnull=True)
+                    | models.Q(next_due_date__gte=models.F('date_administered'))
+                ),
+                name='vacc_next_due_after_administered',
+            ),
+        ]
 
     def __str__(self):
         return f"{self.name} - {self.pet.name} ({self.date_administered})"
@@ -173,6 +191,15 @@ class Medication(models.Model):
         verbose_name = "Прием на лекарство"
         verbose_name_plural = "Прием на лекарства"
         ordering = ['-is_active', '-start_date']
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                    models.Q(end_date__isnull=True)
+                    | models.Q(end_date__gte=models.F('start_date'))
+                ),
+                name='med_end_after_start',
+            ),
+        ]
 
     def __str__(self):
         return f"{self.name} ({self.dosage}) - {self.pet.name}"
@@ -232,29 +259,51 @@ class Reminder(models.Model):
         verbose_name = "Напомняне"
         verbose_name_plural = "Напомняния"
         ordering = ['is_completed', 'due_date', 'due_time']
+        indexes = [
+            models.Index(
+                fields=['owner', 'is_completed', 'due_date'],
+                name='reminder_owner_status_due_idx',
+            ),
+        ]
 
     def __str__(self):
         pet_str = f" за {self.pet.name}" if self.pet else ""
         return f"{self.title}{pet_str} ({self.due_date})"
 
+    def save(self, *args, **kwargs):
+        """Keep ``completed_at`` in sync with ``is_completed``.
+
+        ``is_completed`` is the source of truth; the timestamp is derived so no
+        caller can leave the two fields inconsistent.
+        """
+        if self.is_completed:
+            if self.completed_at is None:
+                self.completed_at = timezone.now()
+        else:
+            self.completed_at = None
+        super().save(*args, **kwargs)
+
+    @property
+    def days_until_due(self):
+        return (self.due_date - date.today()).days
+
     @property
     def is_overdue(self):
         if self.is_completed:
             return False
-        return self.due_date < date.today()
+        return self.days_until_due < 0
 
     @property
     def is_today(self):
         if self.is_completed:
             return False
-        return self.due_date == date.today()
+        return self.days_until_due == 0
 
     @property
     def is_due_soon(self):
         if self.is_completed:
             return False
-        days = (self.due_date - date.today()).days
-        return 0 <= days <= 7
+        return 0 <= self.days_until_due <= 7
 
     @property
     def type_icon(self):

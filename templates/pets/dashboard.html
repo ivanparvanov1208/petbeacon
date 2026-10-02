@@ -130,9 +130,13 @@
                         {% for reminder in today_reminders %}
                         <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
                             <div class="flex items-start gap-3">
-                                <a href="{% url 'pets:reminder_toggle_complete' reminder.pk %}" title="Маркирай като изпълнено" class="w-6 h-6 rounded-lg border-2 border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-transparent hover:text-emerald-600 flex items-center justify-center transition mt-0.5">
-                                    <i class="fa-solid fa-check text-xs"></i>
-                                </a>
+                                <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" title="Маркирай като изпълнено" class="w-6 h-6 rounded-lg border-2 border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-transparent hover:text-emerald-600 flex items-center justify-center transition">
+                                        <i class="fa-solid fa-check text-xs"></i>
+                                    </button>
+                                </form>
                                 <div>
                                     <p class="text-sm font-semibold text-slate-800">{{ reminder.title }}</p>
                                     <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
@@ -177,9 +181,13 @@
                         {% for reminder in upcoming_reminders %}
                         <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
                             <div class="flex items-start gap-3">
-                                <a href="{% url 'pets:reminder_toggle_complete' reminder.pk %}" title="Маркирай като готово" class="w-6 h-6 rounded-lg border-2 border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-transparent hover:text-emerald-600 flex items-center justify-center transition mt-0.5">
-                                    <i class="fa-solid fa-check text-xs"></i>
-                                </a>
+                                <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" title="Маркирай като готово" class="w-6 h-6 rounded-lg border-2 border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-transparent hover:text-emerald-600 flex items-center justify-center transition">
+                                        <i class="fa-solid fa-check text-xs"></i>
+                                    </button>
+                                </form>
                                 <div>
                                     <p class="text-sm font-semibold text-slate-800">{{ reminder.title }}</p>
                                     <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">

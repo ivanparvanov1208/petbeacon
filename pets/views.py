@@ -1,14 +1,46 @@
-from django.shortcuts import render, redirect, get_object_or_404
+﻿from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q
-from django.utils import timezone
+from django.core.paginator import Paginator
+from django.db.models import Count, Q
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.decorators.http import require_POST
 from datetime import date, timedelta
 from .models import Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder
 from .forms import (
     PetForm, VaccinationForm, MedicalRecordForm,
     MedicationForm, VetVisitForm, ReminderForm
 )
+
+# Number of items shown per page in the paginated list views.
+PETS_PER_PAGE = 12
+REMINDERS_PER_PAGE = 20
+
+# How far ahead the dashboard reports upcoming reminders / vaccinations.
+UPCOMING_REMINDER_DAYS = 14
+DUE_SOON_VACCINATION_DAYS = 30
+
+
+def _safe_next_url(request, fallback):
+    """Return a same-host URL from the request, or ``fallback``.
+
+    Guards against open redirects via the ``next`` parameter.
+    """
+    candidate = request.POST.get('next') or request.GET.get('next') or ''
+    if candidate and url_has_allowed_host_and_scheme(
+        url=candidate,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return candidate
+    return fallback
+
+
+def _pet_detail_url(pet_pk, tab=None):
+    """Build the pet detail URL via ``reverse`` instead of a hard-coded path."""
+    url = reverse('pets:pet_detail', kwargs={'pk': pet_pk})
+    return f"{url}?tab={tab}" if tab else url
 
 
 def home_view(request):
@@ -23,27 +55,29 @@ def dashboard_view(request):
     """Main dashboard for pet owners."""
     today = date.today()
     user_pets = Pet.objects.filter(owner=request.user)
-    
-    # Reminders
-    user_reminders = Reminder.objects.filter(owner=request.user)
-    overdue_reminders = user_reminders.filter(is_completed=False, due_date__lt=today).order_by('due_date')
-    today_reminders = user_reminders.filter(is_completed=False, due_date=today).order_by('due_time')
-    upcoming_reminders = user_reminders.filter(
-        is_completed=False,
+
+    # Reminders — one base queryset, sliced into three date buckets. Every
+    # bucket select_related('pet') because the templates render the pet name/icon.
+    base_reminders = Reminder.objects.filter(
+        owner=request.user, is_completed=False
+    ).select_related('pet')
+    overdue_reminders = base_reminders.filter(due_date__lt=today).order_by('due_date')
+    today_reminders = base_reminders.filter(due_date=today).order_by('due_time')
+    upcoming_reminders = base_reminders.filter(
         due_date__gt=today,
-        due_date__lte=today + timedelta(days=14)
+        due_date__lte=today + timedelta(days=UPCOMING_REMINDER_DAYS)
     ).order_by('due_date', 'due_time')
 
+
     # Vaccinations alerts
-    vaccinations_overdue = Vaccination.objects.filter(
-        pet__owner=request.user,
+    base_vaccinations = Vaccination.objects.filter(pet__owner=request.user)
+    vaccinations_overdue = base_vaccinations.filter(
         next_due_date__lt=today
     ).select_related('pet').order_by('next_due_date')
 
-    vaccinations_due_soon = Vaccination.objects.filter(
-        pet__owner=request.user,
+    vaccinations_due_soon = base_vaccinations.filter(
         next_due_date__gte=today,
-        next_due_date__lte=today + timedelta(days=30)
+        next_due_date__lte=today + timedelta(days=DUE_SOON_VACCINATION_DAYS)
     ).select_related('pet').order_by('next_due_date')
 
     # Active medications
@@ -77,7 +111,7 @@ def dashboard_view(request):
 @login_required
 def pet_list_view(request):
     pets = Pet.objects.filter(owner=request.user)
-    
+
     query = request.GET.get('q', '').strip()
     species = request.GET.get('species', '').strip()
 
@@ -92,11 +126,24 @@ def pet_list_view(request):
     if species and species != 'all':
         pets = pets.filter(species=species)
 
+    # Prefetch the counters rendered on each card in a fixed number of queries.
+    pets = pets.annotate(
+        vaccination_count=Count('vaccinations', distinct=True),
+        record_count=Count('medical_records', distinct=True),
+    ).order_by('name')
+
+    paginator = Paginator(pets, PETS_PER_PAGE)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
     context = {
-        'pets': pets,
+        'pets': page_obj,
+        'page_obj': page_obj,
+        'paginator': paginator,
         'query': query,
         'selected_species': species,
         'species_choices': Pet.SPECIES_CHOICES,
+        # Preserve active filters when moving between pages.
+        'filter_qs': request.GET.copy(),
     }
     return render(request, 'pets/pet_list.html', context)
 
@@ -104,22 +151,19 @@ def pet_list_view(request):
 @login_required
 def pet_detail_view(request, pk):
     pet = get_object_or_404(Pet, pk=pk, owner=request.user)
+    valid_tabs = {'overview', 'vaccinations', 'records', 'meds', 'visits', 'reminders'}
     active_tab = request.GET.get('tab', 'overview')
-
-    vaccinations = pet.vaccinations.all()
-    medical_records = pet.medical_records.all()
-    medications = pet.medications.all()
-    vet_visits = pet.vet_visits.all()
-    reminders = pet.reminders.all().order_by('is_completed', 'due_date')
+    if active_tab not in valid_tabs:
+        active_tab = 'overview'
 
     context = {
         'pet': pet,
         'active_tab': active_tab,
-        'vaccinations': vaccinations,
-        'medical_records': medical_records,
-        'medications': medications,
-        'vet_visits': vet_visits,
-        'reminders': reminders,
+        'vaccinations': pet.vaccinations.all(),
+        'medical_records': pet.medical_records.all(),
+        'medications': pet.medications.all(),
+        'vet_visits': pet.vet_visits.all(),
+        'reminders': pet.reminders.all().order_by('is_completed', 'due_date', 'due_time'),
     }
     return render(request, 'pets/pet_detail.html', context)
 
@@ -217,7 +261,7 @@ def vaccination_create_view(request, pet_pk):
                 )
 
             messages.success(request, f"Ваксинацията '{vac.name}' бе добавена успешно за {pet.name}!")
-            return redirect(f"/pets/{pet.pk}/?tab=vaccinations")
+            return redirect(_pet_detail_url(pet.pk, tab="vaccinations"))
     else:
         form = VaccinationForm(initial={'date_administered': date.today()})
 
@@ -238,7 +282,7 @@ def vaccination_update_view(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, f"Ваксинацията '{vac.name}' бе обновена успешно!")
-            return redirect(f"/pets/{pet.pk}/?tab=vaccinations")
+            return redirect(_pet_detail_url(pet.pk, tab="vaccinations"))
     else:
         form = VaccinationForm(instance=vac)
 
@@ -251,13 +295,14 @@ def vaccination_update_view(request, pk):
 
 
 @login_required
+@require_POST
 def vaccination_delete_view(request, pk):
     vac = get_object_or_404(Vaccination, pk=pk, pet__owner=request.user)
     pet_pk = vac.pet.pk
     vac_name = vac.name
     vac.delete()
     messages.success(request, f"Ваксинацията '{vac_name}' бе изтрита.")
-    return redirect(f"/pets/{pet_pk}/?tab=vaccinations")
+    return redirect(_pet_detail_url(pet_pk, tab="vaccinations"))
 
 
 # --- MEDICAL RECORD CRUD ---
@@ -273,7 +318,7 @@ def medical_record_create_view(request, pet_pk):
             rec.pet = pet
             rec.save()
             messages.success(request, f"Медицинският запис '{rec.title}' бе добавен успешно!")
-            return redirect(f"/pets/{pet.pk}/?tab=records")
+            return redirect(_pet_detail_url(pet.pk, tab="records"))
     else:
         form = MedicalRecordForm(initial={'date': date.today()})
 
@@ -294,7 +339,7 @@ def medical_record_update_view(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, f"Записът '{rec.title}' бе обновен успешно!")
-            return redirect(f"/pets/{pet.pk}/?tab=records")
+            return redirect(_pet_detail_url(pet.pk, tab="records"))
     else:
         form = MedicalRecordForm(instance=rec)
 
@@ -307,13 +352,14 @@ def medical_record_update_view(request, pk):
 
 
 @login_required
+@require_POST
 def medical_record_delete_view(request, pk):
     rec = get_object_or_404(MedicalRecord, pk=pk, pet__owner=request.user)
     pet_pk = rec.pet.pk
     rec_title = rec.title
     rec.delete()
     messages.success(request, f"Медицинският запис '{rec_title}' бе изтрит.")
-    return redirect(f"/pets/{pet_pk}/?tab=records")
+    return redirect(_pet_detail_url(pet_pk, tab="records"))
 
 
 # --- MEDICATION CRUD ---
@@ -341,7 +387,7 @@ def medication_create_view(request, pet_pk):
                 )
 
             messages.success(request, f"Медикаментът '{med.name}' бе добавен успешно!")
-            return redirect(f"/pets/{pet.pk}/?tab=meds")
+            return redirect(_pet_detail_url(pet.pk, tab="meds"))
     else:
         form = MedicationForm(initial={'start_date': date.today()})
 
@@ -362,7 +408,7 @@ def medication_update_view(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, f"Медикаментът '{med.name}' бе обновен успешно!")
-            return redirect(f"/pets/{pet.pk}/?tab=meds")
+            return redirect(_pet_detail_url(pet.pk, tab="meds"))
     else:
         form = MedicationForm(instance=med)
 
@@ -375,23 +421,28 @@ def medication_update_view(request, pk):
 
 
 @login_required
+@require_POST
 def medication_toggle_active_view(request, pk):
     med = get_object_or_404(Medication, pk=pk, pet__owner=request.user)
     med.is_active = not med.is_active
-    med.save()
+    med.save(update_fields=['is_active'])
     status_text = "активно" if med.is_active else "приключило"
     messages.success(request, f"Лекарството '{med.name}' е отбелязано като {status_text}.")
-    return redirect(f"/pets/{med.pet.pk}/?tab=meds")
+    return redirect(_safe_next_url(
+        request,
+        _pet_detail_url(med.pet.pk, tab="meds"),
+    ))
 
 
 @login_required
+@require_POST
 def medication_delete_view(request, pk):
     med = get_object_or_404(Medication, pk=pk, pet__owner=request.user)
     pet_pk = med.pet.pk
     med_name = med.name
     med.delete()
     messages.success(request, f"Лекарството '{med_name}' бе изтрито.")
-    return redirect(f"/pets/{pet_pk}/?tab=meds")
+    return redirect(_pet_detail_url(pet_pk, tab="meds"))
 
 
 # --- VET VISIT CRUD ---
@@ -407,7 +458,7 @@ def vet_visit_create_view(request, pet_pk):
             visit.pet = pet
             visit.save()
             messages.success(request, f"Ветеринарното посещение на {pet.name} бе записано успешно!")
-            return redirect(f"/pets/{pet.pk}/?tab=visits")
+            return redirect(_pet_detail_url(pet.pk, tab="visits"))
     else:
         form = VetVisitForm(initial={'visit_date': date.today()})
 
@@ -428,7 +479,7 @@ def vet_visit_update_view(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, "Ветеринарното посещение бе обновено успешно!")
-            return redirect(f"/pets/{pet.pk}/?tab=visits")
+            return redirect(_pet_detail_url(pet.pk, tab="visits"))
     else:
         form = VetVisitForm(instance=visit)
 
@@ -441,12 +492,13 @@ def vet_visit_update_view(request, pk):
 
 
 @login_required
+@require_POST
 def vet_visit_delete_view(request, pk):
     visit = get_object_or_404(VetVisit, pk=pk, pet__owner=request.user)
     pet_pk = visit.pet.pk
     visit.delete()
     messages.success(request, "Ветеринарното посещение бе изтрито.")
-    return redirect(f"/pets/{pet_pk}/?tab=visits")
+    return redirect(_pet_detail_url(pet_pk, tab="visits"))
 
 
 # --- REMINDERS CRUD ---
@@ -454,7 +506,7 @@ def vet_visit_delete_view(request, pk):
 @login_required
 def reminder_list_view(request):
     today = date.today()
-    reminders = Reminder.objects.filter(owner=request.user)
+    reminders = Reminder.objects.filter(owner=request.user).select_related('pet')
 
     status_filter = request.GET.get('status', 'all')
     pet_filter = request.GET.get('pet', '')
@@ -468,8 +520,11 @@ def reminder_list_view(request):
             Q(pet__name__icontains=query)
         )
 
-    if pet_filter:
+    # Guard against non-numeric values leaking into the ORM lookup.
+    if pet_filter.isdigit():
         reminders = reminders.filter(pet_id=pet_filter)
+    else:
+        pet_filter = ''
 
     if type_filter:
         reminders = reminders.filter(reminder_type=type_filter)
@@ -486,19 +541,25 @@ def reminder_list_view(request):
         # Default all: uncompleted first, then completed
         reminders = reminders.order_by('is_completed', 'due_date', 'due_time')
 
-    pets = Pet.objects.filter(owner=request.user)
+    paginator = Paginator(reminders, REMINDERS_PER_PAGE)
+    page_obj = paginator.get_page(request.GET.get('page'))
 
     context = {
-        'reminders': reminders,
+        'reminders': page_obj,
+        'page_obj': page_obj,
+        'paginator': paginator,
         'status_filter': status_filter,
         'pet_filter': pet_filter,
         'type_filter': type_filter,
         'query': query,
-        'pets': pets,
+        'pets': Pet.objects.filter(owner=request.user),
         'today': today,
         'type_choices': Reminder.TYPE_CHOICES,
+        # Preserve active filters when moving between pages.
+        'filter_qs': request.GET.copy(),
     }
     return render(request, 'pets/reminder_list.html', context)
+
 
 
 @login_required
@@ -533,13 +594,8 @@ def reminder_update_view(request, pk):
     if request.method == 'POST':
         form = ReminderForm(request.POST, instance=rem, user=request.user)
         if form.is_valid():
-            reminder = form.save()
-            if reminder.is_completed and not reminder.completed_at:
-                reminder.completed_at = timezone.now()
-                reminder.save()
-            elif not reminder.is_completed:
-                reminder.completed_at = None
-                reminder.save()
+            # Reminder.save() derives completed_at from is_completed.
+            form.save()
             messages.success(request, f"Напомнянето '{rem.title}' бе обновено!")
             return redirect('pets:reminder_list')
     else:
@@ -554,24 +610,23 @@ def reminder_update_view(request, pk):
 
 
 @login_required
+@require_POST
 def reminder_toggle_complete_view(request, pk):
     rem = get_object_or_404(Reminder, pk=pk, owner=request.user)
     rem.is_completed = not rem.is_completed
+    # Reminder.save() stamps / clears completed_at automatically.
+    rem.save(update_fields=['is_completed', 'completed_at'])
+
     if rem.is_completed:
-        rem.completed_at = timezone.now()
         messages.success(request, f"Напомнянето '{rem.title}' бе отбелязано като изпълнено! Браво!")
     else:
-        rem.completed_at = None
         messages.info(request, f"Напомнянето '{rem.title}' бе върнато като активно.")
-    rem.save()
 
-    referer = request.META.get('HTTP_REFERER')
-    if referer:
-        return redirect(referer)
-    return redirect('pets:reminder_list')
+    return redirect(_safe_next_url(request, reverse('pets:reminder_list')))
 
 
 @login_required
+@require_POST
 def reminder_delete_view(request, pk):
     rem = get_object_or_404(Reminder, pk=pk, owner=request.user)
     title = rem.title

@@ -173,5 +173,41 @@
     </div>
     {% endif %}
 
+    <!-- Pagination -->
+    {% if page_obj and page_obj.paginator.num_pages > 1 %}
+    <nav class="flex items-center justify-between gap-4 pt-2" aria-label="Навигация по страници">
+        <p class="text-xs text-slate-500">
+            Показани {{ page_obj.start_index }}–{{ page_obj.end_index }} от {{ page_obj.paginator.count }}
+        </p>
+        <div class="flex items-center gap-1.5">
+            {% if page_obj.has_previous %}
+                <a href="?{% for k, v in filter_qs.items %}{% if k != 'page' %}{{ k }}={{ v|urlencode }}&amp;{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}"
+                   class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i> Предишна
+                </a>
+            {% else %}
+                <span class="px-3 py-1.5 rounded-lg border border-slate-100 text-xs font-semibold text-slate-300 cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i> Предишна
+                </span>
+            {% endif %}
+
+            <span class="px-3 py-1.5 text-xs font-bold text-slate-600">
+                {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?{% for k, v in filter_qs.items %}{% if k != 'page' %}{{ k }}={{ v|urlencode }}&amp;{% endif %}{% endfor %}page={{ page_obj.next_page_number }}"
+                   class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+                    Следваща <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </a>
+            {% else %}
+                <span class="px-3 py-1.5 rounded-lg border border-slate-100 text-xs font-semibold text-slate-300 cursor-not-allowed">
+                    Следваща <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </span>
+            {% endif %}
+        </div>
+    </nav>
+    {% endif %}
+
 </div>
 {% endblock %}

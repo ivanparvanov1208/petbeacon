@@ -19,4 +19,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    # Serve from the project's static/ directory, not STATIC_ROOT — the latter
+    # only exists after `collectstatic` and is empty during development.
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'static')
