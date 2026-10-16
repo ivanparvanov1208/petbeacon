@@ -1,0 +1,1712 @@
+# Български translation for the VetLink project.
+# Copyright (C) VetLink
+# This file is distributed under the same licence as the VetLink package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: VetLink 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: bg\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+msgid "%(counter)s ваксинация"
+msgid_plural "%(counter)s ваксинации"
+# msgstr[0] ""
+# msgstr[1] ""
+
+msgid "%(counter)s запис"
+msgid_plural "%(counter)s записа"
+# msgstr[0] ""
+# msgstr[1] ""
+
+msgid "%(counter)s планиран"
+msgid_plural "%(counter)s планирани"
+# msgstr[0] ""
+# msgstr[1] ""
+
+msgid "%(counter)s резултат"
+msgid_plural "%(counter)s резултата"
+# msgstr[0] ""
+# msgstr[1] ""
+
+msgid "%(days)d ден"
+msgid_plural "%(days)d дни"
+# msgstr[0] ""
+# msgstr[1] ""
+
+msgid "%(label)s е твърде голям (%(size)d KB). Максималният размер е %(max)d MB."
+# msgstr ""
+
+msgid "%(label)s не може да е отрицателна."
+# msgstr ""
+
+msgid "%(months)d мес."
+# msgstr ""
+
+msgid "%(name)s | Профил на любимеца — VetLink"
+# msgstr ""
+
+msgid "%(pet)s при %(clinic)s на %(date)s"
+# msgstr ""
+
+msgid "%(title)s (%(date)s)"
+# msgstr ""
+
+msgid "%(title)s за %(pet)s (%(date)s)"
+# msgstr ""
+
+msgid "%(weight)s кг"
+# msgstr ""
+
+msgid "%(years)d г."
+# msgstr ""
+
+msgid "%(years)d г. и %(months)d мес."
+# msgstr ""
+
+msgid "&middot; краен срок %(due)s"
+# msgstr ""
+
+msgid "(без краен срок)"
+# msgstr ""
+
+msgid "(задължително поле)"
+# msgstr ""
+
+msgid "15-цифрен код на микрочип"
+# msgstr ""
+
+msgid "VetLink Администрация"
+# msgstr ""
+
+msgid "VetLink Портал"
+# msgstr ""
+
+msgid "VetLink е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния."
+# msgstr ""
+
+msgid "VetLink — Грижа и здраве за вашия домашен любимец"
+# msgstr ""
+
+msgid "VetLink — Грижа и здраве за вашия любимец"
+# msgstr ""
+
+msgid "VetLink — платформа за грижа за домашни любимци: профили, ваксинации, медицинска история и напомняния."
+# msgstr ""
+
+msgid "Админ панел"
+# msgstr ""
+
+msgid "Адресът, който последвахте, не съществува или е бил преместен."
+# msgstr ""
+
+msgid "Ако не знаете точната дата на раждане (напр. '2 години')"
+# msgstr ""
+
+msgid "Активен прием в момента"
+# msgstr ""
+
+msgid "Активирай отново"
+# msgstr ""
+
+msgid "Активно"
+# msgstr ""
+
+msgid "Алергии и непоносимости"
+# msgstr ""
+
+msgid "Алергия към пилешко, към препарати, към медикаменти..."
+# msgstr ""
+
+msgid "Бележки"
+# msgstr ""
+
+msgid "Бележки / детайли"
+# msgstr ""
+
+msgid "Бележки / странични реакции"
+# msgstr ""
+
+msgid "Бележки или поносимост"
+# msgstr ""
+
+msgid "Ваксина"
+# msgstr ""
+
+msgid "Ваксина <strong>%(vaccine)s</strong> за"
+# msgstr ""
+
+msgid "Ваксинации"
+# msgstr ""
+
+msgid "Ваксинационен запис за %(name)s"
+# msgstr ""
+
+msgid "Ваксинационен календар"
+# msgstr ""
+
+msgid "Ваксинация"
+# msgstr ""
+
+msgid "Ваксинация: %(name)s"
+# msgstr ""
+
+msgid "Ваксинацията '%(name)s' бе изтрита."
+# msgstr ""
+
+msgid "Ваксинацията '%(name)s' бе обновена успешно!"
+# msgstr ""
+
+msgid "Ваксинацията '%(vaccine)s' бе добавена успешно за %(pet)s!"
+# msgstr ""
+
+msgid "Ветеринар"
+# msgstr ""
+
+msgid "Ветеринарен лекар"
+# msgstr ""
+
+msgid "Ветеринарен преглед"
+# msgstr ""
+
+msgid "Ветеринарна документация"
+# msgstr ""
+
+msgid "Ветеринарна клиника"
+# msgstr ""
+
+msgid "Ветеринарна клиника \"ЗооВет\""
+# msgstr ""
+
+msgid "Ветеринарна клиника..."
+# msgstr ""
+
+msgid "Ветеринарни посещения"
+# msgstr ""
+
+msgid "Ветеринарни прегледи, обезпаразитяване, прием на предписани медикаменти и поръчка на храна."
+# msgstr ""
+
+msgid "Ветеринарно посещение"
+# msgstr ""
+
+msgid "Ветеринарното посещение бе изтрито."
+# msgstr ""
+
+msgid "Ветеринарното посещение бе обновено успешно!"
+# msgstr ""
+
+msgid "Ветеринарното посещение на %(name)s бе записано успешно!"
+# msgstr ""
+
+msgid "Вече имате профил?"
+# msgstr ""
+
+msgid "Вид"
+# msgstr ""
+
+msgid "Вид животно"
+# msgstr ""
+
+msgid "Визити"
+# msgstr ""
+
+msgid "Висок приоритет"
+# msgstr ""
+
+msgid "Влез в профила"
+# msgstr ""
+
+msgid "Влезте оттук"
+# msgstr ""
+
+msgid "Влечуго"
+# msgstr ""
+
+msgid "Влязъл като"
+# msgstr ""
+
+msgid "Все още не сте добавили домашни любимци."
+# msgstr ""
+
+msgid "Все още няма ваксинации"
+# msgstr ""
+
+msgid "Все още няма въведени ваксинации за %(name)s."
+# msgstr ""
+
+msgid "Все още нямате планирани напомняния. Добавете напомняне за ваксина, лекарство или преглед!"
+# msgstr ""
+
+msgid "Всички"
+# msgstr ""
+
+msgid "Всички ваксинации, медицински записи, лекарства и напомняния, свързани с %(name)s, ще бъдат безвъзвратно премахнати."
+# msgstr ""
+
+msgid "Всички категории"
+# msgstr ""
+
+msgid "Всички любимци"
+# msgstr ""
+
+msgid "Всички необходими инструменти за организиране на здравето и ежедневието на кучета, котки, птици и други животни."
+# msgstr ""
+
+msgid "Всички регистрирани животни под ваше наблюдение."
+# msgstr ""
+
+msgid "Всичко за вашия любимец"
+# msgstr ""
+
+msgid "Вход"
+# msgstr ""
+
+msgid "Вход в VetLink"
+# msgstr ""
+
+msgid "Вход в профила"
+# msgstr ""
+
+msgid "Вход в профила | VetLink"
+# msgstr ""
+
+msgid "Вход с съществуващ акаунт"
+# msgstr ""
+
+msgid "Въведете данните си за достъп до профила."
+# msgstr ""
+
+msgid "Въведете потребителско име"
+# msgstr ""
+
+msgid "Възникна неочаквана грешка"
+# msgstr ""
+
+msgid "Възникна неочаквана грешка | VetLink"
+# msgstr ""
+
+msgid "Възникна проблем при изпращането на формуляра"
+# msgstr ""
+
+msgid "Възраст"
+# msgstr ""
+
+msgid "Възраст и физически данни"
+# msgstr ""
+
+msgid "Върни като активно"
+# msgstr ""
+
+msgid "Върни „%(title)s“ като активно"
+# msgstr ""
+
+msgid "Генерирайте готов за разпечатване и PDF файл здравен картон с един клик преди посещение при ветеринарния лекар."
+# msgstr ""
+
+msgid "Генерирано на %(day)s г. за нуждите на ветеринарни прегледи и манипулации"
+# msgstr ""
+
+msgid "Годишен профилактичен преглед, проблем с лапата..."
+# msgstr ""
+
+msgid "Готови ли сте да поемете пълен контрол над грижата?"
+# msgstr ""
+
+msgid "Град"
+# msgstr ""
+
+msgid "Град (по избор)"
+# msgstr ""
+
+msgid "Град / Населено място"
+# msgstr ""
+
+msgid "Грешно потребителско име или парола. Остава ви %(count)d опит."
+msgid_plural "Грешно потребителско име или парола. Остават ви %(count)d опита."
+# msgstr[0] ""
+# msgstr[1] ""
+
+msgid "Гризач"
+# msgstr ""
+
+msgid "Груминг / Къпане"
+# msgstr ""
+
+msgid "Д-р %(vet)s"
+# msgstr ""
+
+msgid "Д-р Георгиев"
+# msgstr ""
+
+msgid "Д-р Петров"
+# msgstr ""
+
+msgid "Да"
+# msgstr ""
+
+msgid "Да се дава с храната; да не се дели таблетката..."
+# msgstr ""
+
+msgid "Да, изтрий профила"
+# msgstr ""
+
+msgid "Данните за %(name)s бяха обновени успешно!"
+# msgstr ""
+
+msgid "Данните на вашия профил бяха обновени успешно!"
+# msgstr ""
+
+msgid "Дата на изпълнение"
+# msgstr ""
+
+msgid "Дата на посещението"
+# msgstr ""
+
+msgid "Дата на поставяне"
+# msgstr ""
+
+msgid "Дата на процедурата / прегледа"
+# msgstr ""
+
+msgid "Дата на раждане"
+# msgstr ""
+
+msgid "Дата на регистрация"
+# msgstr ""
+
+msgid "Дата: %(day)s г."
+# msgstr ""
+
+msgid "Датата на поставяне не може да е в бъдещето."
+# msgstr ""
+
+msgid "Датата на раждане не може да е в бъдещето."
+# msgstr ""
+
+msgid "Демо профил"
+# msgstr ""
+
+msgid "Диагноза"
+# msgstr ""
+
+msgid "Диагноза / Констатации"
+# msgstr ""
+
+msgid "Диетичен режим и хранене"
+# msgstr ""
+
+msgid "Днес"
+# msgstr ""
+
+msgid "До %(due)s"
+# msgstr ""
+
+msgid "Добавете любимец сега"
+# msgstr ""
+
+msgid "Добави в списъка с напомняния"
+# msgstr ""
+
+msgid "Добави ваксинация"
+# msgstr ""
+
+msgid "Добави запис"
+# msgstr ""
+
+msgid "Добави лекарство"
+# msgstr ""
+
+msgid "Добави любимец"
+# msgstr ""
+
+msgid "Добави медикамент"
+# msgstr ""
+
+msgid "Добави напомняне"
+# msgstr ""
+
+msgid "Добави напомняне за %(name)s"
+# msgstr ""
+
+msgid "Добави нов любимец"
+# msgstr ""
+
+msgid "Добави първа ваксинация"
+# msgstr ""
+
+msgid "Добавяне на ваксинация за %(name)s"
+# msgstr ""
+
+msgid "Добавяне на медицински запис за %(name)s"
+# msgstr ""
+
+msgid "Добавяне на нов домашен любимец"
+# msgstr ""
+
+msgid "Добре дошли в VetLink, %(name)s! Вашият профил бе създаден успешно."
+# msgstr ""
+
+msgid "Дозировка"
+# msgstr ""
+
+msgid "Дозировка, честота, начална и крайна дата и специфични указания за прием с храна или на гладно."
+# msgstr ""
+
+msgid "Документът"
+# msgstr ""
+
+msgid "Домашен любимец"
+# msgstr ""
+
+msgid "Домашни любимци"
+# msgstr ""
+
+msgid "Допълнителна информация"
+# msgstr ""
+
+msgid "Допълнителни бележки"
+# msgstr ""
+
+msgid "Допълнителни детайли, час за запазване..."
+# msgstr ""
+
+msgid "Допълнителни указания..."
+# msgstr ""
+
+msgid "Достъпът е отказан"
+# msgstr ""
+
+msgid "Достъпът е отказан | VetLink"
+# msgstr ""
+
+msgid "Друго"
+# msgstr ""
+
+msgid "Друго напомняне"
+# msgstr ""
+
+msgid "Европейски паспорт №"
+# msgstr ""
+
+msgid "Език"
+# msgstr ""
+
+msgid "Електронен здравен паспорт"
+# msgstr ""
+
+msgid "Женски"
+# msgstr ""
+
+msgid "ЗДРАВЕН ПАСПОРТ И МЕДИЦИНСКО КАРТОНЧЕ"
+# msgstr ""
+
+msgid "За днес"
+# msgstr ""
+
+msgid "Заглавие на напомнянето"
+# msgstr ""
+
+msgid "Задачи за днес"
+# msgstr ""
+
+msgid "Заек"
+# msgstr ""
+
+msgid "Запази"
+# msgstr ""
+
+msgid "Запази ваксинацията"
+# msgstr ""
+
+msgid "Запази любимеца"
+# msgstr ""
+
+msgid "Запази медикамента"
+# msgstr ""
+
+msgid "Запази медицинския запис"
+# msgstr ""
+
+msgid "Запази напомнянето"
+# msgstr ""
+
+msgid "Запази посещението"
+# msgstr ""
+
+msgid "Запази промените"
+# msgstr ""
+
+msgid "Записвайте поставените ваксини и крайните срокове за следващите дози, с автоматични сигнали за наближаващи и просрочени."
+# msgstr ""
+
+msgid "Записване на ветеринарно посещение за %(name)s"
+# msgstr ""
+
+msgid "Записи"
+# msgstr ""
+
+msgid "Записът '%(title)s' бе обновен успешно!"
+# msgstr ""
+
+msgid "Запиши посещение"
+# msgstr ""
+
+msgid "Започнете безплатно"
+# msgstr ""
+
+msgid "Затвори менюто"
+# msgstr ""
+
+msgid "Затвори съобщението"
+# msgstr ""
+
+msgid "Здравейте отново, %(name)s!"
+# msgstr ""
+
+msgid "Здравейте, %(name)s!"
+# msgstr ""
+
+msgid "Здравен паспорт"
+# msgstr ""
+
+msgid "Здравен паспорт за принтиране"
+# msgstr ""
+
+msgid "Здравен паспорт на %(name)s"
+# msgstr ""
+
+msgid "Здравен паспорт — %(name)s | VetLink"
+# msgstr ""
+
+msgid "Иван"
+# msgstr ""
+
+msgid "Иванов"
+# msgstr ""
+
+msgid "Идентификация и снимка"
+# msgstr ""
+
+msgid "Изградено с Python & Django"
+# msgstr ""
+
+msgid "Издаден чрез електронна система VetLink"
+# msgstr ""
+
+msgid "Изпълнени"
+# msgstr ""
+
+msgid "Изпълнено"
+# msgstr ""
+
+msgid "Изпълнено на %(moment)s"
+# msgstr ""
+
+msgid "Изтриване на записа?"
+# msgstr ""
+
+msgid "Изтриване на любимец?"
+# msgstr ""
+
+msgid "Изтриване на медикамента?"
+# msgstr ""
+
+msgid "Изтриване на напомнянето?"
+# msgstr ""
+
+msgid "Изтриване на посещението?"
+# msgstr ""
+
+msgid "Изтриване на профил | VetLink"
+# msgstr ""
+
+msgid "Изтрий"
+# msgstr ""
+
+msgid "Изтрий %(name)s"
+# msgstr ""
+
+msgid "Изтрий %(title)s"
+# msgstr ""
+
+msgid "Изтрий посещението"
+# msgstr ""
+
+msgid "Изтрий профила"
+# msgstr ""
+
+msgid "Изтрий профила на %(name)s"
+# msgstr ""
+
+msgid "Изтрий „%(title)s“"
+# msgstr ""
+
+msgid "Изход"
+# msgstr ""
+
+msgid "Изчисти"
+# msgstr ""
+
+msgid "Имате просрочени процедури и напомняния"
+# msgstr ""
+
+msgid "Име"
+# msgstr ""
+
+msgid "Име на ваксината"
+# msgstr ""
+
+msgid "Име на клиниката"
+# msgstr ""
+
+msgid "Име на лекар или клиника"
+# msgstr ""
+
+msgid "Име на лекаря"
+# msgstr ""
+
+msgid "Име на любимеца"
+# msgstr ""
+
+msgid "Име на медикамента"
+# msgstr ""
+
+msgid "Имейл"
+# msgstr ""
+
+msgid "Имейл адрес"
+# msgstr ""
+
+msgid "Интелигентни напомняния"
+# msgstr ""
+
+msgid "Искате ли да тествате веднага?"
+# msgstr ""
+
+msgid "Кастрация"
+# msgstr ""
+
+msgid "Кастриран / Кастрирана"
+# msgstr ""
+
+msgid "Кастриран/а"
+# msgstr ""
+
+msgid "Клиника"
+# msgstr ""
+
+msgid "Клиника / Лекар"
+# msgstr ""
+
+msgid "Констатации и диагноза"
+# msgstr ""
+
+msgid "Констатирано състояние / диагноза..."
+# msgstr ""
+
+msgid "Контактна информация"
+# msgstr ""
+
+msgid "Котка"
+# msgstr ""
+
+msgid "Крайна дата"
+# msgstr ""
+
+msgid "Крайна дата (по избор)"
+# msgstr ""
+
+msgid "Крайната дата не може да е преди началната дата."
+# msgstr ""
+
+msgid "Куче"
+# msgstr ""
+
+msgid "Към началната страница"
+# msgstr ""
+
+msgid "Към съдържанието"
+# msgstr ""
+
+msgid "Към таблото"
+# msgstr ""
+
+msgid "Лекар"
+# msgstr ""
+
+msgid "Лекарства"
+# msgstr ""
+
+msgid "Лекарството '%(name)s' бе изтрито."
+# msgstr ""
+
+msgid "Лекарството '%(name)s' е отбелязано като активно."
+# msgstr ""
+
+msgid "Лекарството '%(name)s' е отбелязано като приключило."
+# msgstr ""
+
+msgid "Лечение"
+# msgstr ""
+
+msgid "Лечение / Процедури"
+# msgstr ""
+
+msgid "Лични данни"
+# msgstr ""
+
+msgid "Любима храна, дневна дажба, график на хранене, забранени лакомства"
+# msgstr ""
+
+msgid "Любимец"
+# msgstr ""
+
+msgid "Любимци"
+# msgstr ""
+
+msgid "Марка суха храна, консерви, брой хранения дневно, грамаж..."
+# msgstr ""
+
+msgid "Маркирай като готово"
+# msgstr ""
+
+msgid "Маркирай като изпълнено"
+# msgstr ""
+
+msgid "Маркирай като приключило"
+# msgstr ""
+
+msgid "Маркирай „%(title)s“ като изпълнено"
+# msgstr ""
+
+msgid "Медикаментът '%(name)s' бе добавен успешно!"
+# msgstr ""
+
+msgid "Медикаментът '%(name)s' бе обновен успешно!"
+# msgstr ""
+
+msgid "Медицинска история"
+# msgstr ""
+
+msgid "Медицинска история и извършени манипулации"
+# msgstr ""
+
+msgid "Медицинска история и извършени процедури"
+# msgstr ""
+
+msgid "Медицински запис"
+# msgstr ""
+
+msgid "Медицински запис за %(name)s"
+# msgstr ""
+
+msgid "Медицинският запис '%(title)s' бе добавен успешно!"
+# msgstr ""
+
+msgid "Медицинският запис '%(title)s' бе изтрит."
+# msgstr ""
+
+msgid "Микрочип"
+# msgstr ""
+
+msgid "Микрочип: %(number)s"
+# msgstr ""
+
+msgid "Минимум 8 символа"
+# msgstr ""
+
+msgid "Можете да прикачите рентгенова снимка, епикриза, кръвни изследвания и др."
+# msgstr ""
+
+msgid "Моите домашни любимци"
+# msgstr ""
+
+msgid "Моите домашни любимци | VetLink"
+# msgstr ""
+
+msgid "Моите любимци"
+# msgstr ""
+
+msgid "Моля, коригирайте грешките по-долу"
+# msgstr ""
+
+msgid "Моля, проверете въведените данни в полетата по-долу."
+# msgstr ""
+
+msgid "Моят профил"
+# msgstr ""
+
+msgid "Моят профил | VetLink"
+# msgstr ""
+
+msgid "Мъжки"
+# msgstr ""
+
+msgid "Наближаващи ваксинации (30 дни)"
+# msgstr ""
+
+msgid "Наблюдавани реакции или бележки..."
+# msgstr ""
+
+msgid "Навигация по страници"
+# msgstr ""
+
+msgid "Назад"
+# msgstr ""
+
+msgid "Назад към ваксинациите"
+# msgstr ""
+
+msgid "Назад към визитите"
+# msgstr ""
+
+msgid "Назад към историята"
+# msgstr ""
+
+msgid "Назад към лекарствата"
+# msgstr ""
+
+msgid "Назад към напомнянията"
+# msgstr ""
+
+msgid "Назад към профила на %(name)s"
+# msgstr ""
+
+msgid "Назначено лечение и процедури"
+# msgstr ""
+
+msgid "Напомняне"
+# msgstr ""
+
+msgid "Напомняне: <strong>%(title)s</strong>"
+# msgstr ""
+
+msgid "Напомнянето '%(title)s' бе върнато като активно."
+# msgstr ""
+
+msgid "Напомнянето '%(title)s' бе изтрито."
+# msgstr ""
+
+msgid "Напомнянето '%(title)s' бе обновено!"
+# msgstr ""
+
+msgid "Напомнянето '%(title)s' бе отбелязано като изпълнено! Браво!"
+# msgstr ""
+
+msgid "Напомнянето '%(title)s' бе създадено успешно!"
+# msgstr ""
+
+msgid "Напомняния"
+# msgstr ""
+
+msgid "Напомняния за %(name)s"
+# msgstr ""
+
+msgid "Напомняния и задачи"
+# msgstr ""
+
+msgid "Напомняния и задачи | VetLink"
+# msgstr ""
+
+msgid "Напр. 1 табл., 2.5 мл, 3 капки"
+# msgstr ""
+
+msgid "Напр. 1 таблетка, 2.5 мл"
+# msgstr ""
+
+msgid "Напр. 14.5"
+# msgstr ""
+
+msgid "Напр. 2 г. и 4 мес. (ако рождената дата е неизвестна)"
+# msgstr ""
+
+msgid "Напр. 2 пъти дневно, сутрин и вечер, на всеки 8 часа"
+# msgstr ""
+
+msgid "Напр. 2 пъти на ден (сутрин и вечер)"
+# msgstr ""
+
+msgid "Напр. Антибиотик, Витамини, Капки за очи"
+# msgstr ""
+
+msgid "Напр. Бяс (Rabisin), DHPPi, Tricat..."
+# msgstr ""
+
+msgid "Напр. Бяс, DHPPi, Tricat, Годишна поливалентна"
+# msgstr ""
+
+msgid "Напр. Ваксинация срещу бяс, Контролен преглед..."
+# msgstr ""
+
+msgid "Напр. Годишен преглед, почистване на зъбен камък, гастрит"
+# msgstr ""
+
+msgid "Напр. Немска овчарка, Сиамска..."
+# msgstr ""
+
+msgid "Напр. Почистване на зъбен камък, Отит..."
+# msgstr ""
+
+msgid "Напр. Рекс, Бела, Макс"
+# msgstr ""
+
+msgid "Напр. Синулокс, Апоквел, Омега-3..."
+# msgstr ""
+
+msgid "Начална дата"
+# msgstr ""
+
+msgid "Не"
+# msgstr ""
+
+msgid "Не е въведено"
+# msgstr ""
+
+msgid "Не е посочена"
+# msgstr ""
+
+msgid "Не са въведени бележки за хранителния режим на любимеца."
+# msgstr ""
+
+msgid "Невалидна дата"
+# msgstr ""
+
+msgid "Неизвестен"
+# msgstr ""
+
+msgid "Неразрешен формат на документа (%(ext)s). Позволени: %(allowed)s."
+# msgstr ""
+
+msgid "Неразрешен формат на снимката (%(ext)s). Позволени: %(allowed)s."
+# msgstr ""
+
+msgid "Неуточнена порода"
+# msgstr ""
+
+msgid "Нисък приоритет"
+# msgstr ""
+
+msgid "Нов любимец"
+# msgstr ""
+
+msgid "Нов медицински запис"
+# msgstr ""
+
+msgid "Ново напомняне"
+# msgstr ""
+
+msgid "Номер на ветеринарен паспорт"
+# msgstr ""
+
+msgid "Номер на европейски паспорт"
+# msgstr ""
+
+msgid "Номер на микрочип"
+# msgstr ""
+
+msgid "Номерът на микрочипа трябва да се състои само от цифри (обикновено 15)."
+# msgstr ""
+
+msgid "Нормален приоритет"
+# msgstr ""
+
+msgid "Няма въведен"
+# msgstr ""
+
+msgid "Няма въведени ваксинации."
+# msgstr ""
+
+msgid "Няма въведени медицински записи за %(name)s."
+# msgstr ""
+
+msgid "Няма въведени медицински записи."
+# msgstr ""
+
+msgid "Няма въведени специфични бележки."
+# msgstr ""
+
+msgid "Няма записани посещения"
+# msgstr ""
+
+msgid "Няма записани посещения за %(name)s."
+# msgstr ""
+
+msgid "Няма медикаменти"
+# msgstr ""
+
+msgid "Няма медицински записи"
+# msgstr ""
+
+msgid "Няма намерени домашни любимци"
+# msgstr ""
+
+msgid "Няма намерени напомняния"
+# msgstr ""
+
+msgid "Няма напомняния"
+# msgstr ""
+
+msgid "Няма напомняния, отговарящи на избраните филтри."
+# msgstr ""
+
+msgid "Няма планирани напомняния за следващите 14 дни."
+# msgstr ""
+
+msgid "Няма регистрирани алергии или непоносимости."
+# msgstr ""
+
+msgid "Няма регистрирани медикаменти за %(name)s."
+# msgstr ""
+
+msgid "Няма регистрирани медикаменти."
+# msgstr ""
+
+msgid "Няма резултати, отговарящи на вашите критерии. Опитайте да изчистите филтрите."
+# msgstr ""
+
+msgid "Няма създадени напомняния за %(name)s."
+# msgstr ""
+
+msgid "Няма установени алергии."
+# msgstr ""
+
+msgid "Нямате планирани задачи за днес. Всичко е изпълнено!"
+# msgstr ""
+
+msgid "Нямате права да прегледате тази страница. Ако смятате, че това е грешка, влезте с друг профил."
+# msgstr ""
+
+msgid "Нямате профил?"
+# msgstr ""
+
+msgid "Обезпаразитяване"
+# msgstr ""
+
+msgid "Обновен на"
+# msgstr ""
+
+msgid "Обнови профила"
+# msgstr ""
+
+msgid "Обобщение на здравето и задачите за %(day)s"
+# msgstr ""
+
+msgid "Общ преглед"
+# msgstr ""
+
+msgid "Общо напомняне (без конкретен любимец)"
+# msgstr ""
+
+msgid "Опитайте отново след %(seconds)s сек."
+# msgstr ""
+
+msgid "Основна информация"
+# msgstr ""
+
+msgid "Основна навигация"
+# msgstr ""
+
+msgid "Особености в поведението, навици, страх от гръмотевици и т.н."
+# msgstr ""
+
+msgid "Отбележи като изпълнено"
+# msgstr ""
+
+msgid "Отбележи „%(title)s“ като изпълнено"
+# msgstr ""
+
+msgid "Отвори менюто"
+# msgstr ""
+
+msgid "Отвори менюто на потребителя: %(name)s"
+# msgstr ""
+
+msgid "Отказ"
+# msgstr ""
+
+msgid "Парола"
+# msgstr ""
+
+msgid "Парола:"
+# msgstr ""
+
+msgid "Паролата трябва да е поне 8 символа и да не е твърде честа или подобна на потребителското ви име."
+# msgstr ""
+
+msgid "Паролите не съвпадат!"
+# msgstr ""
+
+msgid "Партида: %(number)s"
+# msgstr ""
+
+msgid "Партиден номер от стикера"
+# msgstr ""
+
+msgid "Партиден №"
+# msgstr ""
+
+msgid "Паспорт"
+# msgstr ""
+
+msgid "Паспорт %(number)s"
+# msgstr ""
+
+msgid "Период"
+# msgstr ""
+
+msgid "Платформа за грижа за домашни любимци"
+# msgstr ""
+
+msgid "Платформа за собственици на любимци"
+# msgstr ""
+
+msgid "По време на хранене, разтворено във вода и др."
+# msgstr ""
+
+msgid "Повторете паролата"
+# msgstr ""
+
+msgid "Подпис и печат на ветеринарния лекар:"
+# msgstr ""
+
+msgid "Показани %(start)s–%(end)s от %(total)s"
+# msgstr ""
+
+msgid "Покупка на храна"
+# msgstr ""
+
+msgid "Пол"
+# msgstr ""
+
+msgid "Поле"
+# msgstr ""
+
+msgid "Попълни данни за демо профил"
+# msgstr ""
+
+msgid "Порода"
+# msgstr ""
+
+msgid "Порода, рождена дата, снимка, тегло, номер на микрочип, европейски паспорт, режим на хранене и алергии."
+# msgstr ""
+
+msgid "Посещение при ветеринарен лекар за %(name)s"
+# msgstr ""
+
+msgid "Поставена"
+# msgstr ""
+
+msgid "Поставена:"
+# msgstr ""
+
+msgid "Поставени и предстоящи ваксинации"
+# msgstr ""
+
+msgid "Потвърди паролата"
+# msgstr ""
+
+msgid "Потребител"
+# msgstr ""
+
+msgid "Потребител:"
+# msgstr ""
+
+msgid "Потребителски профил"
+# msgstr ""
+
+msgid "Потребителски профили"
+# msgstr ""
+
+msgid "Потребителско име"
+# msgstr ""
+
+msgid "Преглед"
+# msgstr ""
+
+msgid "Преглед на всички"
+# msgstr ""
+
+msgid "Предишна"
+# msgstr ""
+
+msgid "Предписани лекарства и хранителни добавки"
+# msgstr ""
+
+msgid "Предписване на медикамент за %(name)s"
+# msgstr ""
+
+msgid "Предстои скоро"
+# msgstr ""
+
+msgid "Предстоящи"
+# msgstr ""
+
+msgid "Предстоящи (14 дни)"
+# msgstr ""
+
+msgid "През целия ден"
+# msgstr ""
+
+msgid "Препоръки"
+# msgstr ""
+
+msgid "Препоръки за храна, контролен преглед след 10 дни..."
+# msgstr ""
+
+msgid "Препоръки и следващи стъпки"
+# msgstr ""
+
+msgid "Приблизителна възраст"
+# msgstr ""
+
+msgid "Прием на лекарства"
+# msgstr ""
+
+msgid "Прием на лекарство"
+# msgstr ""
+
+msgid "Прием на лекарство за %(name)s"
+# msgstr ""
+
+msgid "Прием на лекарство: %(name)s (%(dosage)s)"
+# msgstr ""
+
+msgid "Прикачен файл / резултати"
+# msgstr ""
+
+msgid "Приключило"
+# msgstr ""
+
+msgid "Прикрепен файл"
+# msgstr ""
+
+msgid "Приложена терапия, манипулации, инжекции..."
+# msgstr ""
+
+msgid "Приложи"
+# msgstr ""
+
+msgid "Приложи филтъра"
+# msgstr ""
+
+msgid "Принтирай / Запази като PDF"
+# msgstr ""
+
+msgid "Приоритет"
+# msgstr ""
+
+msgid "Причина"
+# msgstr ""
+
+msgid "Причина / Диагноза / Процедура"
+# msgstr ""
+
+msgid "Причина за посещението"
+# msgstr ""
+
+msgid "Просрочена"
+# msgstr ""
+
+msgid "Просрочени"
+# msgstr ""
+
+msgid "Просрочено"
+# msgstr ""
+
+msgid "Профил"
+# msgstr ""
+
+msgid "Профил на %(name)s"
+# msgstr ""
+
+msgid "Профилактика, спешен преглед, контролен преглед..."
+# msgstr ""
+
+msgid "Профили, ваксинации, медицинска история, хранителен режим и ветеринарни визити — организирани така, че нищо важно да не се изгуби. Без риск от пропуснати ваксини или прегледи."
+# msgstr ""
+
+msgid "Профилът е временно заключен"
+# msgstr ""
+
+msgid "Профилът е временно заключен за %(minutes)d минути поради твърде много неуспешни опити."
+# msgstr ""
+
+msgid "Профилът на %(name)s бе изтрит успешно."
+# msgstr ""
+
+msgid "Птица"
+# msgstr ""
+
+msgid "Пълен профил на любимеца"
+# msgstr ""
+
+msgid "Раздели на профила"
+# msgstr ""
+
+msgid "Регистрация"
+# msgstr ""
+
+msgid "Регистрация в VetLink"
+# msgstr ""
+
+msgid "Регистрация на нов профил | VetLink"
+# msgstr ""
+
+msgid "Регистрирайте се безплатно"
+# msgstr ""
+
+msgid "Регистрирайте се за по-малко от минута и добавете първия си любимец днес."
+# msgstr ""
+
+msgid "Регистриран на %(joined)s г."
+# msgstr ""
+
+msgid "Редактирай"
+# msgstr ""
+
+msgid "Редактирай %(name)s"
+# msgstr ""
+
+msgid "Редактирай %(title)s"
+# msgstr ""
+
+msgid "Редактирай посещението в %(clinic)s"
+# msgstr ""
+
+msgid "Редактирай „%(title)s“"
+# msgstr ""
+
+msgid "Редакция"
+# msgstr ""
+
+msgid "Редакция на ваксинация: %(name)s"
+# msgstr ""
+
+msgid "Редакция на медикамент: %(name)s"
+# msgstr ""
+
+msgid "Редакция на медицински запис: %(title)s"
+# msgstr ""
+
+msgid "Редакция на напомняне: %(title)s"
+# msgstr ""
+
+msgid "Редакция на посещение от %(date)s"
+# msgstr ""
+
+msgid "Редакция на профила на %(name)s"
+# msgstr ""
+
+msgid "Редовна"
+# msgstr ""
+
+msgid "Резултати от прегледа"
+# msgstr ""
+
+msgid "Рибки / Аквариум"
+# msgstr ""
+
+msgid "Роля"
+# msgstr ""
+
+msgid "Светла тема"
+# msgstr ""
+
+msgid "Сериен / партиден номер"
+# msgstr ""
+
+msgid "Сигурни ли сте, че искате да изтриете напомнянето?"
+# msgstr ""
+
+msgid "Сигурни ли сте, че искате да изтриете профила на <strong class=\"text-ink-900 dark:text-white\">%(name)s</strong>?"
+# msgstr ""
+
+msgid "Сигурни ли сте, че искате да изтриете тази ваксинация?"
+# msgstr ""
+
+msgid "Скорошни ветеринарни визити"
+# msgstr ""
+
+msgid "Следваща"
+# msgstr ""
+
+msgid "Следваща ваксинация (краен срок)"
+# msgstr ""
+
+msgid "Следваща доза"
+# msgstr ""
+
+msgid "Следваща доза за %(vaccine)s. Предишна поставена на %(date)s."
+# msgstr ""
+
+msgid "Следваща доза:"
+# msgstr ""
+
+msgid "Следващата ваксинация не може да е преди датата на поставяне на сегашната."
+# msgstr ""
+
+msgid "Следете ваксинации, прегледи, прием на лекарства и обезпаразитяване."
+# msgstr ""
+
+msgid "Смесена"
+# msgstr ""
+
+msgid "Смяна на езика"
+# msgstr ""
+
+msgid "Смяна на темата"
+# msgstr ""
+
+msgid "Смяна на цветовата тема"
+# msgstr ""
+
+msgid "Снимка"
+# msgstr ""
+
+msgid "Снимка на %(name)s"
+# msgstr ""
+
+msgid "Снимката"
+# msgstr ""
+
+msgid "Снимката е повредена и не може да бъде прочетена."
+# msgstr ""
+
+msgid "Собственик"
+# msgstr ""
+
+msgid "София, Пловдив, Варна..."
+# msgstr ""
+
+msgid "София, Пловдив..."
+# msgstr ""
+
+msgid "Специални бележки и характер"
+# msgstr ""
+
+msgid "Специфични указания"
+# msgstr ""
+
+msgid "Стандартен режим на хранене."
+# msgstr ""
+
+msgid "Стандартният микрочип има 15 цифри, въведени са %(count)d."
+# msgstr ""
+
+msgid "Статус"
+# msgstr ""
+
+msgid "Стойност (лв.)"
+# msgstr ""
+
+msgid "Стойността"
+# msgstr ""
+
+msgid "Стопанин"
+# msgstr ""
+
+msgid "Стопанин управлява любимците си, Ветеринар работи с медицинските им записи."
+# msgstr ""
+
+msgid "Страницата не е намерена"
+# msgstr ""
+
+msgid "Страницата не е намерена | VetLink"
+# msgstr ""
+
+msgid "Съдържанието на файла не е валидно изображение. Уверете се, че качвате снимка, а не преименуван документ."
+# msgstr ""
+
+msgid "Съжаляваме — нещо се обърка при обработката на заявката. Опитайте отново след малко; ако проблемът продължава, се свържете с администратора."
+# msgstr ""
+
+msgid "Създаване на ново напомняне"
+# msgstr ""
+
+msgid "Създаден на"
+# msgstr ""
+
+msgid "Създадено с внимание към любимците"
+# msgstr ""
+
+msgid "Създай автоматично напомняне за следващата доза"
+# msgstr ""
+
+msgid "Създай профил"
+# msgstr ""
+
+msgid "Създайте безплатен профил"
+# msgstr ""
+
+msgid "Създайте профил и организирайте грижата за любимците си."
+# msgstr ""
+
+msgid "Съобщения"
+# msgstr ""
+
+msgid "Табло"
+# msgstr ""
+
+msgid "Табло за управление | VetLink"
+# msgstr ""
+
+msgid "Твърде много неуспешни опити за вход. Моля, изчакайте %(minutes)dм %(seconds)dс и опитайте отново."
+# msgstr ""
+
+msgid "Тегло"
+# msgstr ""
+
+msgid "Тегло (кг)"
+# msgstr ""
+
+msgid "Теглото трябва да е положително число."
+# msgstr ""
+
+msgid "Текущ прием на лекарства"
+# msgstr ""
+
+msgid "Текущ прием на лекарства и терапия"
+# msgstr ""
+
+msgid "Текуща снимка:"
+# msgstr ""
+
+msgid "Тел"
+# msgstr ""
+
+msgid "Тел: %(number)s"
+# msgstr ""
+
+msgid "Телефон"
+# msgstr ""
+
+msgid "Телефон за връзка"
+# msgstr ""
+
+msgid "Телефон за връзка (по избор)"
+# msgstr ""
+
+msgid "Телефон за връзка с клиниката"
+# msgstr ""
+
+msgid "Температура, състояние на козината, зъби, лимфни възли..."
+# msgstr ""
+
+msgid "Тип напомняне"
+# msgstr ""
+
+msgid "Това потребителско име вече е заето."
+# msgstr ""
+
+msgid "Този документ е предназначен за носене при ветеринарен лекар. Използвайте „Принтирай“ и изберете „Запази като PDF“, за да го споделите електронно."
+# msgstr ""
+
+msgid "Този имейл адрес вече се използва от друг профил."
+# msgstr ""
+
+msgid "Тъмна тема"
+# msgstr ""
+
+msgid "Търсене"
+# msgstr ""
+
+msgid "Търсене по име, порода, микрочип или паспорт…"
+# msgstr ""
+
+msgid "Търсене по напомняне или любимец…"
+# msgstr ""
+
+msgid "Търси"
+# msgstr ""
+
+msgid "Управление на база данни за домашни любимци"
+# msgstr ""
+
+msgid "Управление на личните данни и контактна информация."
+# msgstr ""
+
+msgid "Успешно добавихте профил на %(name)s!"
+# msgstr ""
+
+msgid "Успешно излязохте от профила си. Очакваме ви отново!"
+# msgstr ""
+
+msgid "Фамилия"
+# msgstr ""
+
+msgid "Филтър по категория"
+# msgstr ""
+
+msgid "Филтър по любимец"
+# msgstr ""
+
+msgid "Характер, навици и специални грижи"
+# msgstr ""
+
+msgid "Характер, навици, контакт с други животни, любими играчки..."
+# msgstr ""
+
+msgid "Хранене и диета"
+# msgstr ""
+
+msgid "Хранене и диетичен режим"
+# msgstr ""
+
+msgid "Хранене, алергии и характер"
+# msgstr ""
+
+msgid "Хранителни или медикаментозни алергии"
+# msgstr ""
+
+msgid "Хронология на ветеринарните посещения"
+# msgstr ""
+
+msgid "Хронология на прегледи, диагнози, манипулации, посетени клиники и разходи, с прикачени резултати от изследвания."
+# msgstr ""
+
+msgid "Час (по избор)"
+# msgstr ""
+
+msgid "Честота"
+# msgstr ""
+
+msgid "Честота на прием"
+# msgstr ""
+
+msgid "Честота: %(frequency)s. %(instructions)s"
+# msgstr ""
+
+msgid "Чип"
+# msgstr ""
+
+msgid "Чип %(number)s"
+# msgstr ""
+
+msgid "в %(time)s"
+# msgstr ""
+
+msgid "до %(end)s"
+# msgstr ""
+
+msgid "е била дължима на %(due)s"
+# msgstr ""
+
+msgid "за вид „%(label)s“"
+# msgstr ""
+
+msgid "кг"
+# msgstr ""
+
+msgid "лв."
+# msgstr ""
+
+msgid "на едно сигурно място."
+# msgstr ""
+
+msgid "от %(start)s"
+# msgstr ""

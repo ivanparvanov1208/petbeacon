@@ -1,0 +1,23 @@
+{% load i18n %}
+{% comment %} Language switcher for the mobile drawer.
+
+   A segmented control rather than a dropdown: inside an already-collapsed
+   drawer, one tap should be enough, and the current selection stays visible
+   without opening anything. Buttons are real submits, so the drawer closes and
+   the page reloads in the new language even with JavaScript off. {% endcomment %}
+<form method="POST" action="{% url 'set_language' %}"
+      class="lang-segmented mt-1.5"
+      role="group"
+      aria-label="{% translate 'Смяна на езика' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    {% for code, name in LANGUAGES %}
+        {% if code == LANGUAGE_CODE %}
+            <span class="lang-segment lang-segment-active" aria-current="true">{{ name }}</span>
+        {% else %}
+            <button type="submit" name="language" value="{{ code }}" class="lang-segment">
+                {{ name }}
+            </button>
+        {% endif %}
+    {% endfor %}
+</form>

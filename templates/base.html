@@ -1,338 +1,385 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="bg" class="h-full scroll-smooth">
+{% load static i18n %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}PetCare — Грижа и здраве за твоя домашен любимец{% endblock %}</title>
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="{% block meta_description %}{% translate "VetLink — платформа за грижа за домашни любимци: профили, ваксинации, медицинска история и напомняния." %}{% endblock %}">
+    <title>{% block title %}{% translate "VetLink — Грижа и здраве за вашия любимец" %}{% endblock %}</title>
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50:  '#f0fdfa',
-                            100: '#ccfbf1',
-                            200: '#99f6e4',
-                            300: '#5eead4',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'xs': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
 
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-
-    <!-- Google Fonts -->
+    <!-- Typography & iconography.
+         TODO(self-host): both are third-party CDN requests on the critical path.
+         Move to self-hosted woff2 + a subsetted icon font for production. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,400&display=swap">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer">
 
     {% block extra_head %}{% endblock %}
+
+    <script>
+        // Apply the stored colour-scheme preference before first paint so the
+        // page never flashes the wrong theme.
+        (function () {
+            try {
+                var stored = localStorage.getItem('petcare-theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (stored === 'dark' || (!stored && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) { /* private mode — fall back to the light theme */ }
+        })();
+    </script>
 </head>
-<body class="flex flex-col min-h-screen bg-slate-50 text-slate-800 antialiased font-sans">
+<body class="flex min-h-full flex-col bg-ink-50 text-ink-800 antialiased dark:bg-ink-950 dark:text-ink-200">
 
-    <!-- ===== TOP NAVIGATION BAR ===== -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-xs no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 gap-4">
+<a href="#main" class="skip-link">{% translate "Към съдържанието" %}</a>
 
-                <!-- Brand Logo -->
-                <a href="{% if user.is_authenticated %}{% url 'pets:dashboard' %}{% else %}{% url 'pets:home' %}{% endif %}"
-                   class="flex items-center gap-2.5 shrink-0 group">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-400 flex items-center justify-center text-white shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-200">
-                        <i class="fa-solid fa-paw text-base"></i>
-                    </div>
-                    <span class="font-extrabold text-xl text-slate-900 tracking-tight hidden sm:block">
-                        Pet<span class="text-brand-600">Care</span>
-                    </span>
+<!-- ===================== HEADER ===================== -->
+<header class="sticky top-0 z-40 border-b border-ink-200/80 bg-white/85 backdrop-blur-md print-hidden dark:border-ink-800 dark:bg-ink-900/85">
+    <div class="page">
+        <div class="flex h-16 items-center gap-3">
+
+            <!-- Brand -->
+            <a href="{% if user.is_authenticated %}{% url 'pets:dashboard' %}{% else %}{% url 'pets:home' %}{% endif %}"
+               class="flex shrink-0 items-center gap-2.5 rounded-lg transition hover:opacity-90">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 text-white shadow-sm">
+                    <i class="fa-solid fa-paw text-sm" aria-hidden="true"></i>
+                </span>
+                <span class="text-lg font-extrabold tracking-tight text-ink-900 dark:text-white">
+                    Vet<span class="text-brand-600 dark:text-brand-400">Link</span>
+                </span>
+            </a>
+
+            <!-- Desktop navigation -->
+            {% if user.is_authenticated %}
+            <nav class="ml-4 hidden flex-1 items-center gap-1 md:flex" aria-label="{% translate 'Основна навигация' %}">
+                <a href="{% url 'pets:dashboard' %}"
+                   class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}nav-link-active{% endif %}"
+                   {% if request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>
+                    <i class="fa-solid fa-gauge-high text-xs" aria-hidden="true"></i> {% translate "Табло" %}
                 </a>
 
-                <!-- Desktop Nav Links -->
+                <a href="{% url 'pets:pet_list' %}"
+                   class="nav-link {% if 'pet' in request.resolver_match.url_name and 'reminder' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}nav-link-active{% endif %}"
+                   {% if 'pet' in request.resolver_match.url_name and 'reminder' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}aria-current="page"{% endif %}>
+                    <i class="fa-solid fa-paw text-xs" aria-hidden="true"></i> {% translate "Любимци" %}
+                    {% if nav_total_pets %}
+                        <span class="ml-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ink-100 px-1.5 text-xs font-bold text-ink-600 dark:bg-ink-800 dark:text-ink-300">{{ nav_total_pets }}</span>
+                    {% endif %}
+                </a>
+
+                <a href="{% url 'pets:reminder_list' %}"
+                   class="nav-link {% if 'reminder' in request.resolver_match.url_name %}nav-link-active{% endif %}"
+                   {% if 'reminder' in request.resolver_match.url_name %}aria-current="page"{% endif %}>
+                    <i class="fa-solid fa-bell text-xs" aria-hidden="true"></i> {% translate "Напомняния" %}
+                    {% if badge_urgent_total > 0 %}
+                        <span class="ml-0.5 inline-flex h-5 min-w-5 animate-pulse items-center justify-center rounded-full px-1.5 text-xs font-bold {% if badge_overdue_count > 0 %}bg-rose-500 text-white{% else %}bg-amber-400 text-amber-950{% endif %}">{{ badge_urgent_total }}</span>
+                    {% endif %}
+                </a>
+            </nav>
+            {% endif %}
+
+            <div class="ml-auto flex items-center gap-1.5">
+
+                <!-- Theme toggle -->
+                <button type="button" id="themeToggle" class="btn-icon"
+                        aria-label="{% translate 'Смяна на цветовата тема' %}"
+                        title="{% translate 'Смяна на темата' %}"
+                        data-title-light="{% translate 'Светла тема' %}"
+                        data-title-dark="{% translate 'Тъмна тема' %}">
+                    <i class="fa-solid fa-moon" data-theme-icon="dark" aria-hidden="true"></i>
+                </button>
+
+                <!-- Language switcher (desktop).
+                     A plain POST form so it works with JavaScript disabled; the
+                     hidden `next` field is what Django's set_language view
+                     rewrites into the equivalent URL in the new language. -->
+                {% include "partials/language_switcher.html" %}
+
                 {% if user.is_authenticated %}
-                <nav class="hidden md:flex items-center gap-1 flex-1 ml-4">
-                    <a href="{% url 'pets:dashboard' %}"
-                       class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors
-                       {% if request.resolver_match.url_name == 'dashboard' %}bg-brand-50 text-brand-700{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100{% endif %}">
-                        <i class="fa-solid fa-gauge-high text-xs opacity-75"></i> Табло
+                    <a href="{% url 'pets:pet_create' %}" class="btn-primary btn-sm hidden sm:inline-flex">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i> {% translate "Нов любимец" %}
                     </a>
-                    <a href="{% url 'pets:pet_list' %}"
-                       class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors
-                       {% if 'pet' in request.resolver_match.url_name and 'reminder' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}bg-brand-50 text-brand-700{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100{% endif %}">
-                        <i class="fa-solid fa-paw text-xs opacity-75"></i> Любимци
-                        {% if nav_total_pets %}
-                        <span class="ml-0.5 min-w-[20px] h-5 px-1.5 text-xs rounded-full bg-slate-200 text-slate-700 font-bold inline-flex items-center justify-center">{{ nav_total_pets }}</span>
-                        {% endif %}
-                    </a>
-                    <a href="{% url 'pets:reminder_list' %}"
-                       class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors
-                       {% if 'reminder' in request.resolver_match.url_name %}bg-brand-50 text-brand-700{% else %}text-slate-600 hover:text-slate-900 hover:bg-slate-100{% endif %}">
-                        <i class="fa-solid fa-bell text-xs opacity-75"></i> Напомняния
-                        {% if badge_urgent_total > 0 %}
-                        <span class="ml-0.5 min-w-[20px] h-5 px-1.5 text-xs rounded-full font-bold inline-flex items-center justify-center
-                            {% if badge_overdue_count > 0 %}bg-rose-500 text-white animate-pulse{% else %}bg-amber-400 text-amber-900{% endif %}">
-                            {{ badge_urgent_total }}
-                        </span>
-                        {% endif %}
-                    </a>
-                </nav>
-                {% endif %}
 
-                <!-- Right side actions -->
-                <div class="flex items-center gap-2 ml-auto">
-                    {% if user.is_authenticated %}
-                        <!-- Quick "New Pet" CTA -->
-                        <a href="{% url 'pets:pet_create' %}"
-                           class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-xs hover:shadow transition-all duration-150">
-                            <i class="fa-solid fa-plus text-xs"></i>
-                            <span class="hidden lg:inline">Нов любимец</span>
-                            <span class="lg:hidden">Нов</span>
-                        </a>
+                    <!-- User menu -->
+                    <div class="relative" id="userMenu">
+                        <button type="button" id="userMenuButton"
+                                aria-label="{% blocktranslate with name=user.get_full_name|default:user.username %}Отвори менюто на потребителя: {{ name }}{% endblocktranslate %}"
+                                class="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-ink-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 dark:hover:bg-ink-800"
+                                aria-expanded="false" aria-haspopup="true" aria-controls="userMenuDropdown">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-sm font-bold text-white">
+                                {{ user.first_name|default:user.username|slice:":1"|upper }}
+                            </span>
+                            <span class="hidden max-w-[7rem] truncate text-sm font-semibold text-ink-700 lg:block dark:text-ink-200">
+                                {{ user.first_name|default:user.username }}
+                            </span>
+                            <i class="fa-solid fa-chevron-down text-[9px] text-ink-400 transition-transform duration-200" id="userChevron" aria-hidden="true"></i>
+                        </button>
 
-                        <!-- User Dropdown -->
-                        <div class="relative" id="userMenuContainer">
-                            <button id="userMenuButton" type="button"
-                                    class="flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-slate-100 transition focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
-                                    aria-expanded="false" aria-haspopup="true">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white font-bold text-sm flex items-center justify-center shadow-xs">
-                                    {{ user.first_name|default:user.username|slice:":1"|upper }}
+                        <div id="userMenuDropdown" class="absolute right-0 top-full z-50 hidden w-60 pt-2">
+                            <div class="overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-lg dark:border-ink-800 dark:bg-ink-900">
+                                <div class="border-b border-ink-100 bg-ink-50/70 px-4 py-3 dark:border-ink-800 dark:bg-ink-800/50">
+                                    <p class="text-xs font-medium text-ink-400">{% translate "Влязъл като" %}</p>
+                                    <p class="truncate text-sm font-bold text-ink-900 dark:text-white">{{ user.get_full_name|default:user.username }}</p>
+                                    {% if user.email %}
+                                        <p class="truncate text-xs text-ink-500 dark:text-ink-400">{{ user.email }}</p>
+                                    {% endif %}
                                 </div>
-                                <span class="hidden md:block text-sm font-semibold text-slate-700 max-w-[100px] truncate">
-                                    {{ user.first_name|default:user.username }}
-                                </span>
-                                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200" id="userChevron"></i>
-                            </button>
 
-                            <!-- Dropdown panel -->
-                            <div id="userMenuDropdown"
-                                 class="absolute right-0 top-full pt-2 w-56 hidden z-50">
-                                <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-                                    <!-- User info header -->
-                                    <div class="px-4 py-3 bg-gradient-to-r from-brand-50 to-slate-50 border-b border-slate-100">
-                                        <p class="text-xs text-slate-400 font-medium">Влязъл като</p>
-                                        <p class="text-sm font-bold text-slate-800 truncate">{{ user.get_full_name|default:user.username }}</p>
-                                        {% if user.email %}
-                                        <p class="text-xs text-slate-400 truncate">{{ user.email }}</p>
-                                        {% endif %}
-                                    </div>
-                                    <!-- Menu links -->
-                                    <div class="py-1">
-                                        <a href="{% url 'accounts:profile' %}"
-                                           class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium transition-colors">
-                                            <i class="fa-regular fa-user w-4 text-slate-400"></i> Моят профил
-                                        </a>
-                                        <a href="{% url 'pets:reminder_create' %}"
-                                           class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium transition-colors">
-                                            <i class="fa-solid fa-bell-plus w-4 text-slate-400"></i> Ново напомняне
-                                        </a>
-                                        {% if user.is_staff %}
-                                        <a href="{% url 'admin:index' %}" target="_blank" rel="noopener"
-                                           class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium transition-colors">
-                                            <i class="fa-solid fa-shield-halved w-4 text-slate-400"></i> Админ панел
-                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-400 ml-auto"></i>
-                                        </a>
-                                        {% endif %}
-                                        <div class="border-t border-slate-100 mt-1 pt-1">
-                                            <!-- Logout: POST form for CSRF security -->
-                                            <form method="POST" action="{% url 'accounts:logout' %}">
-                                                {% csrf_token %}
-                                                <button type="submit"
-                                                        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50 font-medium transition-colors text-left">
-                                                    <i class="fa-solid fa-arrow-right-from-bracket w-4"></i> Изход
-                                                </button>
-                                            </form>
-                                        </div>
+                                <div class="py-1.5">
+                                    <a href="{% url 'accounts:profile' %}" class="flex items-center gap-3 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-brand-50 hover:text-brand-700 dark:text-ink-200 dark:hover:bg-ink-800">
+                                        <i class="fa-regular fa-user w-4 text-ink-400" aria-hidden="true"></i> {% translate "Моят профил" %}
+                                    </a>
+                                    <a href="{% url 'pets:reminder_create' %}" class="flex items-center gap-3 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-brand-50 hover:text-brand-700 dark:text-ink-200 dark:hover:bg-ink-800">
+                                        <i class="fa-solid fa-bell-plus w-4 text-ink-400" aria-hidden="true"></i> {% translate "Ново напомняне" %}
+                                    </a>
+                                    {% if user.is_staff %}
+                                    <a href="{% url 'admin:index' %}" target="_blank" rel="noopener" class="flex items-center gap-3 px-4 py-2 text-sm font-medium text-ink-700 transition hover:bg-brand-50 hover:text-brand-700 dark:text-ink-200 dark:hover:bg-ink-800">
+                                        <i class="fa-solid fa-shield-halved w-4 text-ink-400" aria-hidden="true"></i> {% translate "Админ панел" %}
+                                        <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-[10px] text-ink-400" aria-hidden="true"></i>
+                                    </a>
+                                    {% endif %}
+
+                                    <div class="mt-1.5 border-t border-ink-100 pt-1.5 dark:border-ink-800">
+                                        <form method="POST" action="{% url 'accounts:logout' %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="flex w-full items-center gap-3 px-4 py-2 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/40">
+                                                <i class="fa-solid fa-arrow-right-from-bracket w-4" aria-hidden="true"></i> {% translate "Изход" %}
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                    {% else %}
-                        <a href="{% url 'accounts:login' %}" class="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 transition rounded-lg hover:bg-slate-100">Вход</a>
-                        <a href="{% url 'accounts:register' %}" class="px-4 py-2 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-xs hover:shadow transition-all duration-150">Регистрация</a>
-                    {% endif %}
-
-                    <!-- Mobile hamburger -->
-                    <button id="mobileMenuBtn" type="button"
-                            class="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition focus:outline-none">
-                        <i class="fa-solid fa-bars text-base" id="mobileMenuIcon"></i>
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Mobile Drawer -->
-        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white">
-            <div class="px-4 py-3 space-y-1">
-                {% if user.is_authenticated %}
-                    <!-- User info row -->
-                    <div class="flex items-center gap-3 px-2 py-3 border-b border-slate-100 mb-2">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white font-bold flex items-center justify-center shadow-xs shrink-0">
-                            {{ user.first_name|default:user.username|slice:":1"|upper }}
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-slate-800">{{ user.get_full_name|default:user.username }}</p>
-                            <p class="text-xs text-slate-400">{{ user.email|default:"" }}</p>
-                        </div>
                     </div>
-                    <a href="{% url 'pets:dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
-                        <i class="fa-solid fa-gauge-high w-5 text-brand-600"></i> Табло
-                    </a>
-                    <a href="{% url 'pets:pet_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
-                        <i class="fa-solid fa-paw w-5 text-brand-600"></i> Моите любимци
-                        {% if nav_total_pets %}<span class="ml-auto text-xs font-bold bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full">{{ nav_total_pets }}</span>{% endif %}
-                    </a>
-                    <a href="{% url 'pets:reminder_list' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition">
-                        <i class="fa-solid fa-bell w-5 text-brand-600"></i> Напомняния
-                        {% if badge_urgent_total > 0 %}<span class="ml-auto text-xs font-bold bg-rose-500 text-white px-2 py-0.5 rounded-full">{{ badge_urgent_total }}</span>{% endif %}
-                    </a>
-                    <a href="{% url 'pets:pet_create' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 transition mt-2">
-                        <i class="fa-solid fa-plus w-5"></i> Добави любимец
-                    </a>
-                    <a href="{% url 'accounts:profile' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">
-                        <i class="fa-regular fa-user w-5 text-slate-400"></i> Моят профил
-                    </a>
-                    {% if user.is_staff %}
-                    <a href="{% url 'admin:index' %}" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">
-                        <i class="fa-solid fa-shield-halved w-5 text-slate-400"></i> Админ панел
-                    </a>
-                    {% endif %}
-                    <!-- POST logout -->
-                    <form method="POST" action="{% url 'accounts:logout' %}" class="pt-1 border-t border-slate-100">
-                        {% csrf_token %}
-                        <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition">
-                            <i class="fa-solid fa-arrow-right-from-bracket w-5"></i> Изход
-                        </button>
-                    </form>
+
+                    <!-- Mobile drawer toggle -->
+                    <button type="button" id="mobileMenuBtn" class="btn-icon md:hidden"
+                            aria-label="{% translate 'Отвори менюто' %}" aria-expanded="false" aria-controls="mobileMenu"
+                            data-label-open="{% translate 'Отвори менюто' %}"
+                            data-label-close="{% translate 'Затвори менюто' %}">
+                        <i class="fa-solid fa-bars" id="mobileMenuIcon" aria-hidden="true"></i>
+                    </button>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-xl transition">Вход</a>
-                    <a href="{% url 'accounts:register' %}" class="block px-3 py-2.5 text-sm font-bold text-white bg-brand-600 text-center rounded-xl">Регистрация</a>
+                    <a href="{% url 'accounts:login' %}" class="btn-ghost btn-sm">{% translate "Вход" %}</a>
+                    <a href="{% url 'accounts:register' %}" class="btn-primary btn-sm">{% translate "Регистрация" %}</a>
                 {% endif %}
             </div>
         </div>
-    </header>
+    </div>
 
-    <!-- ===== FLASH MESSAGES ===== -->
-    {% if messages %}
-    <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 space-y-2 no-print" role="alert" aria-live="polite">
+    <!-- Mobile drawer -->
+    <div id="mobileMenu" class="hidden border-t border-ink-200 bg-white md:hidden dark:border-ink-800 dark:bg-ink-900">
+        <div class="page space-y-1 py-3">
+            {% if user.is_authenticated %}
+                <div class="mb-2 flex items-center gap-3 border-b border-ink-100 px-2 pb-3 dark:border-ink-800">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 font-bold text-white">
+                        {{ user.first_name|default:user.username|slice:":1"|upper }}
+                    </span>
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-bold text-ink-900 dark:text-white">{{ user.get_full_name|default:user.username }}</p>
+                        <p class="truncate text-xs text-ink-500 dark:text-ink-400">{{ user.email|default:"" }}</p>
+                    </div>
+                </div>
+
+                <a href="{% url 'pets:dashboard' %}" class="nav-link"><i class="fa-solid fa-gauge-high w-4 text-brand-600" aria-hidden="true"></i> {% translate "Табло" %}</a>
+                <a href="{% url 'pets:pet_list' %}" class="nav-link">
+                    <i class="fa-solid fa-paw w-4 text-brand-600" aria-hidden="true"></i> {% translate "Моите любимци" %}
+                    {% if nav_total_pets %}<span class="ml-auto badge-neutral">{{ nav_total_pets }}</span>{% endif %}
+                </a>
+                <a href="{% url 'pets:reminder_list' %}" class="nav-link">
+                    <i class="fa-solid fa-bell w-4 text-brand-600" aria-hidden="true"></i> {% translate "Напомняния" %}
+                    {% if badge_urgent_total > 0 %}<span class="ml-auto badge-danger">{{ badge_urgent_total }}</span>{% endif %}
+                </a>
+                <a href="{% url 'pets:pet_create' %}" class="nav-link text-brand-700 dark:text-brand-300"><i class="fa-solid fa-plus w-4" aria-hidden="true"></i> {% translate "Добави любимец" %}</a>
+                <a href="{% url 'accounts:profile' %}" class="nav-link"><i class="fa-regular fa-user w-4 text-ink-400" aria-hidden="true"></i> {% translate "Моят профил" %}</a>
+                {% if user.is_staff %}
+                <a href="{% url 'admin:index' %}" target="_blank" rel="noopener" class="nav-link"><i class="fa-solid fa-shield-halved w-4 text-ink-400" aria-hidden="true"></i> {% translate "Админ панел" %}</a>
+                {% endif %}
+                {% include "partials/language_switcher_mobile.html" %}
+                <form method="POST" action="{% url 'accounts:logout' %}" class="border-t border-ink-100 pt-1.5 dark:border-ink-800">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link w-full text-rose-600 dark:text-rose-400"><i class="fa-solid fa-arrow-right-from-bracket w-4" aria-hidden="true"></i> {% translate "Изход" %}</button>
+                </form>
+            {% else %}
+                {% include "partials/language_switcher_mobile.html" %}
+                <a href="{% url 'accounts:login' %}" class="nav-link">{% translate "Вход" %}</a>
+                <a href="{% url 'accounts:register' %}" class="nav-link justify-center text-brand-700 dark:text-brand-300">{% translate "Регистрация" %}</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- ===================== FLASH MESSAGES ===================== -->
+{% if messages %}
+<div class="page pt-4 print-hidden" role="region" aria-label="{% translate 'Съобщения' %}">
+    <div class="space-y-2" aria-live="polite">
         {% for message in messages %}
-        <div class="flex items-start justify-between gap-3 px-4 py-3.5 rounded-2xl border text-sm font-medium shadow-xs
-            {% if message.tags == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800
-            {% elif message.tags == 'error' %}bg-rose-50 border-rose-200 text-rose-800
-            {% elif message.tags == 'warning' %}bg-amber-50 border-amber-200 text-amber-800
-            {% else %}bg-sky-50 border-sky-200 text-sky-800{% endif %}">
+        <div class="animate-in flex items-start justify-between gap-3 rounded-xl border px-4 py-3 text-sm font-medium shadow-xs
+                    {% if message.tags == 'success' %}border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200
+                    {% elif message.tags == 'error' %}border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-200
+                    {% elif message.tags == 'warning' %}border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200
+                    {% else %}border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-200{% endif %}"
+             role="status">
             <div class="flex items-start gap-3">
-                {% if message.tags == 'success' %}<i class="fa-solid fa-circle-check text-emerald-500 text-base mt-0.5 shrink-0"></i>
-                {% elif message.tags == 'error' %}<i class="fa-solid fa-circle-exclamation text-rose-500 text-base mt-0.5 shrink-0"></i>
-                {% elif message.tags == 'warning' %}<i class="fa-solid fa-triangle-exclamation text-amber-500 text-base mt-0.5 shrink-0"></i>
-                {% else %}<i class="fa-solid fa-circle-info text-sky-500 text-base mt-0.5 shrink-0"></i>{% endif %}
+                {% if message.tags == 'success' %}<i class="fa-solid fa-circle-check mt-0.5 shrink-0 text-emerald-500" aria-hidden="true"></i>
+                {% elif message.tags == 'error' %}<i class="fa-solid fa-circle-exclamation mt-0.5 shrink-0 text-rose-500" aria-hidden="true"></i>
+                {% elif message.tags == 'warning' %}<i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0 text-amber-500" aria-hidden="true"></i>
+                {% else %}<i class="fa-solid fa-circle-info mt-0.5 shrink-0 text-sky-500" aria-hidden="true"></i>{% endif %}
                 <span>{{ message }}</span>
             </div>
-            <button onclick="this.parentElement.remove()"
-                    class="shrink-0 p-0.5 rounded-lg opacity-60 hover:opacity-100 transition"
-                    aria-label="Затвори">
-                <i class="fa-solid fa-xmark text-sm"></i>
+            <button type="button" onclick="this.parentElement.remove()" class="-mr-1 shrink-0 rounded-lg p-0.5 text-ink-400 transition hover:text-ink-700 dark:hover:text-white" aria-label="{% translate 'Затвори съобщението' %}">
+                <i class="fa-solid fa-xmark text-sm" aria-hidden="true"></i>
             </button>
         </div>
         {% endfor %}
     </div>
-    {% endif %}
+</div>
+{% endif %}
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {% block content %}{% endblock %}
-    </main>
+<!-- ===================== MAIN ===================== -->
+<main id="main" class="page flex-1 py-6 sm:py-8">
+    {% block content %}{% endblock %}
+</main>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="mt-auto border-t border-slate-200 bg-white no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
-            <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center text-xs shadow-xs">
-                    <i class="fa-solid fa-paw"></i>
-                </div>
-                <span class="font-bold text-slate-700">PetCare</span>
-                <span class="text-slate-300">•</span>
-                <span>Платформа за грижа за домашни любимци</span>
-            </div>
-            <p class="text-xs text-slate-400">Изградено с Python &amp; Django</p>
+<!-- ===================== FOOTER ===================== -->
+<footer class="mt-auto border-t border-ink-200 bg-white print-hidden dark:border-ink-800 dark:bg-ink-900">
+    <div class="page flex flex-col items-center justify-between gap-3 py-6 text-sm text-ink-500 sm:flex-row dark:text-ink-400">
+        <div class="flex items-center gap-2.5">
+            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600 text-white">
+                <i class="fa-solid fa-paw text-[11px]" aria-hidden="true"></i>
+            </span>
+            <span class="font-bold text-ink-800 dark:text-ink-100">VetLink</span>
+            <span class="text-ink-300 dark:text-ink-700" aria-hidden="true">&bull;</span>
+            <span>{% translate "Платформа за грижа за домашни любимци" %}</span>
         </div>
-    </footer>
+        <p class="text-xs text-ink-400">{% translate "Изградено с Python & Django" %}</p>
+    </div>
+</footer>
 
-    <!-- ===== SCRIPTS ===== -->
-    <script>
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileMenuIcon = document.getElementById('mobileMenuIcon');
+<script>
+    (function () {
+        'use strict';
 
-        mobileMenuBtn?.addEventListener('click', () => {
-            const isOpen = !mobileMenu.classList.contains('hidden');
-            mobileMenu.classList.toggle('hidden', isOpen);
-            mobileMenuIcon.className = isOpen
-                ? 'fa-solid fa-bars text-base'
-                : 'fa-solid fa-xmark text-base';
-        });
+        /* ---- Theme toggle ---- */
+        var root = document.documentElement;
+        var toggle = document.getElementById('themeToggle');
+        var icon = document.querySelector('[data-theme-icon]');
 
-        // User profile dropdown
-        const userMenuBtn = document.getElementById('userMenuButton');
-        const userMenuDrop = document.getElementById('userMenuDropdown');
-        const userChevron = document.getElementById('userChevron');
-
-        function openDropdown() {
-            userMenuDrop?.classList.remove('hidden');
-            userMenuBtn?.setAttribute('aria-expanded', 'true');
-            userChevron?.classList.add('rotate-180');
-        }
-        function closeDropdown() {
-            userMenuDrop?.classList.add('hidden');
-            userMenuBtn?.setAttribute('aria-expanded', 'false');
-            userChevron?.classList.remove('rotate-180');
+        function syncThemeIcon() {
+            if (!icon) return;
+            icon.className = root.classList.contains('dark')
+                ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            // Labels come from data-* attributes so they stay translated rather
+            // than hard-coded in this file.
+            if (toggle) {
+                toggle.setAttribute('title', root.classList.contains('dark')
+                    ? toggle.dataset.titleLight : toggle.dataset.titleDark);
+            }
         }
 
-        if (userMenuBtn && userMenuDrop) {
-            userMenuBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                userMenuDrop.classList.contains('hidden') ? openDropdown() : closeDropdown();
+        if (toggle) {
+            syncThemeIcon();
+            toggle.addEventListener('click', function () {
+                var dark = root.classList.toggle('dark');
+                try { localStorage.setItem('petcare-theme', dark ? 'dark' : 'light'); } catch (e) {}
+                syncThemeIcon();
             });
-            document.addEventListener('click', (e) => {
-                if (!userMenuDrop.contains(e.target) && !userMenuBtn.contains(e.target)) {
-                    closeDropdown();
+        }
+
+        /* ---- Mobile drawer ---- */
+        var menuBtn = document.getElementById('mobileMenuBtn');
+        var menu = document.getElementById('mobileMenu');
+        var menuIcon = document.getElementById('mobileMenuIcon');
+
+        if (menuBtn && menu) {
+            menuBtn.addEventListener('click', function () {
+                var open = menu.classList.toggle('hidden');
+                menuBtn.setAttribute('aria-expanded', String(!open));
+                menuBtn.setAttribute('aria-label', open ? menuBtn.dataset.labelOpen : menuBtn.dataset.labelClose);
+                if (menuIcon) {
+                    menuIcon.className = open ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
                 }
             });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeDropdown();
+        }
+
+        /* ---- User dropdown ---- */
+        var userBtn = document.getElementById('userMenuButton');
+        var userDrop = document.getElementById('userMenuDropdown');
+        var userChevron = document.getElementById('userChevron');
+
+        function openDrop() {
+            userDrop.classList.remove('hidden');
+            userBtn.setAttribute('aria-expanded', 'true');
+            userChevron.classList.add('rotate-180');
+        }
+        function closeDrop() {
+            userDrop.classList.add('hidden');
+            userBtn.setAttribute('aria-expanded', 'false');
+            userChevron.classList.remove('rotate-180');
+        }
+
+        if (userBtn && userDrop) {
+            userBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                userDrop.classList.contains('hidden') ? openDrop() : closeDrop();
+            });
+            document.addEventListener('click', function (e) {
+                if (!userDrop.contains(e.target) && !userBtn.contains(e.target)) closeDrop();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') { closeDrop(); userBtn.focus(); }
             });
         }
 
-        // Auto-dismiss flash messages after 6 seconds
-        setTimeout(() => {
-            document.querySelectorAll('[role="alert"] > div').forEach(el => {
-                el.style.transition = 'opacity 0.5s ease';
+        /* ---- Language dropdown ---- */
+        var langBtn = document.getElementById('langMenuButton');
+        var langPanel = document.getElementById('langMenuDropdown');
+
+        if (langBtn && langPanel) {
+            function setLangOpen(open) {
+                langPanel.classList.toggle('hidden', !open);
+                langBtn.classList.toggle('lang-trigger-open', open);
+                langBtn.setAttribute('aria-expanded', String(open));
+            }
+            langBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                setLangOpen(langPanel.classList.contains('hidden'));
+            });
+            document.addEventListener('click', function (e) {
+                if (!langPanel.contains(e.target) && !langBtn.contains(e.target)) setLangOpen(false);
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && !langPanel.classList.contains('hidden')) {
+                    setLangOpen(false);
+                    langBtn.focus();
+                }
+            });
+        }
+
+        /* ---- Auto-dismiss flash messages ---- */
+        setTimeout(function () {
+            document.querySelectorAll('[role="status"]').forEach(function (el) {
+                el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
                 el.style.opacity = '0';
-                setTimeout(() => el.remove(), 500);
+                el.style.transform = 'translateY(-4px)';
+                setTimeout(function () { el.remove(); }, 400);
             });
         }, 6000);
-    </script>
-    {% block extra_scripts %}{% endblock %}
+
+        /* ---- Move focus to the error summary after a failed submit ---- */
+        var summary = document.getElementById('form-errors');
+        if (summary) { summary.focus(); summary.scrollIntoView({ block: 'nearest' }); }
+    })();
+</script>
+
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>

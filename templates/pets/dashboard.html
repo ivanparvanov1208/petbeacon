@@ -1,352 +1,374 @@
 {% extends 'base.html' %}
+{% load petcare_tags i18n %}
 
-{% block title %}Табло за управление | PetCare{% endblock %}
+{% block title %}{% translate "Табло за управление | VetLink" %}{% endblock %}
 
 {% block content %}
-<div class="space-y-8">
+{# Resolved up front because a `default:` filter argument is never translated. #}
+{% translate "През целия ден" as all_day %}
+<div class="space-y-6">
 
-    <!-- Welcome & Quick Actions Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Здравейте, {{ user.first_name|default:user.username }}! 👋
+    <!-- ================= WELCOME ================= -->
+    <div class="card flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between print-sheet">
+        <div class="min-w-0">
+            <h1 class="page-title">
+                {% blocktranslate with name=user.first_name|default:user.username %}Здравейте, {{ name }}!{% endblocktranslate %}
             </h1>
-            <p class="text-sm text-slate-500 mt-1">
-                Ето обобщение на здравето и задачите за вашите домашни любимци за днес, {{ today|date:"d E Y" }} г.
+            <p class="muted mt-1.5">
+                {% comment %} SHORT_DATE_FORMAT follows the active language, so the
+                   localised month name comes for free. {% endcomment %}
+                {% blocktranslate with day=today|date:"SHORT_DATE_FORMAT" %}Обобщение на здравето и задачите за {{ day }}{% endblocktranslate %}
             </p>
         </div>
-        <div class="flex items-center gap-3">
-            <a href="{% url 'pets:reminder_create' %}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition">
-                <i class="fa-solid fa-clock text-brand-600"></i> Ново напомняне
+
+        <div class="flex shrink-0 flex-wrap items-center gap-2 print-hidden">
+            <a href="{% url 'pets:reminder_create' %}" class="btn-secondary">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i> {% translate "Ново напомняне" %}
             </a>
-            <a href="{% url 'pets:pet_create' %}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-xs hover:shadow transition">
-                <i class="fa-solid fa-plus"></i> Нов любимец
+            <a href="{% url 'pets:pet_create' %}" class="btn-primary">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> {% translate "Нов любимец" %}
             </a>
         </div>
     </div>
 
-    <!-- Stats Cards Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Stat 1: Total Pets -->
-        <a href="{% url 'pets:pet_list' %}" class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-brand-300 transition group flex items-center justify-between">
-            <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Моите любимци</p>
-                <p class="text-3xl font-extrabold text-slate-800 mt-1 group-hover:text-brand-600 transition">{{ total_pets }}</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                <i class="fa-solid fa-paw"></i>
-            </div>
-        </a>
-
-        <!-- Stat 2: Today Tasks -->
-        <a href="{% url 'pets:reminder_list' %}?status=today" class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-blue-300 transition group flex items-center justify-between">
-            <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Задачи за днес</p>
-                <p class="text-3xl font-extrabold text-slate-800 mt-1 group-hover:text-blue-600 transition">{{ today_reminders.count }}</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                <i class="fa-solid fa-calendar-day"></i>
+    <!-- ================= STATS ================= -->
+    <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <a href="{% url 'pets:pet_list' %}" class="card card-hover group p-4 sm:p-5">
+            <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                    <p class="truncate text-xs font-semibold uppercase tracking-wide text-ink-400">{% translate "Любимци" %}</p>
+                    <p class="stat-value mt-1 group-hover:text-brand-700">{{ total_pets }}</p>
+                </div>
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-lg text-brand-600 transition group-hover:scale-110 dark:bg-brand-950/50 dark:text-brand-300">
+                    <i class="fa-solid fa-paw" aria-hidden="true"></i>
+                </span>
             </div>
         </a>
 
-        <!-- Stat 3: Active Medications -->
-        <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Активни лекарства</p>
-                <p class="text-3xl font-extrabold text-slate-800 mt-1 text-purple-700">{{ active_meds.count }}</p>
+        <a href="{% url 'pets:reminder_list' %}?status=today" class="card card-hover group p-4 sm:p-5">
+            <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                    <p class="truncate text-xs font-semibold uppercase tracking-wide text-ink-400">{% translate "За днес" %}</p>
+                    <p class="stat-value mt-1 group-hover:text-sky-700">{{ today_reminders.count }}</p>
+                </div>
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-lg text-sky-600 transition group-hover:scale-110 dark:bg-sky-950/50 dark:text-sky-300">
+                    <i class="fa-solid fa-calendar-day" aria-hidden="true"></i>
+                </span>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
-                <i class="fa-solid fa-pills"></i>
-            </div>
-        </div>
+        </a>
 
-        <!-- Stat 4: Overdue & Urgent Alerts -->
-        <a href="{% url 'pets:reminder_list' %}?status=overdue" class="p-5 rounded-2xl bg-white border {% if overdue_reminders.count > 0 or vaccinations_overdue.count > 0 %}border-rose-300 bg-rose-50/30{% else %}border-slate-200/80{% endif %} shadow-xs hover:border-rose-400 transition group flex items-center justify-between">
-            <div>
-                <p class="text-xs font-semibold {% if overdue_reminders.count > 0 or vaccinations_overdue.count > 0 %}text-rose-600 font-bold{% else %}text-slate-400{% endif %} uppercase tracking-wider">
-                    Спешни / Просрочени
-                </p>
-                <p class="text-3xl font-extrabold {% if overdue_reminders.count > 0 or vaccinations_overdue.count > 0 %}text-rose-600{% else %}text-slate-800{% endif %} mt-1">
-                    {{ overdue_reminders.count|add:vaccinations_overdue.count }}
-                </p>
+        <a href="{% url 'pets:pet_list' %}" class="card card-hover group p-4 sm:p-5">
+            <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                    <p class="truncate text-xs font-semibold uppercase tracking-wide text-ink-400">{% translate "Лекарства" %}</p>
+                    <p class="stat-value mt-1 group-hover:text-purple-700">{{ active_meds.count }}</p>
+                </div>
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-lg text-purple-600 transition group-hover:scale-110 dark:bg-purple-950/50 dark:text-purple-300">
+                    <i class="fa-solid fa-pills" aria-hidden="true"></i>
+                </span>
             </div>
-            <div class="w-12 h-12 rounded-xl {% if overdue_reminders.count > 0 or vaccinations_overdue.count > 0 %}bg-rose-100 text-rose-600{% else %}bg-slate-100 text-slate-500{% endif %} flex items-center justify-center text-xl">
-                <i class="fa-solid fa-triangle-exclamation"></i>
+        </a>
+
+        <a href="{% url 'pets:reminder_list' %}?status=overdue"
+           class="card card-hover p-4 sm:p-5 {% if urgent_total %}border-rose-300 bg-rose-50/50 dark:border-rose-900/60 dark:bg-rose-950/20{% endif %}">
+            <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                    <p class="truncate text-xs font-semibold uppercase tracking-wide {% if urgent_total %}text-rose-600{% else %}text-ink-400{% endif %}">{% translate "Просрочени" %}</p>
+                    <p class="stat-value mt-1 {% if urgent_total %}text-rose-600{% endif %}">{{ urgent_total }}</p>
+                </div>
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg transition group-hover:scale-110
+                             {% if urgent_total %}bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-300
+                             {% else %}bg-ink-100 text-ink-400 dark:bg-ink-800 dark:text-ink-500{% endif %}">
+                    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                </span>
             </div>
         </a>
     </div>
 
-    <!-- Urgent Alerts Notification (if any) -->
-    {% if overdue_reminders or vaccinations_overdue %}
-    <div class="p-5 rounded-2xl bg-gradient-to-r from-rose-50 to-amber-50 border border-rose-200 text-rose-900 shadow-xs">
-        <div class="flex items-start gap-3.5">
-            <div class="p-2 rounded-xl bg-rose-500 text-white shrink-0 mt-0.5">
-                <i class="fa-solid fa-bell-ring text-base"></i>
-            </div>
-            <div class="space-y-1.5 flex-1">
-                <h3 class="font-bold text-base text-rose-900">Внимание: Имате просрочени процедури или напомняния!</h3>
-                <div class="text-sm space-y-1 text-rose-800">
+    <!-- ================= URGENT ALERTS ================= -->
+    {% if urgent_total %}
+    <section class="overflow-hidden rounded-2xl border border-rose-200 bg-gradient-to-r from-rose-50 to-amber-50 dark:border-rose-900/60 dark:from-rose-950/40 dark:to-amber-950/20"
+             aria-labelledby="alerts-heading">
+        <div class="flex items-start gap-3.5 p-5">
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500 text-white">
+                <i class="fa-solid fa-bell-ring" aria-hidden="true"></i>
+            </span>
+
+            <div class="min-w-0 flex-1">
+                <h2 id="alerts-heading" class="font-bold text-rose-900 dark:text-rose-200">
+                    {% translate "Имате просрочени процедури и напомняния" %}
+                </h2>
+                <ul class="mt-2 space-y-1.5 text-sm text-rose-800 dark:text-rose-200">
                     {% for vac in vaccinations_overdue %}
-                    <p class="flex items-center gap-2">
-                        <i class="fa-solid fa-syringe text-rose-600"></i>
-                        <span>Ваксина <strong>{{ vac.name }}</strong> за <strong>{{ vac.pet.name }}</strong> е била дължима на {{ vac.next_due_date|date:"d.m.Y" }} г.</span>
-                    </p>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-syringe mt-1 shrink-0 text-rose-500" aria-hidden="true"></i>
+                            {% comment %} A blocktranslate may contain text and variables but no block
+                               tags, so the pet link cannot live inside it. The sentence is
+                               split either side of the link — a boundary that falls in the
+                               same place in both languages, and the link text itself is
+                               user data rather than translatable copy. The separating space
+                               lives in the markup, not in the msgid, so a translator never
+                               has to reproduce leading whitespace. {% endcomment %}
+                            <span>{% blocktranslate with vaccine=vac.name due=vac.next_due_date|date:"SHORT_DATE_FORMAT" %}Ваксина <strong>{{ vaccine }}</strong> за{% endblocktranslate %} <a href="{% url 'pets:pet_detail' vac.pet.pk %}?tab=vaccinations" class="font-semibold underline decoration-rose-300 underline-offset-2 hover:decoration-rose-600">{{ vac.pet.name }}</a> {% blocktranslate with due=vac.next_due_date|date:"SHORT_DATE_FORMAT" %}е била дължима на {{ due }}{% endblocktranslate %}</span>
+                        </li>
                     {% endfor %}
                     {% for rem in overdue_reminders %}
-                    <p class="flex items-center gap-2">
-                        <i class="fa-solid fa-clock text-rose-600"></i>
-                        <span>Напомняне: <strong>{{ rem.title }}</strong>{% if rem.pet %} ({{ rem.pet.name }}){% endif %} - краен срок: {{ rem.due_date|date:"d.m.Y" }} г.</span>
-                    </p>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-clock mt-1 shrink-0 text-rose-500" aria-hidden="true"></i>
+                            {% comment %} The optional pet name sits at a natural boundary after a dash,
+                               which keeps it outside the blocktranslate. {% endcomment %}
+                            <span>{% blocktranslate with title=rem.title due=rem.due_date|date:"SHORT_DATE_FORMAT" %}Напомняне: <strong>{{ title }}</strong>{% endblocktranslate %}{% if rem.pet %} — {{ rem.pet.name }}{% endif %} {% blocktranslate with due=rem.due_date|date:"SHORT_DATE_FORMAT" %}&middot; краен срок {{ due }}{% endblocktranslate %}</span>
+                        </li>
                     {% endfor %}
-                </div>
+                </ul>
             </div>
-            <a href="{% url 'pets:reminder_list' %}?status=overdue" class="hidden sm:inline-flex px-3.5 py-1.5 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-700 text-white transition whitespace-nowrap self-center">
-                Преглед на всички
+
+            <a href="{% url 'pets:reminder_list' %}?status=overdue" class="btn-danger btn-sm hidden shrink-0 sm:inline-flex">
+                {% translate "Преглед на всички" %}
             </a>
         </div>
-    </div>
+    </section>
     {% endif %}
 
-    <!-- 2-Column Main Dashboard Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- ================= MAIN GRID ================= -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
 
-        <!-- Left Column: Tasks, Upcoming Vaccinations & Reminders (7 cols) -->
-        <div class="lg:col-span-7 space-y-8">
+        <!-- ---------- Left column ---------- -->
+        <div class="space-y-6 lg:col-span-7">
 
-            <!-- Today's Schedule & Urgents -->
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-                <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <!-- Today's tasks -->
+            <section class="card overflow-hidden print-sheet" aria-labelledby="today-heading">
+                <header class="flex items-center justify-between gap-3 border-b border-ink-100 bg-ink-50/60 px-5 py-3.5 dark:border-ink-800 dark:bg-ink-800/40">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-bold">
-                            <i class="fa-solid fa-list-check"></i>
-                        </div>
-                        <h2 class="text-base font-bold text-slate-800">Задачи за днес</h2>
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300">
+                            <i class="fa-solid fa-list-check text-sm" aria-hidden="true"></i>
+                        </span>
+                        <h2 id="today-heading" class="section-title">{% translate "Задачи за днес" %}</h2>
                     </div>
-                    <span class="text-xs text-slate-500 font-medium">{{ today_reminders.count }} планирани</span>
-                </div>
+                    <span class="badge-neutral">
+                        {% blocktranslate count counter=today_reminders.count %}{{ counter }} планиран{% plural %}{{ counter }} планирани{% endblocktranslate %}
+                    </span>
+                </header>
 
-                <div class="p-5 divide-y divide-slate-100">
-                    {% if today_reminders %}
-                        {% for reminder in today_reminders %}
-                        <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
-                            <div class="flex items-start gap-3">
-                                <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                    <button type="submit" title="Маркирай като изпълнено" class="w-6 h-6 rounded-lg border-2 border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-transparent hover:text-emerald-600 flex items-center justify-center transition">
-                                        <i class="fa-solid fa-check text-xs"></i>
-                                    </button>
-                                </form>
-                                <div>
-                                    <p class="text-sm font-semibold text-slate-800">{{ reminder.title }}</p>
-                                    <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                                        {% if reminder.pet %}
-                                        <span class="inline-flex items-center gap-1 font-medium text-slate-700">
-                                            <i class="{{ reminder.pet.species_icon }}"></i> {{ reminder.pet.name }}
+                {% if today_reminders %}
+                <ul class="divide-y divide-ink-100 dark:divide-ink-800">
+                    {% for reminder in today_reminders %}
+                    <li class="flex items-center justify-between gap-3 p-4 transition hover:bg-ink-50/70 dark:hover:bg-ink-800/40">
+                        <div class="flex min-w-0 items-start gap-3">
+                            <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5 shrink-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" title="{% translate 'Маркирай като изпълнено' %}"
+                                        aria-label="{% blocktranslate with title=reminder.title %}Маркирай „{{ title }}“ като изпълнено{% endblocktranslate %}"
+                                        class="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-ink-300 text-transparent transition hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600">
+                                    <i class="fa-solid fa-check text-[10px]" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold text-ink-900 dark:text-white">{{ reminder.title }}</p>
+                                <div class="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-ink-500">
+                                    {% if reminder.pet %}
+                                        <span class="inline-flex items-center gap-1 font-medium">
+                                            <i class="{{ reminder.pet.species_icon }}" aria-hidden="true"></i>{{ reminder.pet.name }}
                                         </span>
-                                        •
-                                        {% endif %}
-                                        <span><i class="fa-regular fa-clock"></i> {{ reminder.due_time|default:"През целия ден" }}</span>
-                                    </div>
+                                    {% endif %}
+                                    <span><i class="fa-regular fa-clock" aria-hidden="true"></i> {{ reminder.due_time|default:all_day }}</span>
                                 </div>
                             </div>
-                            <span class="px-2 py-1 rounded-md text-xs font-semibold {% if reminder.priority == 'high' %}bg-rose-100 text-rose-700{% elif reminder.priority == 'normal' %}bg-blue-100 text-blue-700{% else %}bg-slate-100 text-slate-600{% endif %}">
-                                {{ reminder.get_priority_display }}
-                            </span>
                         </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="text-center py-6 text-slate-400 text-sm">
-                            <i class="fa-regular fa-circle-check text-3xl text-emerald-500 mb-2 block"></i>
-                            Нямате предстоящи задачи за днес. Всичко е изпълнено!
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Upcoming Reminders (Next 14 Days) -->
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-                <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center text-sm font-bold">
-                            <i class="fa-solid fa-calendar-days"></i>
-                        </div>
-                        <h2 class="text-base font-bold text-slate-800">Предстоящи напомняния (14 дни)</h2>
+                        <span class="{% if reminder.priority == 'high' %}badge-danger{% elif reminder.priority == 'low' %}badge-neutral{% else %}badge-info{% endif %} shrink-0">
+                            {{ reminder.get_priority_display }}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                    <div class="px-5 py-10 text-center">
+                        <i class="fa-regular fa-circle-check mb-2 block text-3xl text-emerald-500" aria-hidden="true"></i>
+                        <p class="text-sm text-ink-500">{% translate "Нямате планирани задачи за днес. Всичко е изпълнено!" %}</p>
                     </div>
-                    <a href="{% url 'pets:reminder_list' %}" class="text-xs font-semibold text-brand-600 hover:text-brand-700">Всички &rarr;</a>
-                </div>
+                {% endif %}
+            </section>
 
-                <div class="p-5 divide-y divide-slate-100">
-                    {% if upcoming_reminders %}
-                        {% for reminder in upcoming_reminders %}
-                        <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
-                            <div class="flex items-start gap-3">
-                                <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                    <button type="submit" title="Маркирай като готово" class="w-6 h-6 rounded-lg border-2 border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-transparent hover:text-emerald-600 flex items-center justify-center transition">
-                                        <i class="fa-solid fa-check text-xs"></i>
-                                    </button>
-                                </form>
-                                <div>
-                                    <p class="text-sm font-semibold text-slate-800">{{ reminder.title }}</p>
-                                    <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                                        {% if reminder.pet %}
-                                        <span class="inline-flex items-center gap-1 font-medium text-slate-700">
-                                            <i class="{{ reminder.pet.species_icon }}"></i> {{ reminder.pet.name }}
+            <!-- Upcoming reminders -->
+            <section class="card overflow-hidden print-sheet" aria-labelledby="upcoming-heading">
+                <header class="flex items-center justify-between gap-3 border-b border-ink-100 bg-ink-50/60 px-5 py-3.5 dark:border-ink-800 dark:bg-ink-800/40">
+                    <div class="flex items-center gap-2.5">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300">
+                            <i class="fa-solid fa-calendar-days text-sm" aria-hidden="true"></i>
+                        </span>
+                        <h2 id="upcoming-heading" class="section-title">{% translate "Предстоящи (14 дни)" %}</h2>
+                    </div>
+                    <a href="{% url 'pets:reminder_list' %}" class="text-xs font-semibold text-brand-700 hover:underline dark:text-brand-300">
+                        {% translate "Всички" %} <i class="fa-solid fa-arrow-right text-[10px]" aria-hidden="true"></i>
+                    </a>
+                </header>
+
+                {% if upcoming_reminders %}
+                <ul class="divide-y divide-ink-100 dark:divide-ink-800">
+                    {% for reminder in upcoming_reminders %}
+                    <li class="flex items-center justify-between gap-3 p-4 transition hover:bg-ink-50/70 dark:hover:bg-ink-800/40">
+                        <div class="flex min-w-0 items-start gap-3">
+                            <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5 shrink-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" title="{% translate 'Маркирай като готово' %}"
+                                        aria-label="{% blocktranslate with title=reminder.title %}Маркирай „{{ title }}“ като изпълнено{% endblocktranslate %}"
+                                        class="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-ink-300 text-transparent transition hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600">
+                                    <i class="fa-solid fa-check text-[10px]" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold text-ink-900 dark:text-white">{{ reminder.title }}</p>
+                                <div class="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-ink-500">
+                                    {% if reminder.pet %}
+                                        <span class="inline-flex items-center gap-1 font-medium">
+                                            <i class="{{ reminder.pet.species_icon }}" aria-hidden="true"></i>{{ reminder.pet.name }}
                                         </span>
-                                        •
-                                        {% endif %}
-                                        <span><i class="fa-regular fa-calendar"></i> {{ reminder.due_date|date:"d.m.Y" }}{% if reminder.due_time %} в {{ reminder.due_time|time:"H:i" }}{% endif %}</span>
-                                    </div>
+                                    {% endif %}
+                                    <span><i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ reminder.due_date|date:"SHORT_DATE_FORMAT" }}{% if reminder.due_time %} {% blocktranslate with time=reminder.due_time|time:"H:i" %}в {{ time }}{% endblocktranslate %}{% endif %}</span>
                                 </div>
                             </div>
-                            <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700">
-                                {{ reminder.get_reminder_type_display }}
-                            </span>
                         </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="text-center py-6 text-slate-400 text-sm">
-                            Няма планирани напомняния за следващите 14 дни.
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+                        <span class="badge-neutral shrink-0">{{ reminder.get_reminder_type_display }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                    <p class="px-5 py-10 text-center text-sm text-ink-500">{% translate "Няма планирани напомняния за следващите 14 дни." %}</p>
+                {% endif %}
+            </section>
 
-            <!-- Vaccinations Due Soon (Next 30 Days) -->
+            <!-- Vaccinations due soon -->
             {% if vaccinations_due_soon %}
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-                <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-amber-50/50">
+            <section class="card overflow-hidden print-sheet" aria-labelledby="vacc-heading">
+                <header class="flex items-center justify-between gap-3 border-b border-ink-100 bg-amber-50/60 px-5 py-3.5 dark:border-ink-800 dark:bg-amber-950/20">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-sm font-bold">
-                            <i class="fa-solid fa-syringe"></i>
-                        </div>
-                        <h2 class="text-base font-bold text-slate-800">Наближаващи ваксинации (30 дни)</h2>
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300">
+                            <i class="fa-solid fa-syringe text-sm" aria-hidden="true"></i>
+                        </span>
+                        <h2 id="vacc-heading" class="section-title">{% translate "Наближаващи ваксинации (30 дни)" %}</h2>
                     </div>
-                </div>
+                </header>
 
-                <div class="p-5 divide-y divide-slate-100">
+                <ul class="divide-y divide-ink-100 dark:divide-ink-800">
                     {% for vac in vaccinations_due_soon %}
-                    <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                                <i class="fa-solid fa-shield-virus"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-800">{{ vac.name }}</h4>
-                                <p class="text-xs text-slate-500">
-                                    Любимец: <a href="{% url 'pets:pet_detail' vac.pet.pk %}" class="font-semibold text-brand-600 hover:underline">{{ vac.pet.name }}</a>
+                    <li class="flex items-center justify-between gap-3 p-4 transition hover:bg-ink-50/70 dark:hover:bg-ink-800/40">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300">
+                                <i class="fa-solid fa-shield-virus" aria-hidden="true"></i>
+                            </span>
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-bold text-ink-900 dark:text-white">{{ vac.name }}</p>
+                                <p class="truncate text-xs text-ink-500">
+                                    <a href="{% url 'pets:pet_detail' vac.pet.pk %}?tab=vaccinations" class="font-semibold text-brand-700 hover:underline dark:text-brand-300">{{ vac.pet.name }}</a>
                                 </p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <span class="inline-block px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800">
-                                До {{ vac.next_due_date|date:"d.m.Y" }} г.
-                            </span>
-                        </div>
-                    </div>
+                        <span class="badge-warning shrink-0 font-bold">
+                            {% blocktranslate with due=vac.next_due_date|date:"SHORT_DATE_FORMAT" %}До {{ due }}{% endblocktranslate %}
+                        </span>
+                    </li>
                     {% endfor %}
-                </div>
-            </div>
+                </ul>
+            </section>
             {% endif %}
-
         </div>
 
-        <!-- Right Column: Pet Profiles & Active Meds (5 cols) -->
-        <div class="lg:col-span-5 space-y-8">
+        <!-- ---------- Right column ---------- -->
+        <div class="space-y-6 lg:col-span-5">
 
-            <!-- My Pets Quick Showcase -->
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-paw text-brand-600"></i> Моите любимци
+            <!-- Pets -->
+            <section class="card p-5 print-sheet" aria-labelledby="pets-heading">
+                <div class="mb-4 flex items-center justify-between">
+                    <h2 id="pets-heading" class="section-title">
+                        <i class="fa-solid fa-paw text-brand-600" aria-hidden="true"></i> {% translate "Моите любимци" %}
                     </h2>
-                    <a href="{% url 'pets:pet_list' %}" class="text-xs font-semibold text-brand-600 hover:text-brand-700">Всички &rarr;</a>
+                    <a href="{% url 'pets:pet_list' %}" class="text-xs font-semibold text-brand-700 hover:underline dark:text-brand-300">
+                        {% translate "Всички" %} <i class="fa-solid fa-arrow-right text-[10px]" aria-hidden="true"></i>
+                    </a>
                 </div>
 
-                <div class="space-y-3">
-                    {% if pets %}
-                        {% for pet in pets %}
-                        <a href="{% url 'pets:pet_detail' pet.pk %}" class="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-brand-300 hover:bg-slate-50/80 transition group">
-                            <div class="flex items-center gap-3.5">
-                                <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
+                {% if pets %}
+                <ul class="space-y-2">
+                    {% for pet in pets %}
+                    <li>
+                        <a href="{% url 'pets:pet_detail' pet.pk %}"
+                           class="group flex items-center justify-between gap-3 rounded-xl border border-ink-100 p-2.5 transition hover:border-brand-300 hover:bg-brand-50/40 dark:border-ink-800 dark:hover:border-brand-800 dark:hover:bg-ink-800/40">
+                            <span class="flex min-w-0 items-center gap-3">
+                                <span class="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-ink-200 bg-ink-100 dark:border-ink-700 dark:bg-ink-800">
                                     {% if pet.photo %}
-                                        <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="w-full h-full object-cover group-hover:scale-105 transition">
+                                        <img src="{{ pet.photo.url }}" alt="" loading="lazy"
+                                             class="h-full w-full object-cover transition group-hover:scale-105">
                                     {% else %}
-                                        <div class="w-full h-full flex items-center justify-center text-xl bg-slate-100">
-                                            <i class="{{ pet.species_icon }}"></i>
-                                        </div>
+                                        <span class="flex h-full w-full items-center justify-center text-xl">
+                                            <i class="{{ pet.species_icon }}" aria-hidden="true"></i>
+                                        </span>
                                     {% endif %}
-                                </div>
-                                <div>
-                                    <h3 class="text-sm font-bold text-slate-800 group-hover:text-brand-600 transition">{{ pet.name }}</h3>
-                                    <p class="text-xs text-slate-500">{{ pet.breed|default:pet.get_species_display }} • {{ pet.age_display }}</p>
-                                </div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right text-xs text-slate-300 group-hover:text-brand-600 group-hover:translate-x-0.5 transition"></i>
-                        </a>
-                        {% endfor %}
-                    {% else %}
-                        <div class="text-center py-8 px-4 rounded-xl border-2 border-dashed border-slate-200 space-y-3">
-                            <i class="fa-solid fa-dog text-3xl text-slate-300"></i>
-                            <p class="text-sm text-slate-500 font-medium">Все още не сте добавили домашни любимци.</p>
-                            <a href="{% url 'pets:pet_create' %}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-600 text-white text-xs font-bold hover:bg-brand-700 transition">
-                                <i class="fa-solid fa-plus"></i> Добавете любимец сега
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Active Medications -->
-            {% if active_meds %}
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-4">
-                <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-pills text-purple-600"></i> Текущ прием на лекарства
-                </h2>
-                <div class="space-y-2.5">
-                    {% for med in active_meds %}
-                    <div class="p-3 rounded-xl bg-purple-50/50 border border-purple-100 space-y-1">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-sm font-bold text-slate-800">{{ med.name }}</h4>
-                            <span class="text-xs font-semibold text-purple-700 bg-purple-100 px-2 py-0.5 rounded">
-                                {{ med.pet.name }}
+                                </span>
+                                <span class="min-w-0">
+                                    <span class="block truncate text-sm font-bold text-ink-900 transition group-hover:text-brand-700 dark:text-white">{{ pet.name }}</span>
+                                    <span class="block truncate text-xs text-ink-500">{{ pet.breed|default:pet.get_species_display }} &middot; {{ pet.age_display }}</span>
+                                </span>
                             </span>
-                        </div>
-                        <p class="text-xs text-slate-600 font-medium">{{ med.dosage }} • {{ med.frequency }}</p>
-                        {% if med.instructions %}
-                        <p class="text-xs text-slate-400 italic">"{{ med.instructions|truncatechars:60 }}"</p>
-                        {% endif %}
-                    </div>
+                            <i class="fa-solid fa-chevron-right shrink-0 text-xs text-ink-300 transition group-hover:translate-x-0.5 group-hover:text-brand-600" aria-hidden="true"></i>
+                        </a>
                     {% endfor %}
-                </div>
-            </div>
-            {% endif %}
+                </ul>
+                {% else %}
+                    <div class="rounded-xl border-2 border-dashed border-ink-200 px-4 py-8 text-center dark:border-ink-800">
+                        <i class="fa-solid fa-dog mb-2 block text-3xl text-ink-300" aria-hidden="true"></i>
+                        <p class="text-sm font-medium text-ink-500">{% translate "Все още не сте добавили домашни любимци." %}</p>
+                        <a href="{% url 'pets:pet_create' %}" class="btn-primary btn-sm mt-4">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i> {% translate "Добавете любимец сега" %}
+                        </a>
+                    </div>
+                {% endif %}
+            </section>
 
-            <!-- Recent Vet Visits -->
-            {% if recent_visits %}
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-4">
-                <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-stethoscope text-blue-600"></i> Скорошни ветеринарни визити
+            <!-- Active medications -->
+            {% if active_meds %}
+            <section class="card p-5 print-sheet" aria-labelledby="meds-heading">
+                <h2 id="meds-heading" class="section-title mb-4">
+                    <i class="fa-solid fa-pills text-purple-600" aria-hidden="true"></i> {% translate "Текущ прием на лекарства" %}
                 </h2>
-                <div class="space-y-3">
-                    {% for visit in recent_visits %}
-                    <div class="text-xs space-y-1 border-b border-slate-100 pb-2.5 last:border-0 last:pb-0">
-                        <div class="flex items-center justify-between font-semibold text-slate-700">
-                            <span>{{ visit.pet.name }} - {{ visit.clinic_name }}</span>
-                            <span class="text-slate-400">{{ visit.visit_date|date:"d.m.Y" }}</span>
+                <ul class="space-y-2">
+                    {% for med in active_meds %}
+                    <li class="space-y-1 rounded-xl border border-purple-100 bg-purple-50/50 p-3 dark:border-purple-900/50 dark:bg-purple-950/30">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="truncate text-sm font-bold text-ink-900 dark:text-white">{{ med.name }}</p>
+                            <a href="{% url 'pets:pet_detail' med.pet.pk %}?tab=meds" class="badge-purple shrink-0">{{ med.pet.name }}</a>
                         </div>
-                        <p class="text-slate-500">{{ visit.reason }}</p>
-                    </div>
+                        <p class="text-xs font-medium text-ink-600 dark:text-ink-300">{{ med.dosage }} &middot; {{ med.frequency }}</p>
+                        {% if med.instructions %}
+                            <p class="text-xs italic text-ink-400">“{{ med.instructions|truncatechars:60 }}”</p>
+                        {% endif %}
+                    </li>
                     {% endfor %}
-                </div>
-            </div>
+                </ul>
+            </section>
             {% endif %}
 
+            <!-- Recent vet visits -->
+            {% if recent_visits %}
+            <section class="card p-5 print-sheet" aria-labelledby="visits-heading">
+                <h2 id="visits-heading" class="section-title mb-4">
+                    <i class="fa-solid fa-stethoscope text-sky-600" aria-hidden="true"></i> {% translate "Скорошни ветеринарни визити" %}
+                </h2>
+                <ul class="space-y-3">
+                    {% for visit in recent_visits %}
+                    <li class="space-y-0.5 border-b border-ink-100 pb-3 text-xs last:border-0 last:pb-0 dark:border-ink-800">
+                        <div class="flex items-center justify-between gap-2 font-semibold text-ink-700 dark:text-ink-200">
+                            <span class="truncate">{{ visit.pet.name }} &mdash; {{ visit.clinic_name }}</span>
+                            <span class="shrink-0 text-ink-400">{{ visit.visit_date|date:"SHORT_DATE_FORMAT" }}</span>
+                        </div>
+                        <p class="text-ink-500">{{ visit.reason }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
         </div>
-
     </div>
-
 </div>
 {% endblock %}

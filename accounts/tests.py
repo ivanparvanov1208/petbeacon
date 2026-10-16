@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.test import Client, TestCase
 from django.urls import reverse
+from django.utils import translation
 
 from .forms import UserProfileUpdateForm, UserRegistrationForm
 from .models import UserProfile
@@ -30,6 +31,87 @@ class UserProfileModelTests(TestCase):
         user.last_login = None
         user.save()
         self.assertEqual(UserProfile.objects.filter(user=user).count(), 1)
+
+
+class RoleTests(TestCase):
+    """`role` is admin-granted only, and defaults to Стопанин."""
+
+    def test_only_two_roles_exist(self):
+        codes = [code for code, _label in UserProfile.ROLE_CHOICES]
+        self.assertEqual(codes, ['owner', 'vet'])
+
+    def test_labels_are_the_required_bulgarian_names(self):
+        labels = [str(label) for _code, label in UserProfile.ROLE_CHOICES]
+        self.assertEqual(labels, ['Стопанин', 'Ветеринар'])
+
+    def test_new_profile_defaults_to_owner(self):
+        user = User.objects.create_user(username='defaulted', password='password123')
+        self.assertEqual(user.profile.role, 'owner')
+        self.assertTrue(user.profile.is_owner)
+        self.assertFalse(user.profile.is_vet)
+
+    def test_role_helpers_track_the_stored_value(self):
+        user = User.objects.create_user(username='promoted', password='password123')
+        profile = user.profile
+        profile.role = UserProfile.ROLE_VET
+        profile.save()
+        self.assertTrue(profile.is_vet)
+        self.assertFalse(profile.is_owner)
+        self.assertEqual(profile.get_role_display(), 'Ветеринар')
+
+    def test_role_field_is_not_editable_by_the_user(self):
+        """Neither account form may accept a role from the visitor."""
+        self.assertNotIn('role', UserRegistrationForm().fields)
+        self.assertNotIn('role', UserProfileUpdateForm().fields)
+
+    def test_registering_cannot_self_assign_a_role(self):
+        """A posted `role` is ignored; the account lands on Стопанин."""
+        self.client.post(
+            reverse('accounts:register'),
+            registration_payload(username='selfpromoted', role='vet'),
+        )
+        user = User.objects.get(username='selfpromoted')
+        self.assertEqual(user.profile.role, 'owner')
+
+    def test_profile_update_cannot_self_promote(self):
+        user = User.objects.create_user(
+            username='promote2', password='password123', email='p@example.com'
+        )
+        self.client.force_login(user)
+        self.client.post(
+            reverse('accounts:profile'),
+            {'first_name': 'Иван', 'last_name': 'Иванов', 'email': 'p@example.com',
+             'phone': '', 'city': '', 'role': 'vet'},
+        )
+        user.profile.refresh_from_db()
+        self.assertEqual(user.profile.role, 'owner')
+
+    def test_role_choices_translate(self):
+        user = User.objects.create_user(username='translated', password='password123')
+        with translation.override('bg'):
+            self.assertEqual(user.profile.get_role_display(), 'Стопанин')
+        with translation.override('en'):
+            self.assertEqual(user.profile.get_role_display(), 'Owner')
+
+    def test_admin_exposes_role_for_granting(self):
+        from django.contrib import admin as django_admin
+
+        self.assertIn(UserProfile, django_admin.site._registry)
+        options = django_admin.site._registry[UserProfile]
+        self.assertIn('role', options.list_display)
+        self.assertIn('role', options.list_filter)
+
+    def test_role_is_not_required_on_the_profile_form(self):
+        """The field is absent, so profile edits need no role payload."""
+        user = User.objects.create_user(
+            username='norole', password='password123', email='n@example.com'
+        )
+        form = UserProfileUpdateForm(
+            data={'first_name': 'Иван', 'last_name': 'Иванов',
+                  'email': 'n@example.com', 'phone': '', 'city': ''},
+            instance=user,
+        )
+        self.assertTrue(form.is_valid(), form.errors)
 
 
 class RegistrationFormTests(TestCase):

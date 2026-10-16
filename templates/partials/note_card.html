@@ -1,0 +1,29 @@
+{% comment %}
+A titled note panel with an icon and free-form text (or an empty hint).
+
+Usage:
+    {% include "partials/note_card.html" with icon="fa-solid fa-bowl-food" tone="amber"
+        title="Хранене" body=pet.food_diet empty="Не е въведено." wide=True %}
+
+tones: brand | amber | rose | sky | purple | emerald
+{% endcomment %}
+<div class="card p-5 {% if wide %}lg:col-span-2{% endif %} print-sheet">
+    <div class="mb-3.5 flex items-center gap-3">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg
+                     {% if tone == 'rose' %}bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-300
+                     {% elif tone == 'amber' %}bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300
+                     {% elif tone == 'sky' %}bg-sky-50 text-sky-600 dark:bg-sky-950/50 dark:text-sky-300
+                     {% elif tone == 'purple' %}bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-300
+                     {% elif tone == 'emerald' %}bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-300
+                     {% else %}bg-brand-50 text-brand-600 dark:bg-brand-950/50 dark:text-brand-300{% endif %}">
+            <i class="{{ icon }}" aria-hidden="true"></i>
+        </span>
+        <h3 class="text-base font-bold text-ink-900 dark:text-white">{{ title }}</h3>
+    </div>
+
+    {% if body %}
+        <div class="whitespace-pre-line rounded-xl bg-ink-50 p-4 text-sm leading-relaxed text-ink-700 dark:bg-ink-800/60 dark:text-ink-200">{{ body }}</div>
+    {% else %}
+        <p class="rounded-xl bg-ink-50 p-4 text-sm italic text-ink-400 dark:bg-ink-800/60">{{ empty }}</p>
+    {% endif %}
+</div>

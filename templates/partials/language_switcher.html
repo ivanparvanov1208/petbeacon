@@ -1,0 +1,56 @@
+{% load i18n %}
+{% comment %} Language switcher for the desktop header.
+
+   Hidden below the `md` breakpoint, where the mobile drawer carries the
+   segmented control instead — two controls for the same job would just be
+   duplicate tab stops.
+
+   The POST form lives inside the (absolutely positioned) dropdown rather than
+   wrapping the trigger, so the trigger stays a plain flex child of the header
+   and no stray box appears in the bar. `next` holds the current path, which
+   Django's set_language view rewrites to the same page in the chosen language
+   (it understands the i18n_patterns prefix). Submitting a form rather than
+   following an href means the switcher still works without JavaScript.
+
+   Language names are shown in their own language (Български, English) on
+   purpose: a reader hunting for their language scans for the endonym, not for
+   an English gloss. That is why these come from settings.LANGUAGES and are not
+   translated strings. {% endcomment %}
+<div class="relative hidden md:block" id="langMenu">
+    <button type="button" id="langMenuButton" class="lang-trigger"
+            aria-label="{% translate 'Смяна на езика' %}"
+            title="{% translate 'Смяна на езика' %}"
+            aria-expanded="false" aria-haspopup="true" aria-controls="langMenuDropdown">
+        <i class="fa-solid fa-globe text-sm" aria-hidden="true"></i>
+        <span class="lang-code">
+            {% for code, name in LANGUAGES %}{% if code == LANGUAGE_CODE %}{{ code|upper }}{% endif %}{% endfor %}
+        </span>
+        <i class="fa-solid fa-chevron-down text-[9px] opacity-60" aria-hidden="true"></i>
+    </button>
+
+    {# `hidden` lives in the markup, never in the `lang-panel` utility: the toggle script adds and removes exactly this class, so the panel starts closed and opens on the first click. #}
+    <div id="langMenuDropdown" class="lang-panel hidden">
+        <form method="POST" action="{% url 'set_language' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <div class="overflow-hidden rounded-2xl border border-ink-200 bg-white p-1.5 shadow-lg dark:border-ink-800 dark:bg-ink-900">
+                <p class="px-3 pb-1 pt-1.5 text-[11px] font-bold uppercase tracking-wide text-ink-400">
+                    {% translate "Език" %}
+                </p>
+                {% for code, name in LANGUAGES %}
+                    {% if code == LANGUAGE_CODE %}
+                        {% comment %} The active language is shown but not focusable — it is already
+                           the current state, and a dead control is a screen-reader trap. {% endcomment %}
+                        <span class="lang-option lang-option-active" aria-current="true">
+                            <i class="fa-solid fa-check lang-check text-xs" aria-hidden="true"></i>{{ name }}
+                        </span>
+                    {% else %}
+                        <button type="submit" name="language" value="{{ code }}" class="lang-option">
+                            <i class="fa-solid fa-check text-xs opacity-0" aria-hidden="true"></i>{{ name }}
+                        </button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</div>

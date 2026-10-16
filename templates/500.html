@@ -1,0 +1,38 @@
+{% comment %}
+Deliberately does NOT extend base.html: if base.html itself is what failed to
+render, extending it would raise a TemplateSyntaxError inside the 500 handler.
+
+The same robustness argument applies to the two things it would otherwise take
+from the shared layout: the active language and the home URL. `{% ... as var %}`
+swallows a NoReverseMatch and leaves the variable empty, so a broken URLconf
+degrades to a literal "/" instead of raising a second error inside the handler.
+{% endcomment %}
+{% load static i18n %}
+{% get_current_language as CURRENT_LANGUAGE %}
+{% url 'pets:home' as home_url %}
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANGUAGE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% translate "Възникна неочаквана грешка | VetLink" %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="flex min-h-screen items-center justify-center bg-ink-50 px-4 text-ink-800 dark:bg-ink-950 dark:text-ink-200">
+    <main class="w-full max-w-md text-center">
+        <p class="text-7xl font-extrabold tracking-tight text-rose-600">500</p>
+
+        <h1 class="mt-4 text-xl font-bold tracking-tight text-ink-900 dark:text-white">
+            {% translate "Възникна неочаквана грешка" %}
+        </h1>
+        <p class="mt-2 text-sm text-ink-500">
+            {% translate "Съжаляваме — нещо се обърка при обработката на заявката. Опитайте отново след малко; ако проблемът продължава, се свържете с администратора." %}
+        </p>
+
+        <a href="{% firstof home_url '/' %}" class="mt-7 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700">
+            <i class="fa-solid fa-house" aria-hidden="true"></i>
+            {% translate "Към началната страница" %}
+        </a>
+    </main>
+</body>
+</html>

@@ -1,0 +1,1712 @@
+# English translation for the VetLink project.
+# Copyright (C) VetLink
+# This file is distributed under the same licence as the VetLink package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: VetLink 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+msgid "%(counter)s ваксинация"
+msgid_plural "%(counter)s ваксинации"
+msgstr[0] "%(counter)s vaccination"
+msgstr[1] "%(counter)s vaccinations"
+
+msgid "%(counter)s запис"
+msgid_plural "%(counter)s записа"
+msgstr[0] "%(counter)s record"
+msgstr[1] "%(counter)s records"
+
+msgid "%(counter)s планиран"
+msgid_plural "%(counter)s планирани"
+msgstr[0] "%(counter)s scheduled"
+msgstr[1] "%(counter)s scheduled"
+
+msgid "%(counter)s резултат"
+msgid_plural "%(counter)s резултата"
+msgstr[0] "%(counter)s result"
+msgstr[1] "%(counter)s results"
+
+msgid "%(days)d ден"
+msgid_plural "%(days)d дни"
+msgstr[0] "%(days)d day"
+msgstr[1] "%(days)d days"
+
+msgid "%(label)s е твърде голям (%(size)d KB). Максималният размер е %(max)d MB."
+msgstr "%(label)s is too large (%(size)d KB). The maximum size is %(max)d MB."
+
+msgid "%(label)s не може да е отрицателна."
+msgstr "%(label)s cannot be negative."
+
+msgid "%(months)d мес."
+msgstr "%(months)d mo"
+
+msgid "%(name)s | Профил на любимеца — VetLink"
+msgstr "%(name)s | Pet profile — VetLink"
+
+msgid "%(pet)s при %(clinic)s на %(date)s"
+msgstr "%(pet)s at %(clinic)s on %(date)s"
+
+msgid "%(title)s (%(date)s)"
+msgstr "%(title)s (%(date)s)"
+
+msgid "%(title)s за %(pet)s (%(date)s)"
+msgstr "%(title)s for %(pet)s (%(date)s)"
+
+msgid "%(weight)s кг"
+msgstr "%(weight)s kg"
+
+msgid "%(years)d г."
+msgstr "%(years)d yr"
+
+msgid "%(years)d г. и %(months)d мес."
+msgstr "%(years)d yr %(months)d mo"
+
+msgid "&middot; краен срок %(due)s"
+msgstr "&middot; due %(due)s"
+
+msgid "(без краен срок)"
+msgstr "(no end date)"
+
+msgid "(задължително поле)"
+msgstr "(required field)"
+
+msgid "15-цифрен код на микрочип"
+msgstr "15-digit microchip code"
+
+msgid "VetLink Администрация"
+msgstr "VetLink Administration"
+
+msgid "VetLink Портал"
+msgstr "VetLink Portal"
+
+msgid "VetLink е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния."
+msgstr "VetLink is a web platform for caring for pets: profiles, a vaccination schedule, medical history, medications and smart reminders."
+
+msgid "VetLink — Грижа и здраве за вашия домашен любимец"
+msgstr "VetLink — Care and health for your pet"
+
+msgid "VetLink — Грижа и здраве за вашия любимец"
+msgstr "VetLink — Care and health for your companion"
+
+msgid "VetLink — платформа за грижа за домашни любимци: профили, ваксинации, медицинска история и напомняния."
+msgstr "VetLink — a platform for caring for pets: profiles, vaccinations, medical history and reminders."
+
+msgid "Админ панел"
+msgstr "Admin panel"
+
+msgid "Адресът, който последвахте, не съществува или е бил преместен."
+msgstr "The address you followed does not exist or has been moved."
+
+msgid "Ако не знаете точната дата на раждане (напр. '2 години')"
+msgstr "If you do not know the exact date of birth (e.g. '2 years')"
+
+msgid "Активен прием в момента"
+msgstr "Currently being administered"
+
+msgid "Активирай отново"
+msgstr "Reactivate"
+
+msgid "Активно"
+msgstr "Active"
+
+msgid "Алергии и непоносимости"
+msgstr "Allergies and intolerances"
+
+msgid "Алергия към пилешко, към препарати, към медикаменти..."
+msgstr "Allergy to chicken, to detergents, to medication..."
+
+msgid "Бележки"
+msgstr "Notes"
+
+msgid "Бележки / детайли"
+msgstr "Notes / details"
+
+msgid "Бележки / странични реакции"
+msgstr "Notes / side effects"
+
+msgid "Бележки или поносимост"
+msgstr "Notes or tolerance"
+
+msgid "Ваксина"
+msgstr "Vaccine"
+
+msgid "Ваксина <strong>%(vaccine)s</strong> за"
+msgstr "Vaccine <strong>%(vaccine)s</strong> for"
+
+msgid "Ваксинации"
+msgstr "Vaccinations"
+
+msgid "Ваксинационен запис за %(name)s"
+msgstr "Vaccination record for %(name)s"
+
+msgid "Ваксинационен календар"
+msgstr "Vaccination schedule"
+
+msgid "Ваксинация"
+msgstr "Vaccination"
+
+msgid "Ваксинация: %(name)s"
+msgstr "Vaccination: %(name)s"
+
+msgid "Ваксинацията '%(name)s' бе изтрита."
+msgstr "Vaccination “%(name)s” was deleted."
+
+msgid "Ваксинацията '%(name)s' бе обновена успешно!"
+msgstr "Vaccination “%(name)s” was updated successfully!"
+
+msgid "Ваксинацията '%(vaccine)s' бе добавена успешно за %(pet)s!"
+msgstr "Vaccination “%(vaccine)s” was added successfully for %(pet)s!"
+
+msgid "Ветеринар"
+msgstr "Veterinarian"
+
+msgid "Ветеринарен лекар"
+msgstr "Veterinarian"
+
+msgid "Ветеринарен преглед"
+msgstr "Vet check-up"
+
+msgid "Ветеринарна документация"
+msgstr "Veterinary documentation"
+
+msgid "Ветеринарна клиника"
+msgstr "Veterinary clinic"
+
+msgid "Ветеринарна клиника \"ЗооВет\""
+msgstr "Veterinary clinic \"ZooVet\""
+
+msgid "Ветеринарна клиника..."
+msgstr "Veterinary clinic..."
+
+msgid "Ветеринарни посещения"
+msgstr "Veterinary visits"
+
+msgid "Ветеринарни прегледи, обезпаразитяване, прием на предписани медикаменти и поръчка на храна."
+msgstr "Vet check-ups, deworming, prescribed medication and food orders."
+
+msgid "Ветеринарно посещение"
+msgstr "Veterinary visit"
+
+msgid "Ветеринарното посещение бе изтрито."
+msgstr "The veterinary visit was deleted."
+
+msgid "Ветеринарното посещение бе обновено успешно!"
+msgstr "The veterinary visit was updated successfully!"
+
+msgid "Ветеринарното посещение на %(name)s бе записано успешно!"
+msgstr "The veterinary visit for %(name)s was saved successfully!"
+
+msgid "Вече имате профил?"
+msgstr "Already have an account?"
+
+msgid "Вид"
+msgstr "Species"
+
+msgid "Вид животно"
+msgstr "Animal species"
+
+msgid "Визити"
+msgstr "Visits"
+
+msgid "Висок приоритет"
+msgstr "High priority"
+
+msgid "Влез в профила"
+msgstr "Log in"
+
+msgid "Влезте оттук"
+msgstr "Log in here"
+
+msgid "Влечуго"
+msgstr "Reptile"
+
+msgid "Влязъл като"
+msgstr "Signed in as"
+
+msgid "Все още не сте добавили домашни любимци."
+msgstr "You have not added any pets yet."
+
+msgid "Все още няма ваксинации"
+msgstr "No vaccinations yet"
+
+msgid "Все още няма въведени ваксинации за %(name)s."
+msgstr "No vaccinations have been recorded for %(name)s yet."
+
+msgid "Все още нямате планирани напомняния. Добавете напомняне за ваксина, лекарство или преглед!"
+msgstr "You have no planned reminders yet. Add one for a vaccine, medication or check-up!"
+
+msgid "Всички"
+msgstr "All"
+
+msgid "Всички ваксинации, медицински записи, лекарства и напомняния, свързани с %(name)s, ще бъдат безвъзвратно премахнати."
+msgstr "All vaccinations, medical records, medications and reminders linked to %(name)s will be permanently removed."
+
+msgid "Всички категории"
+msgstr "All categories"
+
+msgid "Всички любимци"
+msgstr "All pets"
+
+msgid "Всички необходими инструменти за организиране на здравето и ежедневието на кучета, котки, птици и други животни."
+msgstr "Every tool you need to organise the health and daily routine of dogs, cats, birds and other animals."
+
+msgid "Всички регистрирани животни под ваше наблюдение."
+msgstr "Every animal registered under your care."
+
+msgid "Всичко за вашия любимец"
+msgstr "Everything about your pet"
+
+msgid "Вход"
+msgstr "Log in"
+
+msgid "Вход в VetLink"
+msgstr "Log in to VetLink"
+
+msgid "Вход в профила"
+msgstr "Log in"
+
+msgid "Вход в профила | VetLink"
+msgstr "Log in | VetLink"
+
+msgid "Вход с съществуващ акаунт"
+msgstr "Log in with an existing account"
+
+msgid "Въведете данните си за достъп до профила."
+msgstr "Enter your details to access your account."
+
+msgid "Въведете потребителско име"
+msgstr "Enter your username"
+
+msgid "Възникна неочаквана грешка"
+msgstr "An unexpected error occurred"
+
+msgid "Възникна неочаквана грешка | VetLink"
+msgstr "An unexpected error occurred | VetLink"
+
+msgid "Възникна проблем при изпращането на формуляра"
+msgstr "A problem occurred while submitting the form"
+
+msgid "Възраст"
+msgstr "Age"
+
+msgid "Възраст и физически данни"
+msgstr "Age and measurements"
+
+msgid "Върни като активно"
+msgstr "Reopen"
+
+msgid "Върни „%(title)s“ като активно"
+msgstr "Reopen “%(title)s”"
+
+msgid "Генерирайте готов за разпечатване и PDF файл здравен картон с един клик преди посещение при ветеринарния лекар."
+msgstr "Generate a print-ready health card and PDF with a single click before your vet appointment."
+
+msgid "Генерирано на %(day)s г. за нуждите на ветеринарни прегледи и манипулации"
+msgstr "Generated on %(day)s for veterinary check-ups and procedures"
+
+msgid "Годишен профилактичен преглед, проблем с лапата..."
+msgstr "Annual check-up, paw problem..."
+
+msgid "Готови ли сте да поемете пълен контрол над грижата?"
+msgstr "Ready to take full control of their care?"
+
+msgid "Град"
+msgstr "City"
+
+msgid "Град (по избор)"
+msgstr "City (optional)"
+
+msgid "Град / Населено място"
+msgstr "City / town"
+
+msgid "Грешно потребителско име или парола. Остава ви %(count)d опит."
+msgid_plural "Грешно потребителско име или парола. Остават ви %(count)d опита."
+msgstr[0] "Wrong username or password. %(count)d attempt left."
+msgstr[1] "Wrong username or password. %(count)d attempts left."
+
+msgid "Гризач"
+msgstr "Rodent"
+
+msgid "Груминг / Къпане"
+msgstr "Grooming / bath"
+
+msgid "Д-р %(vet)s"
+msgstr "Dr %(vet)s"
+
+msgid "Д-р Георгиев"
+msgstr "Dr Georgiev"
+
+msgid "Д-р Петров"
+msgstr "Dr Petrov"
+
+msgid "Да"
+msgstr "Yes"
+
+msgid "Да се дава с храната; да не се дели таблетката..."
+msgstr "Give with food; do not split the tablet..."
+
+msgid "Да, изтрий профила"
+msgstr "Yes, delete the profile"
+
+msgid "Данните за %(name)s бяха обновени успешно!"
+msgstr "The details for %(name)s were updated successfully!"
+
+msgid "Данните на вашия профил бяха обновени успешно!"
+msgstr "Your profile details were updated successfully!"
+
+msgid "Дата на изпълнение"
+msgstr "Completion date"
+
+msgid "Дата на посещението"
+msgstr "Visit date"
+
+msgid "Дата на поставяне"
+msgstr "Date administered"
+
+msgid "Дата на процедурата / прегледа"
+msgstr "Date of procedure / check-up"
+
+msgid "Дата на раждане"
+msgstr "Date of birth"
+
+msgid "Дата на регистрация"
+msgstr "Registration date"
+
+msgid "Дата: %(day)s г."
+msgstr "Date: %(day)s"
+
+msgid "Датата на поставяне не може да е в бъдещето."
+msgstr "The administration date cannot be in the future."
+
+msgid "Датата на раждане не може да е в бъдещето."
+msgstr "The date of birth cannot be in the future."
+
+msgid "Демо профил"
+msgstr "Demo account"
+
+msgid "Диагноза"
+msgstr "Diagnosis"
+
+msgid "Диагноза / Констатации"
+msgstr "Diagnosis / findings"
+
+msgid "Диетичен режим и хранене"
+msgstr "Diet and feeding"
+
+msgid "Днес"
+msgstr "Today"
+
+msgid "До %(due)s"
+msgstr "Due %(due)s"
+
+msgid "Добавете любимец сега"
+msgstr "Add a pet now"
+
+msgid "Добави в списъка с напомняния"
+msgstr "Add to the reminder list"
+
+msgid "Добави ваксинация"
+msgstr "Add vaccination"
+
+msgid "Добави запис"
+msgstr "Add record"
+
+msgid "Добави лекарство"
+msgstr "Add medication"
+
+msgid "Добави любимец"
+msgstr "Add a pet"
+
+msgid "Добави медикамент"
+msgstr "Add medication"
+
+msgid "Добави напомняне"
+msgstr "Add reminder"
+
+msgid "Добави напомняне за %(name)s"
+msgstr "Add a reminder for %(name)s"
+
+msgid "Добави нов любимец"
+msgstr "Add a new pet"
+
+msgid "Добави първа ваксинация"
+msgstr "Add the first vaccination"
+
+msgid "Добавяне на ваксинация за %(name)s"
+msgstr "Add a vaccination for %(name)s"
+
+msgid "Добавяне на медицински запис за %(name)s"
+msgstr "Add a medical record for %(name)s"
+
+msgid "Добавяне на нов домашен любимец"
+msgstr "Add a new pet"
+
+msgid "Добре дошли в VetLink, %(name)s! Вашият профил бе създаден успешно."
+msgstr "Welcome to VetLink, %(name)s! Your account was created successfully."
+
+msgid "Дозировка"
+msgstr "Dosage"
+
+msgid "Дозировка, честота, начална и крайна дата и специфични указания за прием с храна или на гладно."
+msgstr "Dosage, frequency, start and end date, and specific instructions for taking it with food or on an empty stomach."
+
+msgid "Документът"
+msgstr "The document"
+
+msgid "Домашен любимец"
+msgstr "Pet"
+
+msgid "Домашни любимци"
+msgstr "Pets"
+
+msgid "Допълнителна информация"
+msgstr "Additional information"
+
+msgid "Допълнителни бележки"
+msgstr "Additional notes"
+
+msgid "Допълнителни детайли, час за запазване..."
+msgstr "Extra details, time to book..."
+
+msgid "Допълнителни указания..."
+msgstr "Additional instructions..."
+
+msgid "Достъпът е отказан"
+msgstr "Access denied"
+
+msgid "Достъпът е отказан | VetLink"
+msgstr "Access denied | VetLink"
+
+msgid "Друго"
+msgstr "Other"
+
+msgid "Друго напомняне"
+msgstr "Other reminder"
+
+msgid "Европейски паспорт №"
+msgstr "EU passport no."
+
+msgid "Език"
+msgstr "Language"
+
+msgid "Електронен здравен паспорт"
+msgstr "Digital health passport"
+
+msgid "Женски"
+msgstr "Female"
+
+msgid "ЗДРАВЕН ПАСПОРТ И МЕДИЦИНСКО КАРТОНЧЕ"
+msgstr "HEALTH PASSPORT AND MEDICAL CARD"
+
+msgid "За днес"
+msgstr "Today"
+
+msgid "Заглавие на напомнянето"
+msgstr "Reminder title"
+
+msgid "Задачи за днес"
+msgstr "Today's tasks"
+
+msgid "Заек"
+msgstr "Rabbit"
+
+msgid "Запази"
+msgstr "Save"
+
+msgid "Запази ваксинацията"
+msgstr "Save vaccination"
+
+msgid "Запази любимеца"
+msgstr "Save pet"
+
+msgid "Запази медикамента"
+msgstr "Save medication"
+
+msgid "Запази медицинския запис"
+msgstr "Save medical record"
+
+msgid "Запази напомнянето"
+msgstr "Save reminder"
+
+msgid "Запази посещението"
+msgstr "Save visit"
+
+msgid "Запази промените"
+msgstr "Save changes"
+
+msgid "Записвайте поставените ваксини и крайните срокове за следващите дози, с автоматични сигнали за наближаващи и просрочени."
+msgstr "Record administered vaccines and next-dose due dates, with automatic alerts for upcoming and overdue ones."
+
+msgid "Записване на ветеринарно посещение за %(name)s"
+msgstr "Book a veterinary visit for %(name)s"
+
+msgid "Записи"
+msgstr "Records"
+
+msgid "Записът '%(title)s' бе обновен успешно!"
+msgstr "Record “%(title)s” was updated successfully!"
+
+msgid "Запиши посещение"
+msgstr "Log a visit"
+
+msgid "Започнете безплатно"
+msgstr "Get started for free"
+
+msgid "Затвори менюто"
+msgstr "Close menu"
+
+msgid "Затвори съобщението"
+msgstr "Dismiss message"
+
+msgid "Здравейте отново, %(name)s!"
+msgstr "Welcome back, %(name)s!"
+
+msgid "Здравейте, %(name)s!"
+msgstr "Hello, %(name)s!"
+
+msgid "Здравен паспорт"
+msgstr "Health passport"
+
+msgid "Здравен паспорт за принтиране"
+msgstr "Printable health passport"
+
+msgid "Здравен паспорт на %(name)s"
+msgstr "Health passport for %(name)s"
+
+msgid "Здравен паспорт — %(name)s | VetLink"
+msgstr "Health passport — %(name)s | VetLink"
+
+msgid "Иван"
+msgstr "Ivan"
+
+msgid "Иванов"
+msgstr "Ivanov"
+
+msgid "Идентификация и снимка"
+msgstr "Identification and photo"
+
+msgid "Изградено с Python & Django"
+msgstr "Built with Python & Django"
+
+msgid "Издаден чрез електронна система VetLink"
+msgstr "Issued via the VetLink online system"
+
+msgid "Изпълнени"
+msgstr "Completed"
+
+msgid "Изпълнено"
+msgstr "Completed"
+
+msgid "Изпълнено на %(moment)s"
+msgstr "Completed on %(moment)s"
+
+msgid "Изтриване на записа?"
+msgstr "Delete this record?"
+
+msgid "Изтриване на любимец?"
+msgstr "Delete this pet?"
+
+msgid "Изтриване на медикамента?"
+msgstr "Delete this medication?"
+
+msgid "Изтриване на напомнянето?"
+msgstr "Delete this reminder?"
+
+msgid "Изтриване на посещението?"
+msgstr "Delete this visit?"
+
+msgid "Изтриване на профил | VetLink"
+msgstr "Delete profile | VetLink"
+
+msgid "Изтрий"
+msgstr "Delete"
+
+msgid "Изтрий %(name)s"
+msgstr "Delete %(name)s"
+
+msgid "Изтрий %(title)s"
+msgstr "Delete %(title)s"
+
+msgid "Изтрий посещението"
+msgstr "Delete the visit"
+
+msgid "Изтрий профила"
+msgstr "Delete profile"
+
+msgid "Изтрий профила на %(name)s"
+msgstr "Delete the profile of %(name)s"
+
+msgid "Изтрий „%(title)s“"
+msgstr "Delete “%(title)s”"
+
+msgid "Изход"
+msgstr "Log out"
+
+msgid "Изчисти"
+msgstr "Clear"
+
+msgid "Имате просрочени процедури и напомняния"
+msgstr "You have overdue procedures and reminders"
+
+msgid "Име"
+msgstr "First name"
+
+msgid "Име на ваксината"
+msgstr "Vaccine name"
+
+msgid "Име на клиниката"
+msgstr "Clinic name"
+
+msgid "Име на лекар или клиника"
+msgstr "Doctor or clinic name"
+
+msgid "Име на лекаря"
+msgstr "Doctor name"
+
+msgid "Име на любимеца"
+msgstr "Pet name"
+
+msgid "Име на медикамента"
+msgstr "Medication name"
+
+msgid "Имейл"
+msgstr "Email"
+
+msgid "Имейл адрес"
+msgstr "Email address"
+
+msgid "Интелигентни напомняния"
+msgstr "Smart reminders"
+
+msgid "Искате ли да тествате веднага?"
+msgstr "Want to try it right away?"
+
+msgid "Кастрация"
+msgstr "Neutered"
+
+msgid "Кастриран / Кастрирана"
+msgstr "Neutered / spayed"
+
+msgid "Кастриран/а"
+msgstr "Neutered"
+
+msgid "Клиника"
+msgstr "Clinic"
+
+msgid "Клиника / Лекар"
+msgstr "Clinic / vet"
+
+msgid "Констатации и диагноза"
+msgstr "Findings and diagnosis"
+
+msgid "Констатирано състояние / диагноза..."
+msgstr "Observed condition / diagnosis..."
+
+msgid "Контактна информация"
+msgstr "Contact information"
+
+msgid "Котка"
+msgstr "Cat"
+
+msgid "Крайна дата"
+msgstr "Due date"
+
+msgid "Крайна дата (по избор)"
+msgstr "End date (optional)"
+
+msgid "Крайната дата не може да е преди началната дата."
+msgstr "The end date cannot be before the start date."
+
+msgid "Куче"
+msgstr "Dog"
+
+msgid "Към началната страница"
+msgstr "Back to home"
+
+msgid "Към съдържанието"
+msgstr "Skip to content"
+
+msgid "Към таблото"
+msgstr "Go to dashboard"
+
+msgid "Лекар"
+msgstr "Vet"
+
+msgid "Лекарства"
+msgstr "Medications"
+
+msgid "Лекарството '%(name)s' бе изтрито."
+msgstr "The medication “%(name)s” was deleted."
+
+msgid "Лекарството '%(name)s' е отбелязано като активно."
+msgstr "The medication “%(name)s” was marked as active."
+
+msgid "Лекарството '%(name)s' е отбелязано като приключило."
+msgstr "The medication “%(name)s” was marked as finished."
+
+msgid "Лечение"
+msgstr "Treatment"
+
+msgid "Лечение / Процедури"
+msgstr "Treatment / procedures"
+
+msgid "Лични данни"
+msgstr "Personal details"
+
+msgid "Любима храна, дневна дажба, график на хранене, забранени лакомства"
+msgstr "Favourite food, daily ration, feeding schedule, forbidden treats"
+
+msgid "Любимец"
+msgstr "Pet"
+
+msgid "Любимци"
+msgstr "Pets"
+
+msgid "Марка суха храна, консерви, брой хранения дневно, грамаж..."
+msgstr "Dry food brand, wet food, meals per day, portion size..."
+
+msgid "Маркирай като готово"
+msgstr "Mark as done"
+
+msgid "Маркирай като изпълнено"
+msgstr "Mark as done"
+
+msgid "Маркирай като приключило"
+msgstr "Mark as finished"
+
+msgid "Маркирай „%(title)s“ като изпълнено"
+msgstr "Mark “%(title)s” as done"
+
+msgid "Медикаментът '%(name)s' бе добавен успешно!"
+msgstr "The medication “%(name)s” was added successfully!"
+
+msgid "Медикаментът '%(name)s' бе обновен успешно!"
+msgstr "The medication “%(name)s” was updated successfully!"
+
+msgid "Медицинска история"
+msgstr "Medical history"
+
+msgid "Медицинска история и извършени манипулации"
+msgstr "Medical history and performed procedures"
+
+msgid "Медицинска история и извършени процедури"
+msgstr "Medical history and performed procedures"
+
+msgid "Медицински запис"
+msgstr "Medical record"
+
+msgid "Медицински запис за %(name)s"
+msgstr "Medical record for %(name)s"
+
+msgid "Медицинският запис '%(title)s' бе добавен успешно!"
+msgstr "The medical record “%(title)s” was added successfully!"
+
+msgid "Медицинският запис '%(title)s' бе изтрит."
+msgstr "The medical record “%(title)s” was deleted."
+
+msgid "Микрочип"
+msgstr "Microchip"
+
+msgid "Микрочип: %(number)s"
+msgstr "Microchip: %(number)s"
+
+msgid "Минимум 8 символа"
+msgstr "At least 8 characters"
+
+msgid "Можете да прикачите рентгенова снимка, епикриза, кръвни изследвания и др."
+msgstr "You can attach an X-ray, an epicrisis report, blood test results and more."
+
+msgid "Моите домашни любимци"
+msgstr "My pets"
+
+msgid "Моите домашни любимци | VetLink"
+msgstr "My pets | VetLink"
+
+msgid "Моите любимци"
+msgstr "My pets"
+
+msgid "Моля, коригирайте грешките по-долу"
+msgstr "Please correct the errors below"
+
+msgid "Моля, проверете въведените данни в полетата по-долу."
+msgstr "Please check the details you entered in the fields below."
+
+msgid "Моят профил"
+msgstr "My profile"
+
+msgid "Моят профил | VetLink"
+msgstr "My profile | VetLink"
+
+msgid "Мъжки"
+msgstr "Male"
+
+msgid "Наближаващи ваксинации (30 дни)"
+msgstr "Upcoming vaccinations (30 days)"
+
+msgid "Наблюдавани реакции или бележки..."
+msgstr "Observed reactions or notes..."
+
+msgid "Навигация по страници"
+msgstr "Pagination"
+
+msgid "Назад"
+msgstr "Back"
+
+msgid "Назад към ваксинациите"
+msgstr "Back to vaccinations"
+
+msgid "Назад към визитите"
+msgstr "Back to visits"
+
+msgid "Назад към историята"
+msgstr "Back to history"
+
+msgid "Назад към лекарствата"
+msgstr "Back to medications"
+
+msgid "Назад към напомнянията"
+msgstr "Back to reminders"
+
+msgid "Назад към профила на %(name)s"
+msgstr "Back to %(name)s's profile"
+
+msgid "Назначено лечение и процедури"
+msgstr "Prescribed treatment and procedures"
+
+msgid "Напомняне"
+msgstr "Reminder"
+
+msgid "Напомняне: <strong>%(title)s</strong>"
+msgstr "Reminder: <strong>%(title)s</strong>"
+
+msgid "Напомнянето '%(title)s' бе върнато като активно."
+msgstr "Reminder “%(title)s” was reopened."
+
+msgid "Напомнянето '%(title)s' бе изтрито."
+msgstr "Reminder “%(title)s” was deleted."
+
+msgid "Напомнянето '%(title)s' бе обновено!"
+msgstr "Reminder “%(title)s” was updated!"
+
+msgid "Напомнянето '%(title)s' бе отбелязано като изпълнено! Браво!"
+msgstr "Reminder “%(title)s” was marked as done! Well done!"
+
+msgid "Напомнянето '%(title)s' бе създадено успешно!"
+msgstr "Reminder “%(title)s” was created successfully!"
+
+msgid "Напомняния"
+msgstr "Reminders"
+
+msgid "Напомняния за %(name)s"
+msgstr "Reminders for %(name)s"
+
+msgid "Напомняния и задачи"
+msgstr "Reminders and tasks"
+
+msgid "Напомняния и задачи | VetLink"
+msgstr "Reminders and tasks | VetLink"
+
+msgid "Напр. 1 табл., 2.5 мл, 3 капки"
+msgstr "e.g. 1 tablet, 2.5 ml, 3 drops"
+
+msgid "Напр. 1 таблетка, 2.5 мл"
+msgstr "e.g. 1 tablet, 2.5 ml"
+
+msgid "Напр. 14.5"
+msgstr "e.g. 14.5"
+
+msgid "Напр. 2 г. и 4 мес. (ако рождената дата е неизвестна)"
+msgstr "e.g. 2 yr 4 mo (if the date of birth is unknown)"
+
+msgid "Напр. 2 пъти дневно, сутрин и вечер, на всеки 8 часа"
+msgstr "e.g. twice a day, morning and evening, every 8 hours"
+
+msgid "Напр. 2 пъти на ден (сутрин и вечер)"
+msgstr "e.g. twice a day (morning and evening)"
+
+msgid "Напр. Антибиотик, Витамини, Капки за очи"
+msgstr "e.g. antibiotic, vitamins, eye drops"
+
+msgid "Напр. Бяс (Rabisin), DHPPi, Tricat..."
+msgstr "e.g. Rabies (Rabisin), DHPPi, Tricat..."
+
+msgid "Напр. Бяс, DHPPi, Tricat, Годишна поливалентна"
+msgstr "e.g. Rabies, DHPPi, Tricat, annual multivalent"
+
+msgid "Напр. Ваксинация срещу бяс, Контролен преглед..."
+msgstr "e.g. Rabies vaccination, follow-up check-up..."
+
+msgid "Напр. Годишен преглед, почистване на зъбен камък, гастрит"
+msgstr "e.g. Annual check-up, teeth scaling, gastritis"
+
+msgid "Напр. Немска овчарка, Сиамска..."
+msgstr "e.g. German Shepherd, Siamese..."
+
+msgid "Напр. Почистване на зъбен камък, Отит..."
+msgstr "e.g. Teeth scaling, otitis..."
+
+msgid "Напр. Рекс, Бела, Макс"
+msgstr "e.g. Rex, Bella, Max"
+
+msgid "Напр. Синулокс, Апоквел, Омега-3..."
+msgstr "e.g. Sinulox, Apoquel, Omega-3..."
+
+msgid "Начална дата"
+msgstr "Start date"
+
+msgid "Не"
+msgstr "No"
+
+msgid "Не е въведено"
+msgstr "Not provided"
+
+msgid "Не е посочена"
+msgstr "Not specified"
+
+msgid "Не са въведени бележки за хранителния режим на любимеца."
+msgstr "No notes have been added about this pet's diet."
+
+msgid "Невалидна дата"
+msgstr "Invalid date"
+
+msgid "Неизвестен"
+msgstr "Unknown"
+
+msgid "Неразрешен формат на документа (%(ext)s). Позволени: %(allowed)s."
+msgstr "Unsupported document format (%(ext)s). Allowed: %(allowed)s."
+
+msgid "Неразрешен формат на снимката (%(ext)s). Позволени: %(allowed)s."
+msgstr "Unsupported image format (%(ext)s). Allowed: %(allowed)s."
+
+msgid "Неуточнена порода"
+msgstr "Breed not specified"
+
+msgid "Нисък приоритет"
+msgstr "Low priority"
+
+msgid "Нов любимец"
+msgstr "New pet"
+
+msgid "Нов медицински запис"
+msgstr "New medical record"
+
+msgid "Ново напомняне"
+msgstr "New reminder"
+
+msgid "Номер на ветеринарен паспорт"
+msgstr "Veterinary passport number"
+
+msgid "Номер на европейски паспорт"
+msgstr "EU passport number"
+
+msgid "Номер на микрочип"
+msgstr "Microchip number"
+
+msgid "Номерът на микрочипа трябва да се състои само от цифри (обикновено 15)."
+msgstr "The microchip number must contain digits only (usually 15)."
+
+msgid "Нормален приоритет"
+msgstr "Normal priority"
+
+msgid "Няма въведен"
+msgstr "Not provided"
+
+msgid "Няма въведени ваксинации."
+msgstr "No vaccinations have been recorded."
+
+msgid "Няма въведени медицински записи за %(name)s."
+msgstr "No medical records for %(name)s."
+
+msgid "Няма въведени медицински записи."
+msgstr "No medical records have been recorded."
+
+msgid "Няма въведени специфични бележки."
+msgstr "No specific notes have been added."
+
+msgid "Няма записани посещения"
+msgstr "No visits recorded"
+
+msgid "Няма записани посещения за %(name)s."
+msgstr "No visits recorded for %(name)s."
+
+msgid "Няма медикаменти"
+msgstr "No medications"
+
+msgid "Няма медицински записи"
+msgstr "No medical records"
+
+msgid "Няма намерени домашни любимци"
+msgstr "No pets found"
+
+msgid "Няма намерени напомняния"
+msgstr "No reminders found"
+
+msgid "Няма напомняния"
+msgstr "No reminders"
+
+msgid "Няма напомняния, отговарящи на избраните филтри."
+msgstr "No reminders match the selected filters."
+
+msgid "Няма планирани напомняния за следващите 14 дни."
+msgstr "No reminders planned for the next 14 days."
+
+msgid "Няма регистрирани алергии или непоносимости."
+msgstr "No known allergies or intolerances."
+
+msgid "Няма регистрирани медикаменти за %(name)s."
+msgstr "No medications registered for %(name)s."
+
+msgid "Няма регистрирани медикаменти."
+msgstr "No medications registered."
+
+msgid "Няма резултати, отговарящи на вашите критерии. Опитайте да изчистите филтрите."
+msgstr "No results match your criteria. Try clearing the filters."
+
+msgid "Няма създадени напомняния за %(name)s."
+msgstr "No reminders created for %(name)s."
+
+msgid "Няма установени алергии."
+msgstr "No known allergies."
+
+msgid "Нямате планирани задачи за днес. Всичко е изпълнено!"
+msgstr "No tasks planned for today. Everything is done!"
+
+msgid "Нямате права да прегледате тази страница. Ако смятате, че това е грешка, влезте с друг профил."
+msgstr "You do not have permission to view this page. If you believe this is a mistake, log in with a different account."
+
+msgid "Нямате профил?"
+msgstr "No account yet?"
+
+msgid "Обезпаразитяване"
+msgstr "Deworming"
+
+msgid "Обновен на"
+msgstr "Updated on"
+
+msgid "Обнови профила"
+msgstr "Update profile"
+
+msgid "Обобщение на здравето и задачите за %(day)s"
+msgstr "Health summary and tasks for %(day)s"
+
+msgid "Общ преглед"
+msgstr "Overview"
+
+msgid "Общо напомняне (без конкретен любимец)"
+msgstr "General reminder (not tied to a specific pet)"
+
+msgid "Опитайте отново след %(seconds)s сек."
+msgstr "Try again in %(seconds)s sec."
+
+msgid "Основна информация"
+msgstr "Basic details"
+
+msgid "Основна навигация"
+msgstr "Main navigation"
+
+msgid "Особености в поведението, навици, страх от гръмотевици и т.н."
+msgstr "Behavioural quirks, habits, fear of thunderstorms, etc."
+
+msgid "Отбележи като изпълнено"
+msgstr "Mark as done"
+
+msgid "Отбележи „%(title)s“ като изпълнено"
+msgstr "Mark “%(title)s” as done"
+
+msgid "Отвори менюто"
+msgstr "Open menu"
+
+msgid "Отвори менюто на потребителя: %(name)s"
+msgstr "Open the user menu: %(name)s"
+
+msgid "Отказ"
+msgstr "Cancel"
+
+msgid "Парола"
+msgstr "Password"
+
+msgid "Парола:"
+msgstr "Password:"
+
+msgid "Паролата трябва да е поне 8 символа и да не е твърде честа или подобна на потребителското ви име."
+msgstr "The password must be at least 8 characters long and must not be too common or similar to your username."
+
+msgid "Паролите не съвпадат!"
+msgstr "The passwords do not match!"
+
+msgid "Партида: %(number)s"
+msgstr "Batch: %(number)s"
+
+msgid "Партиден номер от стикера"
+msgstr "Batch number from the label"
+
+msgid "Партиден №"
+msgstr "Batch no."
+
+msgid "Паспорт"
+msgstr "Passport"
+
+msgid "Паспорт %(number)s"
+msgstr "Passport %(number)s"
+
+msgid "Период"
+msgstr "Period"
+
+msgid "Платформа за грижа за домашни любимци"
+msgstr "A platform for caring for your pets"
+
+msgid "Платформа за собственици на любимци"
+msgstr "A platform for pet owners"
+
+msgid "По време на хранене, разтворено във вода и др."
+msgstr "With food, dissolved in water, etc."
+
+msgid "Повторете паролата"
+msgstr "Repeat the password"
+
+msgid "Подпис и печат на ветеринарния лекар:"
+msgstr "Signature and stamp of the veterinarian:"
+
+msgid "Показани %(start)s–%(end)s от %(total)s"
+msgstr "Showing %(start)s–%(end)s of %(total)s"
+
+msgid "Покупка на храна"
+msgstr "Buy food"
+
+msgid "Пол"
+msgstr "Sex"
+
+msgid "Поле"
+msgstr "Field"
+
+msgid "Попълни данни за демо профил"
+msgstr "Fill in the demo account details"
+
+msgid "Порода"
+msgstr "Breed"
+
+msgid "Порода, рождена дата, снимка, тегло, номер на микрочип, европейски паспорт, режим на хранене и алергии."
+msgstr "Breed, date of birth, photo, weight, microchip number, EU passport, feeding routine and allergies."
+
+msgid "Посещение при ветеринарен лекар за %(name)s"
+msgstr "Veterinary visit for %(name)s"
+
+msgid "Поставена"
+msgstr "Administered"
+
+msgid "Поставена:"
+msgstr "Administered:"
+
+msgid "Поставени и предстоящи ваксинации"
+msgstr "Administered and upcoming vaccinations"
+
+msgid "Потвърди паролата"
+msgstr "Confirm password"
+
+msgid "Потребител"
+msgstr "User"
+
+msgid "Потребител:"
+msgstr "User:"
+
+msgid "Потребителски профил"
+msgstr "User profile"
+
+msgid "Потребителски профили"
+msgstr "User profiles"
+
+msgid "Потребителско име"
+msgstr "Username"
+
+msgid "Преглед"
+msgstr "Preview"
+
+msgid "Преглед на всички"
+msgstr "View all"
+
+msgid "Предишна"
+msgstr "Previous"
+
+msgid "Предписани лекарства и хранителни добавки"
+msgstr "Prescribed medications and supplements"
+
+msgid "Предписване на медикамент за %(name)s"
+msgstr "Prescribe a medication for %(name)s"
+
+msgid "Предстои скоро"
+msgstr "Due soon"
+
+msgid "Предстоящи"
+msgstr "Upcoming"
+
+msgid "Предстоящи (14 дни)"
+msgstr "Upcoming (14 days)"
+
+msgid "През целия ден"
+msgstr "All day"
+
+msgid "Препоръки"
+msgstr "Recommendations"
+
+msgid "Препоръки за храна, контролен преглед след 10 дни..."
+msgstr "Diet recommendations, follow-up check-up in 10 days..."
+
+msgid "Препоръки и следващи стъпки"
+msgstr "Recommendations and next steps"
+
+msgid "Приблизителна възраст"
+msgstr "Approximate age"
+
+msgid "Прием на лекарства"
+msgstr "Medication schedule"
+
+msgid "Прием на лекарство"
+msgstr "Medication"
+
+msgid "Прием на лекарство за %(name)s"
+msgstr "Medication for %(name)s"
+
+msgid "Прием на лекарство: %(name)s (%(dosage)s)"
+msgstr "Medication: %(name)s (%(dosage)s)"
+
+msgid "Прикачен файл / резултати"
+msgstr "Attached file / results"
+
+msgid "Приключило"
+msgstr "Finished"
+
+msgid "Прикрепен файл"
+msgstr "Attached file"
+
+msgid "Приложена терапия, манипулации, инжекции..."
+msgstr "Treatment given, procedures, injections..."
+
+msgid "Приложи"
+msgstr "Apply"
+
+msgid "Приложи филтъра"
+msgstr "Apply the filter"
+
+msgid "Принтирай / Запази като PDF"
+msgstr "Print / Save as PDF"
+
+msgid "Приоритет"
+msgstr "Priority"
+
+msgid "Причина"
+msgstr "Reason"
+
+msgid "Причина / Диагноза / Процедура"
+msgstr "Reason / diagnosis / procedure"
+
+msgid "Причина за посещението"
+msgstr "Reason for the visit"
+
+msgid "Просрочена"
+msgstr "Overdue"
+
+msgid "Просрочени"
+msgstr "Overdue"
+
+msgid "Просрочено"
+msgstr "Overdue"
+
+msgid "Профил"
+msgstr "Profile"
+
+msgid "Профил на %(name)s"
+msgstr "Profile of %(name)s"
+
+msgid "Профилактика, спешен преглед, контролен преглед..."
+msgstr "Preventive care, emergency, follow-up..."
+
+msgid "Профили, ваксинации, медицинска история, хранителен режим и ветеринарни визити — организирани така, че нищо важно да не се изгуби. Без риск от пропуснати ваксини или прегледи."
+msgstr "Profiles, vaccinations, medical history, feeding routine and vet visits — organised so nothing important slips through. No risk of missed vaccines or check-ups."
+
+msgid "Профилът е временно заключен"
+msgstr "The account is temporarily locked"
+
+msgid "Профилът е временно заключен за %(minutes)d минути поради твърде много неуспешни опити."
+msgstr "The account is temporarily locked for %(minutes)d minutes because of too many failed attempts."
+
+msgid "Профилът на %(name)s бе изтрит успешно."
+msgstr "The profile of %(name)s was deleted successfully."
+
+msgid "Птица"
+msgstr "Bird"
+
+msgid "Пълен профил на любимеца"
+msgstr "Complete pet profile"
+
+msgid "Раздели на профила"
+msgstr "Profile sections"
+
+msgid "Регистрация"
+msgstr "Sign up"
+
+msgid "Регистрация в VetLink"
+msgstr "Sign up for VetLink"
+
+msgid "Регистрация на нов профил | VetLink"
+msgstr "Create an account | VetLink"
+
+msgid "Регистрирайте се безплатно"
+msgstr "Sign up for free"
+
+msgid "Регистрирайте се за по-малко от минута и добавете първия си любимец днес."
+msgstr "Sign up in under a minute and add your first pet today."
+
+msgid "Регистриран на %(joined)s г."
+msgstr "Joined on %(joined)s"
+
+msgid "Редактирай"
+msgstr "Edit"
+
+msgid "Редактирай %(name)s"
+msgstr "Edit %(name)s"
+
+msgid "Редактирай %(title)s"
+msgstr "Edit %(title)s"
+
+msgid "Редактирай посещението в %(clinic)s"
+msgstr "Edit the visit at %(clinic)s"
+
+msgid "Редактирай „%(title)s“"
+msgstr "Edit “%(title)s”"
+
+msgid "Редакция"
+msgstr "Edit"
+
+msgid "Редакция на ваксинация: %(name)s"
+msgstr "Edit vaccination: %(name)s"
+
+msgid "Редакция на медикамент: %(name)s"
+msgstr "Edit medication: %(name)s"
+
+msgid "Редакция на медицински запис: %(title)s"
+msgstr "Edit medical record: %(title)s"
+
+msgid "Редакция на напомняне: %(title)s"
+msgstr "Edit reminder: %(title)s"
+
+msgid "Редакция на посещение от %(date)s"
+msgstr "Edit visit from %(date)s"
+
+msgid "Редакция на профила на %(name)s"
+msgstr "Edit %(name)s's profile"
+
+msgid "Редовна"
+msgstr "Up to date"
+
+msgid "Резултати от прегледа"
+msgstr "Examination results"
+
+msgid "Рибки / Аквариум"
+msgstr "Fish / aquarium"
+
+msgid "Роля"
+msgstr "Role"
+
+msgid "Светла тема"
+msgstr "Light theme"
+
+msgid "Сериен / партиден номер"
+msgstr "Serial / batch number"
+
+msgid "Сигурни ли сте, че искате да изтриете напомнянето?"
+msgstr "Are you sure you want to delete this reminder?"
+
+msgid "Сигурни ли сте, че искате да изтриете профила на <strong class=\"text-ink-900 dark:text-white\">%(name)s</strong>?"
+msgstr "Are you sure you want to delete the profile of <strong class=\"text-ink-900 dark:text-white\">%(name)s</strong>?"
+
+msgid "Сигурни ли сте, че искате да изтриете тази ваксинация?"
+msgstr "Are you sure you want to delete this vaccination?"
+
+msgid "Скорошни ветеринарни визити"
+msgstr "Recent vet visits"
+
+msgid "Следваща"
+msgstr "Next"
+
+msgid "Следваща ваксинация (краен срок)"
+msgstr "Next vaccination (due date)"
+
+msgid "Следваща доза"
+msgstr "Next dose"
+
+msgid "Следваща доза за %(vaccine)s. Предишна поставена на %(date)s."
+msgstr "Next dose for %(vaccine)s. The previous one was given on %(date)s."
+
+msgid "Следваща доза:"
+msgstr "Next dose:"
+
+msgid "Следващата ваксинация не може да е преди датата на поставяне на сегашната."
+msgstr "The next vaccination cannot be before the date the current one was given."
+
+msgid "Следете ваксинации, прегледи, прием на лекарства и обезпаразитяване."
+msgstr "Track vaccinations, check-ups, medication and deworming."
+
+msgid "Смесена"
+msgstr "Mixed breed"
+
+msgid "Смяна на езика"
+msgstr "Change language"
+
+msgid "Смяна на темата"
+msgstr "Toggle theme"
+
+msgid "Смяна на цветовата тема"
+msgstr "Toggle colour theme"
+
+msgid "Снимка"
+msgstr "Photo"
+
+msgid "Снимка на %(name)s"
+msgstr "Photo of %(name)s"
+
+msgid "Снимката"
+msgstr "The photo"
+
+msgid "Снимката е повредена и не може да бъде прочетена."
+msgstr "The photo is corrupted and cannot be read."
+
+msgid "Собственик"
+msgstr "Owner"
+
+msgid "София, Пловдив, Варна..."
+msgstr "Sofia, Plovdiv, Varna..."
+
+msgid "София, Пловдив..."
+msgstr "Sofia, Plovdiv..."
+
+msgid "Специални бележки и характер"
+msgstr "Special notes and temperament"
+
+msgid "Специфични указания"
+msgstr "Specific instructions"
+
+msgid "Стандартен режим на хранене."
+msgstr "Standard feeding routine."
+
+msgid "Стандартният микрочип има 15 цифри, въведени са %(count)d."
+msgstr "A standard microchip has 15 digits, %(count)d were entered."
+
+msgid "Статус"
+msgstr "Status"
+
+msgid "Стойност (лв.)"
+msgstr "Cost (BGN)"
+
+msgid "Стойността"
+msgstr "The cost"
+
+msgid "Стопанин"
+msgstr "Owner"
+
+msgid "Стопанин управлява любимците си, Ветеринар работи с медицинските им записи."
+msgstr "Owners manage their own pets, veterinarians work with their medical records."
+
+msgid "Страницата не е намерена"
+msgstr "Page not found"
+
+msgid "Страницата не е намерена | VetLink"
+msgstr "Page not found | VetLink"
+
+msgid "Съдържанието на файла не е валидно изображение. Уверете се, че качвате снимка, а не преименуван документ."
+msgstr "The file contents are not a valid image. Make sure you upload a photo, not a renamed document."
+
+msgid "Съжаляваме — нещо се обърка при обработката на заявката. Опитайте отново след малко; ако проблемът продължава, се свържете с администратора."
+msgstr "Sorry — something went wrong while processing your request. Try again shortly; if the problem persists, contact the administrator."
+
+msgid "Създаване на ново напомняне"
+msgstr "Create a new reminder"
+
+msgid "Създаден на"
+msgstr "Created on"
+
+msgid "Създадено с внимание към любимците"
+msgstr "Built with pets in mind"
+
+msgid "Създай автоматично напомняне за следващата доза"
+msgstr "Create an automatic reminder for the next dose"
+
+msgid "Създай профил"
+msgstr "Create account"
+
+msgid "Създайте безплатен профил"
+msgstr "Create a free account"
+
+msgid "Създайте профил и организирайте грижата за любимците си."
+msgstr "Create an account and organise the care of your pets."
+
+msgid "Съобщения"
+msgstr "Messages"
+
+msgid "Табло"
+msgstr "Dashboard"
+
+msgid "Табло за управление | VetLink"
+msgstr "Dashboard | VetLink"
+
+msgid "Твърде много неуспешни опити за вход. Моля, изчакайте %(minutes)dм %(seconds)dс и опитайте отново."
+msgstr "Too many failed sign-in attempts. Please wait %(minutes)dm %(seconds)ds and try again."
+
+msgid "Тегло"
+msgstr "Weight"
+
+msgid "Тегло (кг)"
+msgstr "Weight (kg)"
+
+msgid "Теглото трябва да е положително число."
+msgstr "The weight must be a positive number."
+
+msgid "Текущ прием на лекарства"
+msgstr "Current medication"
+
+msgid "Текущ прием на лекарства и терапия"
+msgstr "Current medication and therapy"
+
+msgid "Текуща снимка:"
+msgstr "Current photo:"
+
+msgid "Тел"
+msgstr "Phone"
+
+msgid "Тел: %(number)s"
+msgstr "Phone: %(number)s"
+
+msgid "Телефон"
+msgstr "Phone"
+
+msgid "Телефон за връзка"
+msgstr "Contact phone"
+
+msgid "Телефон за връзка (по избор)"
+msgstr "Contact phone (optional)"
+
+msgid "Телефон за връзка с клиниката"
+msgstr "Clinic contact phone"
+
+msgid "Температура, състояние на козината, зъби, лимфни възли..."
+msgstr "Temperature, coat condition, teeth, lymph nodes..."
+
+msgid "Тип напомняне"
+msgstr "Reminder type"
+
+msgid "Това потребителско име вече е заето."
+msgstr "That username is already taken."
+
+msgid "Този документ е предназначен за носене при ветеринарен лекар. Използвайте „Принтирай“ и изберете „Запази като PDF“, за да го споделите електронно."
+msgstr "This document is meant to be carried to the vet. Use “Print” and pick “Save as PDF” to share it electronically."
+
+msgid "Този имейл адрес вече се използва от друг профил."
+msgstr "That email address is already in use by another account."
+
+msgid "Тъмна тема"
+msgstr "Dark theme"
+
+msgid "Търсене"
+msgstr "Search"
+
+msgid "Търсене по име, порода, микрочип или паспорт…"
+msgstr "Search by name, breed, microchip or passport…"
+
+msgid "Търсене по напомняне или любимец…"
+msgstr "Search by reminder or pet…"
+
+msgid "Търси"
+msgstr "Search"
+
+msgid "Управление на база данни за домашни любимци"
+msgstr "Pet care database administration"
+
+msgid "Управление на личните данни и контактна информация."
+msgstr "Manage your personal details and contact information."
+
+msgid "Успешно добавихте профил на %(name)s!"
+msgstr "You successfully added a profile for %(name)s!"
+
+msgid "Успешно излязохте от профила си. Очакваме ви отново!"
+msgstr "You have been logged out successfully. We hope to see you again!"
+
+msgid "Фамилия"
+msgstr "Last name"
+
+msgid "Филтър по категория"
+msgstr "Filter by category"
+
+msgid "Филтър по любимец"
+msgstr "Filter by pet"
+
+msgid "Характер, навици и специални грижи"
+msgstr "Temperament, habits and special care"
+
+msgid "Характер, навици, контакт с други животни, любими играчки..."
+msgstr "Temperament, habits, contact with other animals, favourite toys..."
+
+msgid "Хранене и диета"
+msgstr "Feeding and diet"
+
+msgid "Хранене и диетичен режим"
+msgstr "Feeding and diet"
+
+msgid "Хранене, алергии и характер"
+msgstr "Feeding, allergies and temperament"
+
+msgid "Хранителни или медикаментозни алергии"
+msgstr "Food or medication allergies"
+
+msgid "Хронология на ветеринарните посещения"
+msgstr "History of veterinary visits"
+
+msgid "Хронология на прегледи, диагнози, манипулации, посетени клиники и разходи, с прикачени резултати от изследвания."
+msgstr "A timeline of check-ups, diagnoses, procedures, clinics visited and costs, with test results attached."
+
+msgid "Час (по избор)"
+msgstr "Time (optional)"
+
+msgid "Честота"
+msgstr "Frequency"
+
+msgid "Честота на прием"
+msgstr "Frequency of use"
+
+msgid "Честота: %(frequency)s. %(instructions)s"
+msgstr "Frequency: %(frequency)s. %(instructions)s"
+
+msgid "Чип"
+msgstr "Chip"
+
+msgid "Чип %(number)s"
+msgstr "Chip %(number)s"
+
+msgid "в %(time)s"
+msgstr "at %(time)s"
+
+msgid "до %(end)s"
+msgstr "to %(end)s"
+
+msgid "е била дължима на %(due)s"
+msgstr "was due on %(due)s"
+
+msgid "за вид „%(label)s“"
+msgstr "of species “%(label)s”"
+
+msgid "кг"
+msgstr "kg"
+
+msgid "лв."
+msgstr "BGN"
+
+msgid "на едно сигурно място."
+msgstr "in one safe place."
+
+msgid "от %(start)s"
+msgstr "from %(start)s"

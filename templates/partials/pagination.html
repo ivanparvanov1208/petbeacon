@@ -1,0 +1,52 @@
+{% comment %}
+Pagination control. Preserves the active filters via petcare_tags.query_transform.
+
+Usage: {% include "partials/pagination.html" %}
+Requires: {% load petcare_tags i18n %}
+Expects context: page_obj
+{% endcomment %}
+{% load petcare_tags i18n %}
+
+{% if page_obj and page_obj.paginator.num_pages > 1 %}
+<nav class="flex flex-col items-center justify-between gap-3 sm:flex-row print-hidden"
+     aria-label="{% translate 'Навигация по страници' %}">
+
+    {% comment %} Word order differs between the two languages, so this is a block
+       translation rather than three separate fragments. {% endcomment %}
+    <p class="text-xs text-ink-500">
+        {% blocktranslate with start=page_obj.start_index end=page_obj.end_index total=page_obj.paginator.count %}Показани {{ start }}–{{ end }} от {{ total }}{% endblocktranslate %}
+    </p>
+
+    <div class="flex items-center gap-1.5">
+        {% if page_obj.has_previous %}
+            <a href="?{% query_transform page=page_obj.previous_page_number %}"
+               class="btn-secondary btn-sm" rel="prev">
+                <i class="fa-solid fa-chevron-left text-[10px]" aria-hidden="true"></i>
+                <span class="sr-only sm:not-sr-only">{% translate "Предишна" %}</span>
+            </a>
+        {% else %}
+            <span class="btn-secondary btn-sm cursor-not-allowed opacity-45" aria-disabled="true">
+                <i class="fa-solid fa-chevron-left text-[10px]" aria-hidden="true"></i>
+                <span class="sr-only sm:not-sr-only">{% translate "Предишна" %}</span>
+            </span>
+        {% endif %}
+
+        <span class="px-3 text-xs font-semibold tabular-nums text-ink-600">
+            {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?{% query_transform page=page_obj.next_page_number %}"
+               class="btn-secondary btn-sm" rel="next">
+                <span class="sr-only sm:not-sr-only">{% translate "Следваща" %}</span>
+                <i class="fa-solid fa-chevron-right text-[10px]" aria-hidden="true"></i>
+            </a>
+        {% else %}
+            <span class="btn-secondary btn-sm cursor-not-allowed opacity-45" aria-disabled="true">
+                <span class="sr-only sm:not-sr-only">{% translate "Следваща" %}</span>
+                <i class="fa-solid fa-chevron-right text-[10px]" aria-hidden="true"></i>
+            </span>
+        {% endif %}
+    </div>
+</nav>
+{% endif %}

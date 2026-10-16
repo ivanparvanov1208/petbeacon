@@ -1,66 +1,63 @@
 {% extends 'base.html' %}
+{% load petcare_tags i18n %}
 
-{% block title %}Моят профил | PetCare{% endblock %}
+{% block title %}{% translate "Моят профил | VetLink" %}{% endblock %}
 
 {% block content %}
-<div class="max-w-xl mx-auto space-y-6">
+<div class="mx-auto max-w-2xl space-y-6">
 
-    <div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <i class="fa-regular fa-user text-brand-600"></i> Моят профил
-        </h1>
-        <p class="text-sm text-slate-500 mt-1">
-            Управление на личните данни и контактна информация.
-        </p>
-    </div>
+    {% comment %} Literals passed through `include ... with` are never translated, so each
+       one is resolved into a variable first. {% endcomment %}
+    {% translate "Моят профил" as page_title %}
+    {% translate "Управление на личните данни и контактна информация." as page_subtitle %}
+    {% translate "Обнови профила" as submit_label %}
+    {% translate "Лични данни" as personal_title %}
+    {% translate "Контактна информация" as contact_title %}
 
-    <form method="POST" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
-        {% csrf_token %}
+    {% include "partials/page_header.html" with
+        title=page_title
+        subtitle=page_subtitle
+        icon="fa-regular fa-user"
+    %}
 
-        <div class="flex items-center gap-4 pb-4 border-b border-slate-100">
-            <div class="w-16 h-16 rounded-2xl bg-brand-100 text-brand-800 font-extrabold text-2xl flex items-center justify-center border border-brand-200">
+    {% include "partials/form_open.html" with form=form submit_label=submit_label %}
+
+        <!-- Identity summary -->
+        <div class="flex items-center gap-4 rounded-xl border border-ink-100 bg-ink-50/60 p-4 dark:border-ink-800 dark:bg-ink-800/40">
+            <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-xl font-extrabold text-white">
                 {{ user.first_name|default:user.username|slice:":1"|upper }}
-            </div>
-            <div>
-                <h2 class="text-lg font-bold text-slate-900">{{ user.get_full_name|default:user.username }}</h2>
-                <p class="text-xs text-slate-500 font-mono">@{{ user.username }} • Регистриран на {{ user.date_joined|date:"d.m.Y" }} г.</p>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.first_name.label }}</label>
-                {{ form.first_name }}
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.last_name.label }}</label>
-                {{ form.last_name }}
+            </span>
+            <div class="min-w-0">
+                <p class="truncate text-lg font-bold text-ink-900 dark:text-white">
+                    {{ user.get_full_name|default:user.username }}
+                </p>
+                <p class="truncate text-xs text-ink-500">
+                    {% comment %} SHORT_DATE_FORMAT resolves per active language, so the
+                       date reads as 2.10.2026 in Bulgarian and 10/02/2026 in
+                       English without any branch in the template. {% endcomment %}
+                    <span class="font-mono">@{{ user.username }}</span>
+                    &middot; {% blocktranslate with joined=user.date_joined|date:"SHORT_DATE_FORMAT" %}Регистриран на {{ joined }} г.{% endblocktranslate %}
+                </p>
             </div>
         </div>
 
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.email.label }}</label>
-            {{ form.email }}
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.phone.label }}</label>
-                {{ form.phone }}
+        <section class="space-y-4">
+            {% include "partials/section_header.html" with title=personal_title icon="fa-solid fa-id-card" %}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {% include "partials/field.html" with field=form.first_name %}
+                {% include "partials/field.html" with field=form.last_name %}
             </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.city.label }}</label>
-                {{ form.city }}
+            {% include "partials/field.html" with field=form.email %}
+        </section>
+
+        <section class="space-y-4">
+            {% include "partials/section_header.html" with title=contact_title icon="fa-solid fa-phone" %}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {% include "partials/field.html" with field=form.phone %}
+                {% include "partials/field.html" with field=form.city %}
             </div>
-        </div>
+        </section>
 
-        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-            <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs transition">
-                Обнови профила
-            </button>
-        </div>
-
-    </form>
-
+    {% include "partials/form_close.html" %}
 </div>
 {% endblock %}

@@ -1,95 +1,50 @@
 {% extends 'base.html' %}
+{% load petcare_tags i18n %}
 
-{% block title %}{{ title }} | PetCare{% endblock %}
+{% block title %}{{ title }} | VetLink{% endblock %}
 
 {% block content %}
-<div class="max-w-xl mx-auto space-y-6">
+{% translate "Назад към лекарствата" as back_label %}
+{% translate "Запази медикамента" as submit_label %}
+<div class="mx-auto max-w-2xl space-y-6">
 
-    <div>
-        <a href="{% url 'pets:pet_detail' pet.pk %}?tab=meds" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition mb-1">
-            <i class="fa-solid fa-arrow-left"></i> Назад към лекарствата на {{ pet.name }}
-        </a>
-        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ title }}</h1>
-    </div>
+    {# Subtitle is built in the view — it interpolates the pet's name. #}
+    {% include "partials/page_header.html" with
+        title=title
+        subtitle=subtitle
+        icon="fa-solid fa-pills"
+        back_url=cancel_url
+        back_label=back_label
+    %}
 
-    <form method="POST" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
-        {% csrf_token %}
+    {% include "partials/form_open.html" with form=form submit_label=submit_label cancel_url=cancel_url %}
 
-        {% if form.errors %}
-        <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
-            <p class="font-bold">Моля, коригирайте следните грешки:</p>
-            <ul class="list-disc list-inside mt-1 text-xs">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
+        {% include "partials/field.html" with field=form.name %}
 
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.name.label }} *</label>
-            {{ form.name }}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {% include "partials/field.html" with field=form.dosage %}
+            {% include "partials/field.html" with field=form.frequency %}
+            {% include "partials/field.html" with field=form.start_date %}
+            {% include "partials/field.html" with field=form.end_date %}
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.dosage.label }} *</label>
-                {{ form.dosage }}
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.frequency.label }} *</label>
-                {{ form.frequency }}
-            </div>
+        {% include "partials/field.html" with field=form.instructions %}
+        {% include "partials/field.html" with field=form.notes %}
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {% include "partials/checkbox.html" with field=form.is_active %}
+
+            {% if form.create_reminder %}
+                <label for="{{ form.create_reminder.id_for_label }}"
+                       class="flex cursor-pointer items-start gap-3 rounded-xl border border-purple-200 bg-purple-50 px-4 py-3.5 transition hover:border-purple-300 dark:border-purple-900/60 dark:bg-purple-950/30">
+                    {{ form.create_reminder }}
+                    <span class="text-sm font-medium leading-snug text-purple-900 dark:text-purple-200">
+                        {{ form.create_reminder.label }}
+                    </span>
+                </label>
+            {% endif %}
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.start_date.label }} *</label>
-                {{ form.start_date }}
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.end_date.label }}</label>
-                {{ form.end_date }}
-            </div>
-        </div>
-
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.instructions.label }}</label>
-            {{ form.instructions }}
-        </div>
-
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.notes.label }}</label>
-            {{ form.notes }}
-        </div>
-
-        <div class="flex items-center gap-3 pt-1">
-            {{ form.is_active }}
-            <label for="{{ form.is_active.id_for_label }}" class="text-sm font-semibold text-slate-700 cursor-pointer">
-                {{ form.is_active.label }}
-            </label>
-        </div>
-
-        {% if form.create_reminder %}
-        <div class="p-4 rounded-xl bg-purple-50 border border-purple-200 flex items-center gap-3">
-            {{ form.create_reminder }}
-            <label for="{{ form.create_reminder.id_for_label }}" class="text-xs sm:text-sm font-semibold text-purple-900 cursor-pointer">
-                {{ form.create_reminder.label }}
-            </label>
-        </div>
-        {% endif %}
-
-        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-            <a href="{% url 'pets:pet_detail' pet.pk %}?tab=meds" class="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition">
-                Отказ
-            </a>
-            <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs transition">
-                Запази медикамента
-            </button>
-        </div>
-
-    </form>
+    {% include "partials/form_close.html" %}
 </div>
 {% endblock %}

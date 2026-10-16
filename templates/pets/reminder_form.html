@@ -1,86 +1,37 @@
 {% extends 'base.html' %}
+{% load petcare_tags i18n %}
 
-{% block title %}{{ title }} | PetCare{% endblock %}
+{% block title %}{{ title }} | VetLink{% endblock %}
 
 {% block content %}
-<div class="max-w-xl mx-auto space-y-6">
+{% translate "Назад към напомнянията" as back_label %}
+<div class="mx-auto max-w-2xl space-y-6">
 
-    <div>
-        <a href="{% url 'pets:reminder_list' %}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition mb-1">
-            <i class="fa-solid fa-arrow-left"></i> Назад към всички напомняния
-        </a>
-        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">{{ title }}</h1>
-    </div>
+    {% include "partials/page_header.html" with
+        title=title
+        icon="fa-solid fa-bell"
+        back_url=cancel_url
+        back_label=back_label
+    %}
 
-    <form method="POST" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
-        {% csrf_token %}
+    {% include "partials/form_open.html" with form=form submit_label=button_text cancel_url=cancel_url %}
 
-        {% if form.errors %}
-        <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
-            <p class="font-bold">Моля, коригирайте следните грешки:</p>
-            <ul class="list-disc list-inside mt-1 text-xs">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
+        {% include "partials/field.html" with field=form.title %}
 
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.title.label }} *</label>
-            {{ form.title }}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {% include "partials/field.html" with field=form.pet %}
+            {% include "partials/field.html" with field=form.reminder_type %}
+            {% include "partials/field.html" with field=form.due_date %}
+            {% include "partials/field.html" with field=form.due_time %}
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.pet.label }}</label>
-                {{ form.pet }}
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.reminder_type.label }} *</label>
-                {{ form.reminder_type }}
-            </div>
+        {% include "partials/field.html" with field=form.priority %}
+        {% include "partials/field.html" with field=form.notes %}
+
+        <div class="sm:col-span-1">
+            {% include "partials/checkbox.html" with field=form.is_completed %}
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.due_date.label }} *</label>
-                {{ form.due_date }}
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.due_time.label }}</label>
-                {{ form.due_time }}
-            </div>
-        </div>
-
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.priority.label }}</label>
-            {{ form.priority }}
-        </div>
-
-        <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.notes.label }}</label>
-            {{ form.notes }}
-        </div>
-
-        <div class="flex items-center gap-3 pt-1">
-            {{ form.is_completed }}
-            <label for="{{ form.is_completed.id_for_label }}" class="text-sm font-semibold text-slate-700 cursor-pointer">
-                {{ form.is_completed.label }}
-            </label>
-        </div>
-
-        <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-            <a href="{% url 'pets:reminder_list' %}" class="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition">
-                Отказ
-            </a>
-            <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs transition">
-                {{ button_text|default:"Запази" }}
-            </button>
-        </div>
-
-    </form>
+    {% include "partials/form_close.html" %}
 </div>
 {% endblock %}

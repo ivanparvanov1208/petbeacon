@@ -1,0 +1,690 @@
+/* ==========================================================================
+   VetLink — design system
+   Tailwind CSS v4, CSS-first configuration.
+
+   Everything visual derives from the tokens in @theme. Templates should
+   reference the semantic class names defined here (.btn, .card, .field …)
+   rather than long ad-hoc utility strings, so the whole UI can be re-skinned
+   from this single file.
+
+   Components are declared with @utility (not @layer components) so that they
+   are real Tailwind utilities and can therefore be composed with @apply and
+   overridden by any utility class.
+   ========================================================================== */
+
+@import "tailwindcss";
+
+/* Scan Django templates as well as Python sources for class names. */
+@source "../../templates/**/*.html";
+@source "../../pets/**/*.py";
+@source "../../accounts/**/*.py";
+
+/* Honour the OS colour scheme; .dark can also be toggled manually. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+@theme {
+    /* -- Brand: deep teal, the VetLink identity ---------------------------- */
+    --color-brand-50: oklch(0.977 0.014 182);
+    --color-brand-100: oklch(0.949 0.029 182);
+    --color-brand-200: oklch(0.902 0.058 182);
+    --color-brand-300: oklch(0.837 0.092 180);
+    --color-brand-400: oklch(0.765 0.104 178);
+    --color-brand-500: oklch(0.704 0.105 177);
+    --color-brand-600: oklch(0.596 0.093 178);
+    --color-brand-700: oklch(0.511 0.077 178);
+    --color-brand-800: oklch(0.437 0.062 178);
+    --color-brand-900: oklch(0.386 0.050 179);
+    --color-brand-950: oklch(0.271 0.038 180);
+
+    /* -- Ink: neutrals, very slightly cool ------------------------------- */
+    --color-ink-50: oklch(0.985 0.002 250);
+    --color-ink-100: oklch(0.968 0.004 250);
+    --color-ink-200: oklch(0.927 0.006 250);
+    --color-ink-300: oklch(0.869 0.008 250);
+    --color-ink-400: oklch(0.704 0.011 250);
+    --color-ink-500: oklch(0.554 0.013 250);
+    --color-ink-600: oklch(0.446 0.013 250);
+    --color-ink-700: oklch(0.372 0.012 250);
+    --color-ink-800: oklch(0.279 0.010 250);
+    --color-ink-900: oklch(0.208 0.008 250);
+    --color-ink-950: oklch(0.145 0.007 250);
+
+    /* -- Typography ------------------------------------------------------- */
+    --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", Menlo, monospace;
+
+    /* -- Radii: one consistent scale instead of mixed xl/2xl/3xl -------- */
+    --radius-xs: 0.25rem;
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 0.875rem;
+    --radius-2xl: 1.125rem;
+    --radius-3xl: 1.5rem;
+
+    /* -- Elevation: low-contrast, layered ---------------------------------- */
+    --shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+    --shadow-sm: 0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.06);
+    --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.08), 0 2px 6px -2px rgb(15 23 42 / 0.05);
+    --shadow-lg: 0 12px 28px -6px rgb(15 23 42 / 0.12), 0 6px 12px -6px rgb(15 23 42 / 0.06);
+    --shadow-xl: 0 24px 48px -12px rgb(15 23 42 / 0.16);
+
+    /* -- Motion ----------------------------------------------------------- */
+    --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+    --animate-fade-in-up: fade-in-up 0.35s var(--ease-out-soft) both;
+    --animate-shimmer: shimmer 1.6s linear infinite;
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes shimmer {
+    from {
+        background-position: -180% 0;
+    }
+    to {
+        background-position: 180% 0;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   2. Base layer
+   -------------------------------------------------------------------------- */
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: var(--color-ink-50);
+        color: var(--color-ink-800);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .dark body {
+        background-color: var(--color-ink-950);
+        color: var(--color-ink-200);
+    }
+
+    /* Visible focus for keyboard users only. */
+    :focus-visible {
+        outline: 2px solid var(--color-brand-500);
+        outline-offset: 2px;
+        border-radius: var(--radius-xs);
+    }
+
+    /* Never rely on colour alone for validation state. */
+    [aria-invalid="true"] {
+        border-color: var(--color-rose-500);
+    }
+
+    ::selection {
+        background-color: var(--color-brand-200);
+        color: var(--color-brand-950);
+    }
+
+    .dark ::selection {
+        background-color: var(--color-brand-700);
+        color: white;
+    }
+
+    /* Slim, theme-aware scrollbars. */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-ink-300) transparent;
+    }
+
+    .dark * {
+        scrollbar-color: var(--color-ink-700) transparent;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--color-ink-300);
+        border-radius: 999px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-ink-400);
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+        background-color: var(--color-ink-700);
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-ink-600);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. Components
+   -------------------------------------------------------------------------- */
+
+/* ---- Layout primitives ---- */
+
+@utility page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+@utility card {
+    @apply rounded-2xl border border-ink-200/80 bg-white shadow-xs;
+}
+
+@utility card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md;
+}
+
+/* ---- Buttons ---- */
+
+@utility btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5
+           text-sm font-semibold whitespace-nowrap transition duration-150
+           disabled:cursor-not-allowed disabled:opacity-55;
+}
+
+@utility btn-primary {
+    @apply btn bg-brand-600 text-white shadow-xs hover:bg-brand-700 active:bg-brand-800;
+}
+
+@utility btn-secondary {
+    @apply btn border border-ink-200 bg-white text-ink-700 shadow-xs hover:bg-ink-50 active:bg-ink-100;
+}
+
+@utility btn-ghost {
+    @apply btn text-ink-600 hover:bg-ink-100 hover:text-ink-900;
+}
+
+@utility btn-danger {
+    @apply btn bg-rose-600 text-white shadow-xs hover:bg-rose-700 active:bg-rose-800;
+}
+
+@utility btn-danger-soft {
+    @apply btn border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100;
+}
+
+@utility btn-sm {
+    @apply gap-1.5 rounded-md px-2.5 py-1.5 text-xs;
+}
+
+@utility btn-lg {
+    @apply rounded-xl px-6 py-3 text-base;
+}
+
+/* Square icon-only button. */
+@utility btn-icon {
+    @apply inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg
+           text-ink-500 transition duration-150 hover:bg-ink-100 hover:text-ink-900;
+}
+
+@utility btn-icon-danger {
+    @apply btn-icon text-rose-500 hover:bg-rose-50 hover:text-rose-700;
+}
+
+/* ---- Form controls ---- */
+
+@utility label {
+    @apply block text-sm font-medium text-ink-700;
+}
+
+@utility hint {
+    @apply mt-1.5 text-xs text-ink-500;
+}
+
+@utility error-text {
+    @apply mt-1.5 flex items-start gap-1.5 text-xs font-medium text-rose-600;
+}
+
+@utility field {
+    @apply w-full rounded-lg border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-800
+           shadow-xs transition placeholder:text-ink-400
+           focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none
+           disabled:cursor-not-allowed disabled:bg-ink-50;
+}
+
+@utility field-error {
+    @apply border-rose-400 focus:border-rose-500 focus:ring-rose-500/20;
+}
+
+/* File inputs need a restyled native button, so they get their own utility
+   rather than the plain `.field` treatment. */
+@utility file-input {
+    @apply w-full cursor-pointer rounded-lg border border-ink-200 bg-white px-3 py-2.5 text-sm
+           text-ink-600 shadow-xs transition
+           file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-brand-50
+           file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700
+           hover:border-brand-300 hover:file:bg-brand-100
+           focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none;
+}
+
+/* ---- Badges / pills ---- */
+
+@utility badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold;
+}
+
+@utility badge-neutral {
+    @apply badge bg-ink-100 text-ink-700;
+}
+
+@utility badge-brand {
+    @apply badge bg-brand-50 text-brand-700;
+}
+
+@utility badge-success {
+    @apply badge bg-emerald-50 text-emerald-700;
+}
+
+@utility badge-warning {
+    @apply badge bg-amber-50 text-amber-800;
+}
+
+@utility badge-danger {
+    @apply badge bg-rose-50 text-rose-700;
+}
+
+@utility badge-info {
+    @apply badge bg-sky-50 text-sky-700;
+}
+
+@utility badge-purple {
+    @apply badge bg-purple-50 text-purple-700;
+}
+
+/* ---- Navigation ---- */
+
+@utility nav-link {
+    @apply relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold
+           text-ink-600 transition duration-150 hover:bg-ink-100 hover:text-ink-900;
+}
+
+@utility nav-link-active {
+    @apply bg-brand-50 text-brand-700 hover:bg-brand-100 hover:text-brand-800;
+}
+
+/* ---- Tabs ---- */
+
+@utility tab {
+    @apply relative flex items-center gap-2 whitespace-nowrap border-b-2 border-transparent
+           px-4 py-3 text-sm font-semibold text-ink-500 transition
+           hover:border-ink-300 hover:text-ink-800;
+}
+
+@utility tab-active {
+    @apply border-brand-600 text-brand-700;
+}
+
+/* ---- Language switcher ---- */
+
+/* The trigger. Mirrors `btn-icon` so it sits beside the theme toggle, but
+   carries a trailing label that names the *other* languages — that is the
+   affordance users actually look for. */
+@utility lang-trigger {
+    @apply inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border
+           border-transparent px-2 text-ink-500 transition duration-150
+           hover:border-ink-200 hover:bg-ink-100 hover:text-ink-900;
+}
+
+/* Active state is driven from markup (`aria-expanded`), not a hover, so it
+   survives the pointer leaving the button while the panel is open. */
+@utility lang-trigger-open {
+    @apply border-ink-200 bg-ink-100 text-ink-900;
+}
+
+@utility lang-code {
+    @apply text-xs font-bold tracking-wide;
+}
+
+/* Dropdown panel, positioned by the parent `.relative` wrapper.
+
+   Deliberately does NOT include `hidden`: visibility is driven purely by the
+   `hidden` utility that the toggle script adds and removes, so baking
+   `display: none` in here would keep the panel closed forever. */
+@utility lang-panel {
+    @apply absolute right-0 top-full z-50 w-40 pt-2;
+}
+
+@utility lang-option {
+    @apply flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium
+           text-ink-700 transition hover:bg-ink-100 hover:text-ink-900;
+}
+
+/* The row for the language currently in use: it stays visible but inert, which
+   is friendlier than hiding it and shifting the list under the cursor. */
+@utility lang-option-active {
+    @apply cursor-default bg-brand-50 text-brand-700 hover:bg-brand-50 hover:text-brand-700;
+}
+
+@utility lang-check {
+    @apply ml-auto text-brand-600;
+}
+
+/* Inline variant used inside the mobile drawer, where a dropdown would be one
+   tap too many. */
+@utility lang-segmented {
+    @apply flex items-center gap-1 rounded-lg bg-ink-100 p-1;
+}
+
+@utility lang-segment {
+    @apply inline-flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md px-3 py-1.5
+           text-xs font-bold text-ink-500 transition hover:text-ink-800;
+}
+
+@utility lang-segment-active {
+    @apply bg-white text-brand-700 shadow-xs;
+}
+
+/* ---- Typography ---- */
+
+@utility section-title {
+    @apply flex items-center gap-2 text-sm font-bold tracking-wide text-ink-900;
+}
+
+@utility page-title {
+    @apply text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl;
+}
+
+@utility muted {
+    @apply text-sm text-ink-500;
+}
+
+@utility stat-value {
+    @apply text-3xl font-bold tracking-tight text-ink-900;
+}
+
+@utility definition-list {
+    @apply divide-y divide-ink-100;
+}
+
+/* ---- Skeleton loading ---- */
+
+@utility skeleton {
+    @apply rounded-md bg-ink-100;
+    background-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgb(255 255 255 / 0.65) 50%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+}
+
+/* ---- Accessibility helpers ---- */
+
+@utility skip-link {
+    @apply absolute left-4 top-4 z-50 -translate-y-24 rounded-lg bg-brand-700 px-4 py-2
+           text-sm font-semibold text-white shadow-lg transition focus:translate-y-0;
+}
+
+/* Entrance animation. */
+@utility animate-in {
+    animation: var(--animate-fade-in-up);
+}
+
+@utility print-hidden {
+    @media print {
+        display: none !important;
+    }
+}
+
+@utility print-only {
+    @media screen {
+        display: none !important;
+    }
+    @media print {
+        display: revert !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. Dark-mode counterparts
+   Declared with @custom-variant dark above, so `.dark .foo` works.
+   -------------------------------------------------------------------------- */
+@layer utilities {
+    .dark .card {
+        @apply border-ink-800 bg-ink-900;
+    }
+
+    .dark .card-hover:hover {
+        @apply border-brand-800;
+    }
+
+    .dark .btn-primary {
+        @apply bg-brand-500 hover:bg-brand-400 hover:text-brand-950;
+    }
+
+    .dark .btn-secondary {
+        @apply border-ink-700 bg-ink-800 text-ink-200 hover:bg-ink-700;
+    }
+
+    .dark .btn-ghost {
+        @apply text-ink-300 hover:bg-ink-800 hover:text-white;
+    }
+
+    .dark .btn-danger-soft {
+        @apply border-rose-900/60 bg-rose-950/40 text-rose-300 hover:bg-rose-950/70;
+    }
+
+    .dark .btn-icon {
+        @apply text-ink-400 hover:bg-ink-800 hover:text-white;
+    }
+
+    .dark .btn-icon-danger {
+        @apply text-rose-400 hover:bg-rose-950/50 hover:text-rose-300;
+    }
+
+    .dark .label {
+        @apply text-ink-300;
+    }
+
+    .dark .hint,
+    .dark .muted {
+        @apply text-ink-400;
+    }
+
+    .dark .error-text {
+        @apply text-rose-400;
+    }
+
+    .dark .field {
+        @apply border-ink-700 bg-ink-800 text-ink-100 placeholder:text-ink-500;
+    }
+
+    .dark .field:focus {
+        @apply border-brand-400 ring-brand-500/20;
+    }
+
+    .dark .field-error {
+        @apply border-rose-500/60 focus:border-rose-400;
+    }
+
+    .dark .file-input {
+        @apply border-ink-700 bg-ink-800 text-ink-300;
+    }
+
+    .dark .badge-neutral {
+        @apply bg-ink-800 text-ink-300;
+    }
+
+    .dark .badge-brand {
+        @apply bg-brand-950/60 text-brand-300;
+    }
+
+    .dark .badge-success {
+        @apply bg-emerald-950/60 text-emerald-300;
+    }
+
+    .dark .badge-warning {
+        @apply bg-amber-950/60 text-amber-300;
+    }
+
+    .dark .badge-danger {
+        @apply bg-rose-950/60 text-rose-300;
+    }
+
+    .dark .badge-info {
+        @apply bg-sky-950/60 text-sky-300;
+    }
+
+    .dark .badge-purple {
+        @apply bg-purple-950/60 text-purple-300;
+    }
+
+    .dark .nav-link {
+        @apply text-ink-400 hover:bg-ink-800 hover:text-white;
+    }
+
+    .dark .nav-link-active {
+        @apply bg-brand-950/70 text-brand-300 hover:bg-brand-950 hover:text-brand-200;
+    }
+
+    .dark .tab {
+        @apply text-ink-400 hover:border-ink-600 hover:text-ink-100;
+    }
+
+    .dark .tab-active {
+        @apply border-brand-400 text-brand-300;
+    }
+
+    .dark .lang-trigger {
+        @apply text-ink-400 hover:border-ink-700 hover:bg-ink-800 hover:text-white;
+    }
+
+    .dark .lang-trigger-open {
+        @apply border-ink-700 bg-ink-800 text-white;
+    }
+
+    .dark .lang-option {
+        @apply text-ink-200 hover:bg-ink-800 hover:text-white;
+    }
+
+    .dark .lang-option-active {
+        @apply bg-brand-950/70 text-brand-300 hover:bg-brand-950/70 hover:text-brand-300;
+    }
+
+    .dark .lang-check {
+        @apply text-brand-400;
+    }
+
+    .dark .lang-segmented {
+        @apply bg-ink-800;
+    }
+
+    .dark .lang-segment {
+        @apply text-ink-400 hover:text-ink-100;
+    }
+
+    .dark .lang-segment-active {
+        @apply bg-ink-950 text-brand-300;
+    }
+
+    .dark .section-title,
+    .dark .page-title,
+    .dark .stat-value {
+        @apply text-white;
+    }
+
+    .dark .definition-list {
+        @apply divide-ink-800;
+    }
+
+    .dark .skeleton {
+        @apply bg-ink-800;
+        background-image: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgb(255 255 255 / 0.05) 50%,
+            transparent 100%
+        );
+    }
+
+    /* Subtle grid / dot textures. */
+    .bg-grid {
+        background-image:
+            linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+        background-size: 44px 44px;
+    }
+
+    .bg-dot {
+        background-image: radial-gradient(rgb(15 23 42 / 0.07) 1px, transparent 1px);
+        background-size: 22px 22px;
+    }
+
+    .dark .bg-dot {
+        background-image: radial-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    }
+
+    /* Clamp long free-text notes without breaking layout. */
+    .line-clamp-2-fixed {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Respect users who ask for less motion. */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+/* --------------------------------------------------------------------------
+   5. Print — the vet passport must stay clean on paper
+   -------------------------------------------------------------------------- */
+@media print {
+    body {
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 11pt;
+    }
+
+    .print-sheet {
+        box-shadow: none !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+    }
+
+    a[href]::after {
+        content: "";
+    }
+
+    .page-break {
+        break-before: page;
+    }
+}

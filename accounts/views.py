@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.cache import cache
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 from django.conf import settings
 from django.views.decorators.http import require_POST
 
@@ -95,6 +97,9 @@ def register_view(request):
             user.save()
 
             # UserProfile is created by the post_save signal in accounts.models
+            # `role` is deliberately not taken from the form: only an admin may
+            # grant it, so a new account always lands on the model default
+            # (Стопанин) and has to be promoted in the admin panel.
             profile = UserProfile.objects.get_or_create(user=user)[0]
             profile.phone = form.cleaned_data.get('phone', '')
             profile.city = form.cleaned_data.get('city', '')
@@ -103,12 +108,12 @@ def register_view(request):
             login(request, user)
             messages.success(
                 request,
-                f"Добре дошли в PetCare, {user.first_name or user.username}! "
-                "Вашият профил бе създаден успешно."
+                _("Добре дошли в VetLink, %(name)s! Вашият профил бе създаден успешно.")
+                % {"name": user.first_name or user.username},
             )
             return redirect('pets:dashboard')
         else:
-            messages.error(request, "Моля, проверете въведените данни в полетата по-долу.")
+            messages.error(request, _("Моля, проверете въведените данни в полетата по-долу."))
     else:
         form = UserRegistrationForm()
 
@@ -128,8 +133,8 @@ def login_view(request):
         seconds = remaining % 60
         messages.error(
             request,
-            f"Твърде много неуспешни опити за вход. "
-            f"Моля, изчакайте {minutes}м {seconds}с и опитайте отново."
+            _("Твърде много неуспешни опити за вход. Моля, изчакайте %(minutes)dм %(seconds)dс и опитайте отново.")
+            % {"minutes": minutes, "seconds": seconds},
         )
         return render(request, 'accounts/login.html', {
             'form': UserLoginForm(request, data=request.POST or None),
@@ -143,7 +148,10 @@ def login_view(request):
             user = form.get_user()
             _clear_login_attempts(request, username)
             login(request, user)
-            messages.success(request, f"Здравейте отново, {user.first_name or user.username}!")
+            messages.success(
+                request,
+                _("Здравейте отново, %(name)s!") % {"name": user.first_name or user.username},
+            )
 
             # Safe redirect — prevent open redirect attacks
             next_url = request.POST.get('next') or request.GET.get('next', '')
@@ -160,17 +168,22 @@ def login_view(request):
             if still_locked:
                 messages.error(
                     request,
-                    f"Профилът е временно заключен за {_LOCKOUT_SECONDS // 60} минути "
-                    "поради твърде много неуспешни опити."
+                    _("Профилът е временно заключен за %(minutes)d минути поради твърде много неуспешни опити.")
+                    % {"minutes": _LOCKOUT_SECONDS // 60},
                 )
             else:
                 remaining_attempts = max(0, _MAX_ATTEMPTS - cache.get(
                     f"{_ATTEMPTS_PREFIX}{_client_ip(request)}", 0
                 ))
+                # A real plural: Bulgarian and English disagree on the singular
+                # form, so the two shapes must be separate catalogue entries.
                 messages.error(
                     request,
-                    f"Грешно потребителско име или парола. "
-                    f"Остават ви {remaining_attempts} опит(а)."
+                    ngettext(
+                        "Грешно потребителско име или парола. Остава ви %(count)d опит.",
+                        "Грешно потребителско име или парола. Остават ви %(count)d опита.",
+                        remaining_attempts,
+                    ) % {"count": remaining_attempts},
                 )
     else:
         form = UserLoginForm(request)
@@ -182,13 +195,15 @@ def login_view(request):
 def logout_view(request):
     """Logout MUST be POST to prevent CSRF-based logout attacks."""
     logout(request)
-    messages.info(request, "Успешно излязохте от профила си. Очакваме ви отново!")
+    messages.info(request, _("Успешно излязохте от профила си. Очакваме ви отново!"))
     return redirect('pets:home')
 
 
 @login_required
 def profile_view(request):
-    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    # Named, not `_`: binding the `get_or_create` flag to `_` would shadow the
+    # gettext `_` imported above and crash the success message below.
+    profile, _profile_created = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
         form = UserProfileUpdateForm(request.POST, instance=request.user)
@@ -197,7 +212,7 @@ def profile_view(request):
             profile.phone = form.cleaned_data.get('phone', '')
             profile.city = form.cleaned_data.get('city', '')
             profile.save()
-            messages.success(request, "Данните на вашия профил бяха обновени успешно!")
+            messages.success(request, _("Данните на вашия профил бяха обновени успешно!"))
             return redirect('accounts:profile')
     else:
         form = UserProfileUpdateForm(instance=request.user, initial={

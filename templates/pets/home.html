@@ -1,141 +1,109 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}PetCare - Уеб приложение за грижа за домашни любимци{% endblock %}
+{% block title %}{% translate "VetLink — Грижа и здраве за вашия домашен любимец" %}{% endblock %}
+
+{% block meta_description %}{% translate "VetLink е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния." %}{% endblock %}
 
 {% block content %}
-<div class="py-6 sm:py-12 space-y-16">
+<div class="space-y-16 py-4 sm:py-8">
 
-    <!-- Hero Section -->
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-900 via-brand-800 to-emerald-950 text-white p-8 sm:p-14 shadow-2xl">
-        <div class="absolute -right-10 -bottom-10 opacity-10 text-[260px] pointer-events-none select-none">
+    <!-- ================= HERO ================= -->
+    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 via-brand-800 to-brand-950 text-white shadow-lg">
+        <div class="absolute inset-0 bg-grid opacity-70" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -bottom-16 -right-10 select-none text-[280px] leading-none text-white/5"
+             aria-hidden="true">
             <i class="fa-solid fa-paw"></i>
         </div>
 
-        <div class="relative z-10 max-w-3xl space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-emerald-200 text-xs font-semibold uppercase tracking-wider">
-                <i class="fa-solid fa-shield-cat"></i> Уеб платформа за собственици на любимци
-            </div>
+        <div class="relative z-10 max-w-3xl space-y-6 p-8 sm:p-12 lg:p-16">
+            <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand-100 backdrop-blur">
+                <i class="fa-solid fa-shield-cat" aria-hidden="true"></i>
+                {% translate "Платформа за собственици на любимци" %}
+            </span>
 
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                Всичко за твоя домашен любимец на <span class="text-emerald-300">едно сигурно място</span>.
+            <h1 class="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+                {% translate "Всичко за вашия любимец" %}
+                <span class="text-brand-300">{% translate "на едно сигурно място." %}</span>
             </h1>
 
-            <p class="text-lg sm:text-xl text-emerald-100/90 font-normal leading-relaxed">
-                Съхранявайте и управлявайте лесно важна информация за всеки ваш любимец — порода, възраст, снимки, ваксинации, медицинска история, диетичен режим и ветеринарни визити. Без риск от пропуснати ваксини или прегледи.
+            <p class="text-lg leading-relaxed text-brand-100/85">
+                {% translate "Профили, ваксинации, медицинска история, хранителен режим и ветеринарни визити — организирани така, че нищо важно да не се изгуби. Без риск от пропуснати ваксини или прегледи." %}
             </p>
 
-            <div class="flex flex-wrap items-center gap-4 pt-4">
-                <a href="{% url 'accounts:register' %}" class="px-6 py-3.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-900 font-bold text-base shadow-lg hover:shadow-emerald-500/30 transition transform hover:-translate-y-0.5 inline-flex items-center gap-2">
-                    <i class="fa-solid fa-user-plus"></i> Започнете безплатно
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+                <a href="{% url 'accounts:register' %}" class="btn-lg inline-flex items-center gap-2 rounded-xl bg-white font-bold text-brand-900 shadow-md transition hover:-translate-y-0.5 hover:bg-brand-50">
+                    <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                    {% translate "Започнете безплатно" %}
                 </a>
-                <a href="{% url 'accounts:login' %}" class="px-6 py-3.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-base backdrop-blur-md transition inline-flex items-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> Вход в профила
+                <a href="{% url 'accounts:login' %}" class="btn-lg inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 font-semibold text-white backdrop-blur transition hover:bg-white/20">
+                    <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+                    {% translate "Вход в профила" %}
                 </a>
             </div>
 
-            <!-- Quick Demo Credential Note -->
-            <div class="pt-4 border-t border-white/10 flex flex-wrap items-center gap-3 text-xs text-emerald-200">
-                <span class="font-bold text-white uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded">Демо профил:</span>
-                <span>Потребител: <code class="bg-black/30 px-1.5 py-0.5 rounded text-emerald-300 font-mono">demo_owner</code></span>
-                <span>Парола: <code class="bg-black/30 px-1.5 py-0.5 rounded text-emerald-300 font-mono">demo12345</code></span>
+            <!-- Demo credentials -->
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-5 text-xs text-brand-100/80">
+                <span class="rounded bg-white/15 px-2 py-0.5 font-bold uppercase tracking-wide text-white">{% translate "Демо профил" %}</span>
+                <span class="inline-flex items-center gap-1.5">
+                    <span class="text-brand-200/80">{% translate "Потребител:" %}</span>
+                    <code class="rounded bg-black/25 px-1.5 py-0.5 font-mono text-brand-200">demo_owner</code>
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                    <span class="text-brand-200/80">{% translate "Парола:" %}</span>
+                    <code class="rounded bg-black/25 px-1.5 py-0.5 font-mono text-brand-200">demo12345</code>
+                </span>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Feature Highlights -->
-    <div class="space-y-8">
-        <div class="text-center max-w-2xl mx-auto space-y-2">
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Създадено с любов и внимание към любимците</h2>
-            <p class="text-slate-600 text-sm sm:text-base">Всички необходими инструменти за организиране на здравето и ежедневието на кучета, котки, птици и други животни.</p>
+    <!-- ================= FEATURES ================= -->
+    <section class="space-y-8">
+        <div class="mx-auto max-w-2xl space-y-3 text-center">
+            <h2 class="text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl dark:text-white">
+                {% translate "Създадено с внимание към любимците" %}
+            </h2>
+            <p class="muted">
+                {% translate "Всички необходими инструменти за организиране на здравето и ежедневието на кучета, котки, птици и други животни." %}
+            </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Card 1 -->
-            <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-id-card"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800">Пълен профил на любимеца</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Съхранявайте данни за порода, рождена дата, снимка, тегло, номер на микрочип, европейски паспорт, режим на хранене и алергии.
-                </p>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-syringe"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800">Ваксинационен календар</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Записвайте поставените ваксини и крайните срокове за следващите дози. Автоматични сигнали за наближаващи и просрочени ваксинации.
-                </p>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-bell"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800">Интелигентни напомняния</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Напомняния за ветеринарни прегледи, вътрешно/външно обезпаразитяване, прием на предписани медикаменти и поръчка на храна.
-                </p>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-file-medical"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800">Медицинска история и процедури</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Хронология на прегледи, диагнози, манипулации, посетени клиники и разходи. Прикачвайте резултати от изследвания.
-                </p>
-            </div>
-
-            <!-- Card 5 -->
-            <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-pills"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800">Прием на лекарства</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Следете текущите терапии: дозировка, честота, начална и крайна дата, специфични указания за прием с храна или на гладно.
-                </p>
-            </div>
-
-            <!-- Card 6 -->
-            <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-print"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800">Електронен здравен паспорт</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Генерирайте удобен за разпечатване и PDF файл здравен картон с един клик преди посещение при ветеринарния лекар.
-                </p>
-            </div>
+        {% comment %} Feature copy is built in the view so the list stays in one place; the
+           strings there are translated at render time. {% endcomment %}
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {% for icon, tone, title, body in features %}
+            <article class="card card-hover p-6">
+                <span class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-xl
+                             {% if tone == 'emerald' %}bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-300
+                             {% elif tone == 'blue' %}bg-sky-50 text-sky-600 dark:bg-sky-950/50 dark:text-sky-300
+                             {% elif tone == 'purple' %}bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-300
+                             {% elif tone == 'amber' %}bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300
+                             {% elif tone == 'rose' %}bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-300
+                             {% else %}bg-brand-50 text-brand-600 dark:bg-brand-950/50 dark:text-brand-300{% endif %}">
+                    <i class="{{ icon }}" aria-hidden="true"></i>
+                </span>
+                <h3 class="text-base font-bold text-ink-900 dark:text-white">{{ title }}</h3>
+                <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-300">{{ body }}</p>
+            </article>
+            {% endfor %}
         </div>
-    </div>
+    </section>
 
-    <!-- Call to action block -->
-    <div class="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 text-center space-y-6 max-w-4xl mx-auto shadow-xs">
-        <div class="w-16 h-16 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto text-2xl shadow-inner">
-            <i class="fa-solid fa-heart-pulse"></i>
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Готови ли сте да поемете пълен контрол над грижата?</h2>
-        <p class="text-slate-600 max-w-xl mx-auto text-sm sm:text-base">
-            Регистрирайте се за по-малко от минута и добавете първия си любимец днес.
+    <!-- ================= CTA ================= -->
+    <section class="card mx-auto max-w-4xl bg-dot p-8 text-center sm:p-12">
+        <span class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 text-2xl text-white shadow-md">
+            <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>
+        </span>
+        <h2 class="text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl dark:text-white">
+            {% translate "Готови ли сте да поемете пълен контрол над грижата?" %}
+        </h2>
+        <p class="muted mx-auto mt-2 max-w-lg">
+            {% translate "Регистрирайте се за по-малко от минута и добавете първия си любимец днес." %}
         </p>
-        <div class="flex justify-center gap-4">
-            <a href="{% url 'accounts:register' %}" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold transition shadow-sm hover:shadow">
-                Създайте безплатен профил
-            </a>
-            <a href="{% url 'accounts:login' %}" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">
-                Вход с съществуващ акаунт
-            </a>
+        <div class="mt-7 flex flex-wrap justify-center gap-3">
+            <a href="{% url 'accounts:register' %}" class="btn-primary btn-lg">{% translate "Създайте безплатен профил" %}</a>
+            <a href="{% url 'accounts:login' %}" class="btn-secondary btn-lg">{% translate "Вход с съществуващ акаунт" %}</a>
         </div>
-    </div>
-
+    </section>
 </div>
 {% endblock %}

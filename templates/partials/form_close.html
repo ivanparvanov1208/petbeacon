@@ -1,0 +1,23 @@
+{% load i18n %}
+{% comment %}
+Closes the form opened by form_open.html and renders the action bar.
+
+Context:
+    submit_label  Button text (falls back to a translated "Запази")
+    cancel_url    Where the Cancel button goes
+{% endcomment %}
+{% comment %} The default has to be resolved with translate before `default` can use it —
+   a filter argument is a plain literal and is never translated. {% endcomment %}
+{% translate "Запази" as default_submit_label %}
+    </div>
+
+    <div class="flex flex-col-reverse gap-3 border-t border-ink-200 bg-ink-50/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-end print-hidden">
+        {% if cancel_url %}
+            <a href="{{ cancel_url }}" class="btn-secondary">{% translate "Отказ" %}</a>
+        {% endif %}
+        <button type="submit" class="btn-primary">
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            <span>{{ submit_label|default:default_submit_label }}</span>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,45 @@
+{% comment %}
+Page header: optional back link, title, optional subtitle, optional actions.
+
+Usage:
+    {% include "partials/page_header.html" with title="Любимци" subtitle="..." %}
+    {% include "partials/page_header.html" with title=... back_url=... icon="fa-paw" %}
+{% endcomment %}
+{% load i18n %}
+{% comment %} Resolve the fallback with translate first — a `default:` filter argument is a
+   plain literal and is never translated. {% endcomment %}
+{% translate "Назад" as default_back_label %}
+<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div class="min-w-0">
+        {% if back_url %}
+            <a href="{{ back_url }}"
+               class="mb-2 inline-flex items-center gap-1.5 text-sm font-medium text-ink-500 transition hover:text-brand-700">
+                <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i> {{ back_label|default:default_back_label }}
+            </a>
+        {% endif %}
+
+        <div class="flex items-center gap-3">
+            {% if icon %}
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-lg text-brand-600">
+                    <i class="{{ icon }}" aria-hidden="true"></i>
+                </span>
+            {% endif %}
+            <h1 class="page-title truncate">{{ title }}</h1>
+        </div>
+
+        {% if subtitle %}
+            <p class="muted mt-1.5 max-w-2xl">{{ subtitle }}</p>
+        {% endif %}
+    </div>
+
+    {% block page_actions %}
+        {% if action_url %}
+            <div class="flex shrink-0 items-center gap-2">
+                <a href="{{ action_url }}" class="btn-primary">
+                    <i class="{{ action_icon|default:'fa-solid fa-plus' }}" aria-hidden="true"></i>
+                    <span>{{ action_label }}</span>
+                </a>
+            </div>
+        {% endif %}
+    {% endblock %}
+</div>

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/anthropic/claude-sonnet-4.5",
+  "provider": {
+    "openrouter": {
+      "models": {
+        "anthropic/claude-sonnet-4.5": {
+          "options": {
+            "maxTokens": 2048
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 """
-Django settings for PetCare project.
+Django settings for VetLink project.
 """
 
 from pathlib import Path
@@ -47,6 +47,10 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # Must sit after SessionMiddleware (it reads the language chosen by the
+    # `set_language` view) and before CommonMiddleware (so translated URLs
+    # resolve) and any middleware that renders content.
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -64,6 +68,9 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                # Exposes LANGUAGES / LANGUAGE_CODE / LANGUAGE_BIDI to every
+                # template — this is what the header language switcher renders.
+                'django.template.context_processors.i18n',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -164,18 +171,49 @@ LOGIN_LOCKOUT_SECONDS = 300         # 5 minutes
 
 # --------------------------------------------------------------------------
 # Internationalization
+#
+# Bulgarian is the source language: every msgid in locale/*/django.po holds
+# the Bulgarian text, so `msgfmt`-ing nothing still renders Bulgarian.
+# English lives in locale/en/LC_MESSAGES/django.mo.
+#
+# The catalogs are extracted and compiled without GNU gettext (unavailable on
+# Windows) via the bundled helper:
+#   python manage.py i18n_extract && python manage.py i18n_compile
 # --------------------------------------------------------------------------
 LANGUAGE_CODE = 'bg'
 TIME_ZONE = 'Europe/Sofia'
 USE_I18N = True
 USE_TZ = True
 
+# Order matters: the first entry is what `LANGUAGE_CODE` falls back to and it
+# is the language the header switcher shows as active on a fresh session.
+LANGUAGES = [
+    ('bg', 'Български'),
+    ('en', 'English'),
+]
+
+LOCALE_PATHS = [BASE_DIR / 'locale']
+
 # --------------------------------------------------------------------------
 # Static & Media files
+#
+# The stylesheet is a *compiled* Tailwind bundle (static/css/app.css), built
+# from static/css/input.css with `npm run build`. There is no runtime CDN and
+# no runtime tailwind.config — colours, radii, shadows and component classes
+# are declared once in input.css.
+#
+# Collect the compiled bundle for production with:
+#   npm ci && npm run build && python manage.py collectstatic
 # --------------------------------------------------------------------------
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Raise during deployment rather than silently shipping a missing stylesheet.
+if not DEBUG and not (BASE_DIR / 'static' / 'css' / 'app.css').exists():
+    raise ImproperlyConfigured(
+        "static/css/app.css is missing. Build it first: `npm ci && npm run build`."
+    )
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

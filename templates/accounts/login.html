@@ -1,58 +1,87 @@
 {% extends 'base.html' %}
+{% load petcare_tags i18n %}
 
-{% block title %}Вход в профила | PetCare{% endblock %}
+{% block title %}{% translate "Вход в профила | VetLink" %}{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto py-8 space-y-6">
+<div class="mx-auto max-w-md space-y-6 py-6">
 
-    <div class="text-center space-y-2">
-        <div class="w-14 h-14 rounded-2xl bg-brand-600 text-white flex items-center justify-center text-2xl mx-auto shadow-md">
-            <i class="fa-solid fa-lock"></i>
+    <div class="space-y-3 text-center">
+        <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-2xl text-white shadow-md">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+        </span>
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-ink-900 dark:text-white">{% translate "Вход в VetLink" %}</h1>
+            <p class="muted mt-1">{% translate "Въведете данните си за достъп до профила." %}</p>
         </div>
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Вход в PetCare</h1>
-        <p class="text-sm text-slate-500">Въведете вашите данни за достъп до профила.</p>
     </div>
 
-    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
-        <form method="POST" class="space-y-4">
+    <div class="card p-6 sm:p-7 print-sheet">
+
+        {% if locked_out %}
+            <div class="mb-5 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200"
+                 role="alert">
+                <i class="fa-solid fa-lock mt-0.5 shrink-0" aria-hidden="true"></i>
+                <div>
+                    <p class="font-semibold">{% translate "Профилът е временно заключен" %}</p>
+                    <p class="text-xs opacity-90">
+                        {% blocktranslate with seconds=remaining_seconds|floatformat:"d" %}Опитайте отново след {{ seconds }} сек.{% endblocktranslate %}
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+
+        <form method="POST" class="space-y-4" novalidate>
             {% csrf_token %}
 
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.username.label }}</label>
-                {{ form.username }}
-            </div>
-
-            <div>
-                <div class="flex items-center justify-between mb-1.5">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">{{ form.password.label }}</label>
+            {% if form.non_field_errors %}
+                <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-200"
+                     role="alert">
+                    {% for error in form.non_field_errors %}
+                        <p class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-exclamation mt-0.5 shrink-0" aria-hidden="true"></i>
+                            {{ error }}
+                        </p>
+                    {% endfor %}
                 </div>
-                {{ form.password }}
-            </div>
+            {% endif %}
 
-            <button type="submit" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs hover:shadow transition transform hover:-translate-y-0.5">
-                Влез в профила
+            {% include "partials/field.html" with field=form.username %}
+            {% include "partials/field.html" with field=form.password %}
+
+            <button type="submit" class="btn-primary w-full py-3" {% if locked_out %}disabled{% endif %}>
+                <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+                {% translate "Влез в профила" %}
             </button>
         </form>
 
-        <!-- Quick Demo Login Button -->
-        <div class="pt-4 border-t border-slate-100 space-y-2">
-            <p class="text-xs text-slate-400 text-center font-medium">Искате ли да тествате веднага?</p>
-            <button type="button" onclick="fillDemoCredentials()" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-wand-magic-sparkles text-brand-600"></i> Попълни данни за демо профил
+        <div class="mt-6 border-t border-ink-100 pt-5 dark:border-ink-800">
+            <p class="mb-2 text-center text-xs font-medium text-ink-400">{% translate "Искате ли да тествате веднага?" %}</p>
+            <button type="button" data-demo-fill class="btn-secondary w-full"
+                    data-username="demo_owner" data-password="demo12345">
+                <i class="fa-solid fa-wand-magic-sparkles text-brand-600" aria-hidden="true"></i>
+                {% translate "Попълни данни за демо профил" %}
             </button>
         </div>
 
-        <div class="pt-2 text-center text-xs text-slate-500">
-            Нямате профил? <a href="{% url 'accounts:register' %}" class="font-bold text-brand-600 hover:underline">Регистрирайте се безплатно</a>
-        </div>
+        <p class="mt-5 text-center text-xs text-ink-500">
+            {% translate "Нямате профил?" %}
+            <a href="{% url 'accounts:register' %}" class="font-semibold text-brand-700 hover:underline dark:text-brand-300">
+                {% translate "Регистрирайте се безплатно" %}
+            </a>
+        </p>
     </div>
-
 </div>
+{% endblock %}
 
+{% block extra_scripts %}
 <script>
-    function fillDemoCredentials() {
-        document.getElementById('id_username').value = 'demo_owner';
-        document.getElementById('id_password').value = 'demo12345';
-    }
+    document.querySelectorAll('[data-demo-fill]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            document.getElementById('id_username').value = button.dataset.username;
+            document.getElementById('id_password').value = button.dataset.password;
+            document.getElementById('id_password').focus();
+        });
+    });
 </script>
 {% endblock %}

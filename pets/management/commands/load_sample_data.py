@@ -6,10 +6,10 @@ from datetime import date, timedelta
 
 
 class Command(BaseCommand):
-    help = "Loads sample demo data for PetCare application"
+    help = "Loads sample demo data for VetLink application"
 
     def handle(self, *args, **options):
-        self.stdout.write("[PetCare] Creating / updating demo user...")
+        self.stdout.write("[VetLink] Creating / updating demo user...")
         demo_user, created = User.objects.get_or_create(
             username="demo_owner",
             defaults={
@@ -28,18 +28,19 @@ class Command(BaseCommand):
         demo_user.save()
 
         profile, _ = UserProfile.objects.get_or_create(user=demo_user)
+        profile.role = UserProfile.ROLE_OWNER
         profile.phone = "+359 88 765 4321"
         profile.city = "София"
         profile.save()
 
         today = date.today()
 
-        self.stdout.write("[PetCare] Clearing previous pets and reminders for demo user...")
+        self.stdout.write("[VetLink] Clearing previous pets and reminders for demo user...")
         Pet.objects.filter(owner=demo_user).delete()
         Reminder.objects.filter(owner=demo_user).delete()
 
         # 1. Куче Рекс
-        self.stdout.write("[PetCare] Creating Pet 1: Rex...")
+        self.stdout.write("[VetLink] Creating Pet 1: Rex...")
         rex = Pet.objects.create(
             owner=demo_user,
             name="Рекс",
@@ -157,7 +158,7 @@ class Command(BaseCommand):
         )
 
         # 2. Котка Мая
-        self.stdout.write("[PetCare] Creating Pet 2: Maya...")
+        self.stdout.write("[VetLink] Creating Pet 2: Maya...")
         maya = Pet.objects.create(
             owner=demo_user,
             name="Мая",
@@ -227,7 +228,7 @@ class Command(BaseCommand):
         )
 
         # 3. Папагал Чарли
-        self.stdout.write("[PetCare] Creating Pet 3: Charlie...")
+        self.stdout.write("[VetLink] Creating Pet 3: Charlie...")
         charlie = Pet.objects.create(
             owner=demo_user,
             name="Чарли",
@@ -274,5 +275,5 @@ class Command(BaseCommand):
             notes="Прегледът мина супер, всичко е наред."
         )
 
-        self.stdout.write(self.style.SUCCESS("[PetCare] Sample data created successfully!"))
-        self.stdout.write(self.style.SUCCESS("[PetCare] Demo Username: demo_owner | Password: demo12345"))
+        self.stdout.write(self.style.SUCCESS("[VetLink] Sample data created successfully!"))
+        self.stdout.write(self.style.SUCCESS("[VetLink] Demo Username: demo_owner | Password: demo12345"))

@@ -45,6 +45,11 @@ backups/
 # Back it up explicitly outside the repo, e.g.:
 #   python manage.py dumpdata > ../petcare_backup.json
 
+# Translation catalogues are the exception to the "compiled artefacts are not
+# tracked" rule used for static/css/app.css: locale/*/LC_MESSAGES/django.mo is
+# committed so the app runs without GNU gettext on a fresh clone. Do NOT ignore
+# *.mo. Regenerate it with `python manage.py i18n_compile`.
+
 # --- Environment / secrets ---
 .env
 .env.*
@@ -96,3 +101,6 @@ dmypy.json
 
 # --- Documentation builds ---
 docs/_build/
+
+# --- Packages ---
+node_modules/

@@ -26,7 +26,7 @@ def make_png_bytes():
     return buffer.getvalue()
 
 
-class PetCareTestMixin:
+class VetLinkTestMixin:
     def setUp(self):
         cache.clear()
         self.client = Client()
@@ -56,7 +56,7 @@ class PetCareTestMixin:
         self.assertTrue(self.client.login(username=username, password=password))
 
 
-class PetModelTests(PetCareTestMixin, TestCase):
+class PetModelTests(VetLinkTestMixin, TestCase):
     def test_str_and_icon(self):
         self.assertEqual(str(self.pet), "Шаро (Куче)")
         self.assertIn("fa-dog", self.pet.species_icon)
@@ -103,7 +103,7 @@ class PetModelTests(PetCareTestMixin, TestCase):
                 self.pet.save()
 
 
-class ReminderModelTests(PetCareTestMixin, TestCase):
+class ReminderModelTests(VetLinkTestMixin, TestCase):
     def make_reminder(self, **kwargs):
         defaults = {
             'owner': self.user,
@@ -147,7 +147,7 @@ class ReminderModelTests(PetCareTestMixin, TestCase):
         self.assertFalse(reminder.is_today)
 
 
-class BadgeContextProcessorTests(PetCareTestMixin, TestCase):
+class BadgeContextProcessorTests(VetLinkTestMixin, TestCase):
     def setUp(self):
         super().setUp()
         self.factory_request = type('Req', (), {})()
@@ -199,7 +199,7 @@ class BadgeContextProcessorTests(PetCareTestMixin, TestCase):
         self.assertEqual(window_end, real_date(2024, 2, 1))
 
 
-class PetFormValidationTests(PetCareTestMixin, TestCase):
+class PetFormValidationTests(VetLinkTestMixin, TestCase):
     def base_payload(self, **overrides):
         payload = {
             'name': 'Бела',
@@ -266,7 +266,7 @@ class PetFormValidationTests(PetCareTestMixin, TestCase):
         self.assertTrue(form.is_valid(), form.errors)
 
 
-class VaccinationFormValidationTests(PetCareTestMixin, TestCase):
+class VaccinationFormValidationTests(VetLinkTestMixin, TestCase):
     def test_next_due_before_administered_is_rejected(self):
         form = VaccinationForm(data={
             'name': 'Бяс',
@@ -309,7 +309,7 @@ class VaccinationFormValidationTests(PetCareTestMixin, TestCase):
                 )
 
 
-class MedicationFormValidationTests(PetCareTestMixin, TestCase):
+class MedicationFormValidationTests(VetLinkTestMixin, TestCase):
     def test_end_before_start_is_rejected(self):
         form = MedicationForm(data={
             'name': 'Синулокс',
@@ -338,7 +338,7 @@ class MedicationFormValidationTests(PetCareTestMixin, TestCase):
                 )
 
 
-class AuthorizationTests(PetCareTestMixin, TestCase):
+class AuthorizationTests(VetLinkTestMixin, TestCase):
     def test_anonymous_redirect(self):
         response = self.client.get(reverse('pets:dashboard'))
         self.assertEqual(response.status_code, 302)
@@ -377,7 +377,7 @@ class AuthorizationTests(PetCareTestMixin, TestCase):
         self.assertFalse(reminder.is_completed)
 
 
-class StateChangeRequiresPostTests(PetCareTestMixin, TestCase):
+class StateChangeRequiresPostTests(VetLinkTestMixin, TestCase):
     """GET must never mutate state — CSRF tokens do not protect GET requests."""
 
     def setUp(self):
@@ -474,7 +474,7 @@ class StateChangeRequiresPostTests(PetCareTestMixin, TestCase):
         self.assertFalse(Vaccination.objects.filter(pk=vaccination.pk).exists())
 
 
-class ReminderNextUrlTests(PetCareTestMixin, TestCase):
+class ReminderNextUrlTests(VetLinkTestMixin, TestCase):
     def setUp(self):
         super().setUp()
         self.login()
@@ -500,7 +500,7 @@ class ReminderNextUrlTests(PetCareTestMixin, TestCase):
         self.assertRedirects(response, reverse('pets:reminder_list'))
 
 
-class ViewAndListTests(PetCareTestMixin, TestCase):
+class ViewAndListTests(VetLinkTestMixin, TestCase):
     def setUp(self):
         super().setUp()
         self.login()
@@ -633,7 +633,7 @@ class ViewAndListTests(PetCareTestMixin, TestCase):
         self.assertContains(response, "123456789012345")
 
 
-class ListQueryCountTests(PetCareTestMixin, TestCase):
+class ListQueryCountTests(VetLinkTestMixin, TestCase):
     """Guard against N+1 regressions in the list views.
 
     Asserts the query count is independent of the number of rows rather than

@@ -1,0 +1,31 @@
+{% comment %}
+Empty-state block.
+
+Usage:
+    {% include "partials/empty_state.html" with icon="fa-bell-slash" title="..." body="..." %}
+    {% include "partials/empty_state.html" ... action_url="..." action_label="..." %}
+{% endcomment %}
+<div class="card flex flex-col items-center px-6 py-16 text-center">
+    <span class="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-100 text-2xl text-ink-400">
+        <i class="{{ icon|default:'fa-regular fa-folder-open' }}" aria-hidden="true"></i>
+    </span>
+
+    <h3 class="text-lg font-bold text-ink-900">{{ title }}</h3>
+
+    {% if body %}
+        <p class="muted mt-1.5 max-w-md">{{ body }}</p>
+    {% endif %}
+
+    {% if action_url %}
+        <div class="mt-6">
+            <a href="{{ action_url }}" class="btn-primary">
+                <i class="{{ action_icon|default:'fa-solid fa-plus' }}" aria-hidden="true"></i>
+                <span>{{ action_label }}</span>
+            </a>
+        </div>
+    {% elif action_label %}
+        <div class="mt-6">
+            <span class="btn-secondary cursor-default opacity-70">{{ action_label }}</span>
+        </div>
+    {% endif %}
+</div>

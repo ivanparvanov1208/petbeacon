@@ -1,231 +1,224 @@
 {% extends 'base.html' %}
+{% load petcare_tags i18n %}
 
-{% block title %}Напомняния и задачи | PetCare{% endblock %}
+{% block title %}{% translate "Напомняния и задачи | VetLink" %}{% endblock %}
 
 {% block content %}
+{% url 'pets:reminder_create' as new_reminder_url %}
+
+{% translate "Напомняния и задачи" as page_title %}
+{% translate "Следете ваксинации, прегледи, прием на лекарства и обезпаразитяване." as page_subtitle %}
+{% translate "Ново напомняне" as new_label %}
+{% translate "Статус" as status_heading %}
+{% translate "Всички" as all_label %}
+{% translate "Днес" as today_label %}
+{% translate "Предстоящи" as upcoming_label %}
+{% translate "Просрочени" as overdue_label %}
+{% translate "Изпълнени" as completed_label %}
+{% translate "Търсене" as search_label %}
+{% translate "Търсене по напомняне или любимец…" as search_placeholder %}
+{% translate "Всички любимци" as all_pets %}
+{% translate "Всички категории" as all_types %}
+{% translate "Няма намерени напомняния" as empty_title %}
+
 <div class="space-y-6">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
-                <i class="fa-solid fa-bell text-brand-600"></i> Напомняния и задачи
-            </h1>
-            <p class="text-sm text-slate-500 mt-1">
-                Следете ваксинации, прегледи, прием на лекарства и обезпаразитяване.
-            </p>
-        </div>
-        <a href="{% url 'pets:reminder_create' %}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-xs hover:shadow transition self-start sm:self-auto">
-            <i class="fa-solid fa-plus"></i> Ново напомняне
-        </a>
-    </div>
+    {% include "partials/page_header.html" with
+        title=page_title
+        subtitle=page_subtitle
+        icon="fa-solid fa-bell"
+        action_url=new_reminder_url
+        action_label=new_label
+    %}
 
-    <!-- Filters & Search Bar -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
-        
-        <!-- Status Tabs -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-            <span class="text-slate-400 font-semibold uppercase tracking-wider shrink-0 mr-1">Статус:</span>
-            <a href="?status=all{% if pet_filter %}&pet={{ pet_filter }}{% endif %}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if query %}&q={{ query }}{% endif %}" class="px-3.5 py-1.5 rounded-xl font-bold transition whitespace-nowrap {% if status_filter == 'all' %}bg-brand-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
-                Всички
+    <!-- Filters -->
+    <div class="card p-4 print-sheet">
+        <!-- Status chips -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1">
+            <span class="shrink-0 text-xs font-semibold uppercase tracking-wide text-ink-400">{{ status_heading }}</span>
+
+            <a href="?{% query_transform status='all' %}"
+               class="btn-sm whitespace-nowrap rounded-full border transition
+                      {% if status_filter == 'all' %}border-brand-600 bg-brand-600 font-semibold text-white
+                      {% else %}border-ink-200 text-ink-600 hover:border-ink-300 hover:bg-ink-50{% endif %}">
+                {{ all_label }}
             </a>
-            <a href="?status=today{% if pet_filter %}&pet={{ pet_filter }}{% endif %}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if query %}&q={{ query }}{% endif %}" class="px-3.5 py-1.5 rounded-xl font-bold transition whitespace-nowrap {% if status_filter == 'today' %}bg-blue-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
-                <i class="fa-solid fa-calendar-day mr-1"></i> Днес
+            <a href="?{% query_transform status='today' %}"
+               class="btn-sm whitespace-nowrap rounded-full border transition
+                      {% if status_filter == 'today' %}border-sky-600 bg-sky-600 font-semibold text-white
+                      {% else %}border-ink-200 text-ink-600 hover:border-ink-300 hover:bg-ink-50{% endif %}">
+                <i class="fa-solid fa-calendar-day" aria-hidden="true"></i> {{ today_label }}
             </a>
-            <a href="?status=upcoming{% if pet_filter %}&pet={{ pet_filter }}{% endif %}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if query %}&q={{ query }}{% endif %}" class="px-3.5 py-1.5 rounded-xl font-bold transition whitespace-nowrap {% if status_filter == 'upcoming' %}bg-emerald-600 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
-                <i class="fa-solid fa-clock mr-1"></i> Предстоящи
+            <a href="?{% query_transform status='upcoming' %}"
+               class="btn-sm whitespace-nowrap rounded-full border transition
+                      {% if status_filter == 'upcoming' %}border-emerald-600 bg-emerald-600 font-semibold text-white
+                      {% else %}border-ink-200 text-ink-600 hover:border-ink-300 hover:bg-ink-50{% endif %}">
+                <i class="fa-solid fa-clock" aria-hidden="true"></i> {{ upcoming_label }}
             </a>
-            <a href="?status=overdue{% if pet_filter %}&pet={{ pet_filter }}{% endif %}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if query %}&q={{ query }}{% endif %}" class="px-3.5 py-1.5 rounded-xl font-bold transition whitespace-nowrap {% if status_filter == 'overdue' %}bg-rose-600 text-white{% else %}bg-rose-50 text-rose-700 hover:bg-rose-100{% endif %}">
-                <i class="fa-solid fa-triangle-exclamation mr-1"></i> Просрочени
+            <a href="?{% query_transform status='overdue' %}"
+               class="btn-sm whitespace-nowrap rounded-full border transition
+                      {% if status_filter == 'overdue' %}border-rose-600 bg-rose-600 font-semibold text-white
+                      {% else %}border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100{% endif %}">
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{ overdue_label }}
             </a>
-            <a href="?status=completed{% if pet_filter %}&pet={{ pet_filter }}{% endif %}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if query %}&q={{ query }}{% endif %}" class="px-3.5 py-1.5 rounded-xl font-bold transition whitespace-nowrap {% if status_filter == 'completed' %}bg-slate-700 text-white{% else %}bg-slate-100 text-slate-600 hover:bg-slate-200{% endif %}">
-                <i class="fa-solid fa-check mr-1"></i> Изпълнени
+            <a href="?{% query_transform status='completed' %}"
+               class="btn-sm whitespace-nowrap rounded-full border transition
+                      {% if status_filter == 'completed' %}border-ink-700 bg-ink-700 font-semibold text-white
+                      {% else %}border-ink-200 text-ink-600 hover:border-ink-300 hover:bg-ink-50{% endif %}">
+                <i class="fa-solid fa-check" aria-hidden="true"></i> {{ completed_label }}
             </a>
         </div>
 
-        <!-- Filter dropdowns & search form -->
-        <form method="GET" class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2 border-t border-slate-100">
+        <!-- Search & selects -->
+        <form method="GET" action="{% url 'pets:reminder_list' %}"
+              class="mt-4 grid grid-cols-1 gap-2 border-t border-ink-100 pt-4 sm:grid-cols-12 dark:border-ink-800">
             <input type="hidden" name="status" value="{{ status_filter }}">
 
-            <div class="sm:col-span-5 relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+            <div class="relative sm:col-span-5">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-ink-400">
+                    <i class="fa-solid fa-magnifying-glass text-sm" aria-hidden="true"></i>
                 </span>
-                <input type="text" name="q" value="{{ query }}" placeholder="Търси напомняне или любимец..." 
-                    class="w-full pl-10 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                <input type="search" name="q" value="{{ query }}" aria-label="{{ search_label }}"
+                       placeholder="{{ search_placeholder }}" class="field pl-10">
             </div>
 
             <div class="sm:col-span-3">
-                <select name="pet" class="w-full py-2 px-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
-                    <option value="">Всички любимци</option>
+                <label for="filter-pet" class="sr-only">{% translate "Филтър по любимец" %}</label>
+                <select name="pet" id="filter-pet" class="field">
+                    <option value="">{{ all_pets }}</option>
                     {% for p in pets %}
-                    <option value="{{ p.pk }}" {% if pet_filter == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.name }} ({{ p.get_species_display }})</option>
+                        <option value="{{ p.pk }}" {% if pet_filter == p.pk|stringformat:"s" %}selected{% endif %}>
+                            {{ p.name }} ({{ p.get_species_display }})
+                        </option>
                     {% endfor %}
                 </select>
             </div>
 
             <div class="sm:col-span-3">
-                <select name="type" class="w-full py-2 px-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none bg-white">
-                    <option value="">Всички категории</option>
+                <label for="filter-type" class="sr-only">{% translate "Филтър по категория" %}</label>
+                <select name="type" id="filter-type" class="field">
+                    <option value="">{{ all_types }}</option>
                     {% for code, label in type_choices %}
-                    <option value="{{ code }}" {% if type_filter == code %}selected{% endif %}>{{ label }}</option>
+                        <option value="{{ code }}" {% if type_filter == code %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
 
-            <div class="sm:col-span-1 flex items-center gap-1">
-                <button type="submit" class="w-full py-2 px-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold transition" title="Приложи филтъра">
-                    OK
+            <div class="flex items-center gap-2 sm:col-span-1">
+                <button type="submit" class="btn-primary w-full" title="{% translate 'Приложи филтъра' %}">
+                    <i class="fa-solid fa-filter" aria-hidden="true"></i>
+                    <span class="sr-only">{% translate "Приложи" %}</span>
                 </button>
             </div>
         </form>
     </div>
 
-    <!-- Reminders List -->
+    <!-- List -->
     {% if reminders %}
-    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs divide-y divide-slate-100 overflow-hidden">
-        {% for reminder in reminders %}
-        <div class="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition {% if reminder.is_completed %}bg-slate-50/60 opacity-60{% elif reminder.is_overdue %}bg-rose-50/20{% endif %} hover:bg-slate-50">
-            
-            <div class="flex items-start gap-4">
-                <!-- Toggle complete (POST + CSRF: state must never change on GET) -->
-                <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5 shrink-0">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                    <button type="submit"
-                       title="{% if reminder.is_completed %}Върни като активно{% else %}Отбележи като изпълнено{% endif %}"
-                       class="w-7 h-7 rounded-xl border-2 flex items-center justify-center transition-all
-                       {% if reminder.is_completed %}bg-emerald-500 border-emerald-500 text-white shadow-xs
-                       {% elif reminder.is_overdue %}border-rose-400 hover:bg-emerald-50 hover:border-emerald-500 text-transparent hover:text-emerald-600
-                       {% else %}border-slate-300 hover:bg-emerald-50 hover:border-emerald-500 text-transparent hover:text-emerald-600{% endif %}">
-                        <i class="fa-solid fa-check text-xs"></i>
-                    </button>
-                </form>
+        <ul class="card divide-y divide-ink-100 overflow-hidden print-sheet dark:divide-ink-800">
+            {% for reminder in reminders %}
+            <li class="flex flex-col gap-3 p-4 transition hover:bg-ink-50/70 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-ink-800/40
+                       {% if reminder.is_completed %}opacity-60{% elif reminder.is_overdue %}bg-rose-50/50 dark:bg-rose-950/20{% endif %}">
 
-                <div class="space-y-1">
-                    <div class="flex flex-wrap items-center gap-2">
-                        <span class="text-sm font-bold {% if reminder.is_completed %}line-through text-slate-500{% else %}text-slate-900{% endif %}">
-                            {{ reminder.title }}
-                        </span>
-                        
-                        <!-- Type Icon & Badge -->
-                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700">
-                            <i class="{{ reminder.type_icon }} text-xs"></i>
-                            {{ reminder.get_reminder_type_display }}
-                        </span>
+                <div class="flex min-w-0 items-start gap-3.5">
+                    <!-- Toggle complete (POST + CSRF: state must never change on GET) -->
+                    <form method="POST" action="{% url 'pets:reminder_toggle_complete' reminder.pk %}" class="mt-0.5 shrink-0">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit"
+                                title="{% if reminder.is_completed %}{% translate "Върни като активно" %}{% else %}{% translate "Отбележи като изпълнено" %}{% endif %}"
+                                aria-label="{% if reminder.is_completed %}{% blocktranslate with title=reminder.title %}Върни „{{ title }}“ като активно{% endblocktranslate %}{% else %}{% blocktranslate with title=reminder.title %}Отбележи „{{ title }}“ като изпълнено{% endblocktranslate %}{% endif %}"
+                                class="flex h-7 w-7 items-center justify-center rounded-lg border-2 transition
+                                       {% if reminder.is_completed %}border-emerald-500 bg-emerald-500 text-white
+                                       {% elif reminder.is_overdue %}border-rose-400 text-transparent hover:bg-emerald-50 hover:border-emerald-500 hover:text-emerald-600
+                                       {% else %}border-ink-300 text-transparent hover:bg-emerald-50 hover:border-emerald-500 hover:text-emerald-600{% endif %}">
+                            <i class="fa-solid fa-check text-[11px]" aria-hidden="true"></i>
+                        </button>
+                    </form>
 
-                        <!-- Priority Badge -->
-                        <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold 
-                            {% if reminder.priority == 'high' %}bg-rose-100 text-rose-700
-                            {% elif reminder.priority == 'normal' %}bg-blue-100 text-blue-700
-                            {% else %}bg-slate-100 text-slate-600{% endif %}">
-                            {{ reminder.get_priority_display }}
-                        </span>
-                    </div>
+                    <div class="min-w-0 space-y-1.5">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-sm font-bold {% if reminder.is_completed %}text-ink-500 line-through{% else %}text-ink-900 dark:text-white{% endif %}">
+                                {{ reminder.title }}
+                            </span>
+                            <span class="badge-neutral">
+                                <i class="{{ reminder.type_icon }}" aria-hidden="true"></i>
+                                {{ reminder.get_reminder_type_display }}
+                            </span>
+                            <span class="{% if reminder.priority == 'high' %}badge-danger{% elif reminder.priority == 'low' %}badge-neutral{% else %}badge-info{% endif %}">
+                                {{ reminder.get_priority_display }}
+                            </span>
+                        </div>
 
-                    <!-- Meta information -->
-                    <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                        {% if reminder.pet %}
-                        <a href="{% url 'pets:pet_detail' reminder.pet.pk %}" class="inline-flex items-center gap-1 font-bold text-brand-700 hover:underline">
-                            <i class="{{ reminder.pet.species_icon }}"></i> {{ reminder.pet.name }}
-                        </a>
-                        <span>•</span>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-500">
+                            {% if reminder.pet %}
+                                <a href="{% url 'pets:pet_detail' reminder.pet.pk %}"
+                                   class="inline-flex items-center gap-1 font-semibold text-brand-700 hover:underline dark:text-brand-300">
+                                    <i class="{{ reminder.pet.species_icon }}" aria-hidden="true"></i>
+                                    {{ reminder.pet.name }}
+                                </a>
+                                <span class="text-ink-300" aria-hidden="true">&bull;</span>
+                            {% endif %}
+
+                            <span class="inline-flex items-center gap-1 {% if reminder.is_overdue %}font-semibold text-rose-600{% elif reminder.is_today %}font-semibold text-sky-600{% endif %}">
+                                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                                {{ reminder.due_date|date:"SHORT_DATE_FORMAT" }}
+                                {% if reminder.due_time %}{% blocktranslate with time=reminder.due_time|time:"H:i" %}в {{ time }}{% endblocktranslate %}{% endif %}
+                                {% if reminder.is_overdue %}<span class="badge-danger">{% translate "Просрочено" %}</span>
+                                {% elif reminder.is_today %}<span class="badge-info">{% translate "Днес" %}</span>{% endif %}
+                            </span>
+
+                            {% if reminder.is_completed and reminder.completed_at %}
+                                <span class="text-ink-300" aria-hidden="true">&bull;</span>
+                                <span class="text-emerald-600 dark:text-emerald-400">
+                                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                                    {% blocktranslate with moment=reminder.completed_at|date:"SHORT_DATETIME_FORMAT" %}Изпълнено на {{ moment }}{% endblocktranslate %}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        {% if reminder.notes %}
+                            <p class="line-clamp-2-fixed rounded-lg border border-ink-100 bg-white/70 px-2.5 py-1.5 text-xs italic text-ink-600 dark:border-ink-800 dark:bg-ink-800/40 dark:text-ink-300">
+                                {{ reminder.notes }}
+                            </p>
                         {% endif %}
-
-                        <span class="inline-flex items-center gap-1 {% if reminder.is_overdue %}text-rose-600 font-bold{% elif reminder.is_today %}text-blue-600 font-bold{% endif %}">
-                            <i class="fa-regular fa-calendar"></i>
-                            {{ reminder.due_date|date:"d.m.Y" }}
-                            {% if reminder.due_time %}в {{ reminder.due_time|time:"H:i" }}{% endif %}
-                            {% if reminder.is_overdue %}(Просрочено!){% elif reminder.is_today %}(Днес!){% endif %}
-                        </span>
-
-                        {% if reminder.is_completed and reminder.completed_at %}
-                        <span>•</span>
-                        <span class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Изпълнено на {{ reminder.completed_at|date:"d.m.Y H:i" }}</span>
-                        {% endif %}
                     </div>
-
-                    {% if reminder.notes %}
-                    <p class="text-xs text-slate-600 bg-white/70 p-2 rounded-lg border border-slate-100 mt-1">
-                        {{ reminder.notes }}
-                    </p>
-                    {% endif %}
                 </div>
-            </div>
 
-            <!-- Actions -->
-            <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
-                <a href="{% url 'pets:reminder_update' reminder.pk %}" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs transition" title="Редактирай">
-                    <i class="fa-solid fa-pen"></i>
-                </a>
-                <form method="POST" action="{% url 'pets:reminder_delete' reminder.pk %}" onsubmit="return confirm('Сигурни ли сте, че искате да изтриете напомнянето?')">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                    <button type="submit" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs transition" title="Изтрий">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </form>
-            </div>
+                <!-- Actions -->
+                <div class="flex shrink-0 items-center gap-1.5 self-end sm:self-center">
+                    <a href="{% url 'pets:reminder_update' reminder.pk %}" class="btn-icon"
+                       title="{% translate 'Редактирай' %}"
+                       aria-label="{% blocktranslate with title=reminder.title %}Редактирай „{{ title }}“{% endblocktranslate %}">
+                        <i class="fa-solid fa-pen text-xs" aria-hidden="true"></i>
+                    </a>
 
-        </div>
-        {% endfor %}
-    </div>
+                    {% comment %} The confirm copy is rendered into a data attribute so it can be
+                       translated, and read back by the inline handler below. {% endcomment %}
+                    <form method="POST" action="{% url 'pets:reminder_delete' reminder.pk %}"
+                          data-confirm="{% translate 'Сигурни ли сте, че искате да изтриете напомнянето?' %}"
+                          onsubmit="return !this.dataset.confirm || confirm(this.dataset.confirm)">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" class="btn-icon-danger" title="{% translate 'Изтрий' %}"
+                                aria-label="{% blocktranslate with title=reminder.title %}Изтрий „{{ title }}“{% endblocktranslate %}">
+                            <i class="fa-solid fa-trash text-xs" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
     {% else %}
-    <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-4">
-        <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-2xl">
-            <i class="fa-solid fa-bell-slash"></i>
-        </div>
-        <h3 class="text-lg font-bold text-slate-800">Няма намерени напомняния</h3>
-        <p class="text-sm text-slate-500 max-w-md mx-auto">
-            {% if query or pet_filter or type_filter or status_filter != 'all' %}
-            Няма напомняния, отговарящи на избраните филтри.
-            {% else %}
-            Все още нямате планирани напомняния. Добавете напомняне за ваксина, лекарство или преглед!
-            {% endif %}
-        </p>
-        <div>
-            <a href="{% url 'pets:reminder_create' %}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs transition">
-                <i class="fa-solid fa-plus"></i> Ново напомняне
-            </a>
-        </div>
-    </div>
+        {% include "partials/empty_state.html" with
+            icon="fa-solid fa-bell-slash"
+            title=empty_title
+            body=empty_body
+            action_url=new_reminder_url
+            action_label=new_label
+        %}
     {% endif %}
 
-    <!-- Pagination -->
-    {% if page_obj and page_obj.paginator.num_pages > 1 %}
-    <nav class="flex items-center justify-between gap-4 pt-2" aria-label="Навигация по страници">
-        <p class="text-xs text-slate-500">
-            Показани {{ page_obj.start_index }}–{{ page_obj.end_index }} от {{ page_obj.paginator.count }}
-        </p>
-        <div class="flex items-center gap-1.5">
-            {% if page_obj.has_previous %}
-                <a href="?{% for k, v in filter_qs.items %}{% if k != 'page' %}{{ k }}={{ v|urlencode }}&amp;{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}"
-                   class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
-                    <i class="fa-solid fa-chevron-left text-[10px]"></i> Предишна
-                </a>
-            {% else %}
-                <span class="px-3 py-1.5 rounded-lg border border-slate-100 text-xs font-semibold text-slate-300 cursor-not-allowed">
-                    <i class="fa-solid fa-chevron-left text-[10px]"></i> Предишна
-                </span>
-            {% endif %}
-
-            <span class="px-3 py-1.5 text-xs font-bold text-slate-600">
-                {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
-            </span>
-
-            {% if page_obj.has_next %}
-                <a href="?{% for k, v in filter_qs.items %}{% if k != 'page' %}{{ k }}={{ v|urlencode }}&amp;{% endif %}{% endfor %}page={{ page_obj.next_page_number }}"
-                   class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
-                    Следваща <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </a>
-            {% else %}
-                <span class="px-3 py-1.5 rounded-lg border border-slate-100 text-xs font-semibold text-slate-300 cursor-not-allowed">
-                    Следваща <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </span>
-            {% endif %}
-        </div>
-    </nav>
-    {% endif %}
-
+    {% include "partials/pagination.html" %}
 </div>
 {% endblock %}

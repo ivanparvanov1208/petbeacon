@@ -1,87 +1,65 @@
 {% extends 'base.html' %}
+{% load petcare_tags i18n %}
 
-{% block title %}Регистрация на нов профил | PetCare{% endblock %}
+{% block title %}{% translate "Регистрация на нов профил | VetLink" %}{% endblock %}
 
 {% block content %}
-<div class="max-w-lg mx-auto py-8 space-y-6">
+<div class="mx-auto max-w-lg space-y-6 py-6">
 
-    <div class="text-center space-y-2">
-        <div class="w-14 h-14 rounded-2xl bg-brand-600 text-white flex items-center justify-center text-2xl mx-auto shadow-md">
-            <i class="fa-solid fa-user-plus"></i>
+    <div class="space-y-3 text-center">
+        <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-2xl text-white shadow-md">
+            <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+        </span>
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-ink-900 dark:text-white">{% translate "Регистрация в VetLink" %}</h1>
+            <p class="muted mt-1">{% translate "Създайте профил и организирайте грижата за любимците си." %}</p>
         </div>
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Регистрация в PetCare</h1>
-        <p class="text-sm text-slate-500">Създайте профил и организирайте грижата за любимците си.</p>
     </div>
 
-    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
-        <form method="POST" class="space-y-4">
+    <div class="card p-6 sm:p-7 print-sheet">
+        <form method="POST" class="space-y-5" novalidate>
             {% csrf_token %}
 
             {% if form.errors %}
-            <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-1">
-                <p class="font-bold">Моля, проверете следните полета:</p>
-                <ul class="list-disc list-inside">
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
-            </div>
+                {% include "partials/error_summary.html" with form=form %}
             {% endif %}
 
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.username.label }} *</label>
-                {{ form.username }}
+            {% include "partials/field.html" with field=form.username %}
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {% include "partials/field.html" with field=form.first_name %}
+                {% include "partials/field.html" with field=form.last_name %}
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.first_name.label }}</label>
-                    {{ form.first_name }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.last_name.label }}</label>
-                    {{ form.last_name }}
-                </div>
+            {% include "partials/field.html" with field=form.email %}
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {% include "partials/field.html" with field=form.phone %}
+                {% include "partials/field.html" with field=form.city %}
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.email.label }}</label>
-                {{ form.email }}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {% include "partials/field.html" with field=form.password %}
+                {% include "partials/field.html" with field=form.password_confirm %}
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.phone.label }}</label>
-                    {{ form.phone }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.city.label }}</label>
-                    {{ form.city }}
-                </div>
-            </div>
+            <p class="hint flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-info mt-0.5 shrink-0 text-ink-400" aria-hidden="true"></i>
+                {% translate "Паролата трябва да е поне 8 символа и да не е твърде честа или подобна на потребителското ви име." %}
+            </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.password.label }} *</label>
-                    {{ form.password }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.password_confirm.label }} *</label>
-                    {{ form.password_confirm }}
-                </div>
-            </div>
-
-            <button type="submit" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs hover:shadow transition transform hover:-translate-y-0.5 mt-2">
-                Създай профил
+            <button type="submit" class="btn-primary w-full py-3">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                {% translate "Създай профил" %}
             </button>
         </form>
 
-        <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
-            Вече имате профил? <a href="{% url 'accounts:login' %}" class="font-bold text-brand-600 hover:underline">Влезте оттук</a>
-        </div>
+        <p class="mt-5 border-t border-ink-100 pt-5 text-center text-xs text-ink-500 dark:border-ink-800">
+            {% translate "Вече имате профил?" %}
+            <a href="{% url 'accounts:login' %}" class="font-semibold text-brand-700 hover:underline dark:text-brand-300">
+                {% translate "Влезте оттук" %}
+            </a>
+        </p>
     </div>
-
 </div>
 {% endblock %}

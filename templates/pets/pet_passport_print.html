@@ -1,209 +1,242 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Здравен паспорт - {{ pet.name }} | PetCare{% endblock %}
+{% block title %}{% blocktranslate with name=pet.name %}Здравен паспорт — {{ name }} | VetLink{% endblocktranslate %}{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6">
+{% translate "Принтирай / Запази като PDF" as print_label %}
+{% translate "Смесена" as mixed_breed %}
+{% translate "Няма въведен" as not_provided %}
+{% translate "кг" as unit_kg %}
+{% translate "Да" as yes %}
+{% translate "Не" as no %}
+{% translate "Няма установени алергии." as no_allergies %}
+{% translate "Стандартен режим на хранене." as standard_diet %}
+{% translate "Активно" as active %}
+{% translate "Приключило" as finished %}
+{% translate "Диагноза" as diagnosis %}
+{% translate "Лечение" as treatment %}
+<div class="mx-auto max-w-4xl space-y-6">
 
-    <!-- Top Action Bar (hidden on print) -->
-    <div class="no-print flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
-        <a href="{% url 'pets:pet_detail' pet.pk %}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-slate-900">
-            <i class="fa-solid fa-arrow-left"></i> Назад към профила на {{ pet.name }}
+    <!-- ================= TOOLBAR (screen only) ================= -->
+    <div class="card flex flex-col gap-3 p-4 print-hidden sm:flex-row sm:items-center sm:justify-between">
+        <a href="{% url 'pets:pet_detail' pet.pk %}"
+           class="inline-flex items-center gap-2 text-sm font-medium text-ink-500 transition hover:text-brand-700">
+            <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+            {% blocktranslate with name=pet.name %}Назад към профила на {{ name }}{% endblocktranslate %}
         </a>
-        <div class="flex items-center gap-3">
-            <button onclick="window.print()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs transition">
-                <i class="fa-solid fa-print"></i> Принтирай / Запази като PDF
-            </button>
-        </div>
+        <button type="button" onclick="window.print()" class="btn-primary">
+            <i class="fa-solid fa-print" aria-hidden="true"></i>
+            {{ print_label }}
+        </button>
     </div>
 
-    <!-- Printable Passport Document -->
-    <div class="bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-sm space-y-8 passport-card">
+    <p class="muted print-hidden">
+        {% translate "Този документ е предназначен за носене при ветеринарен лекар. Използвайте „Принтирай“ и изберете „Запази като PDF“, за да го споделите електронно." %}
+    </p>
 
-        <!-- Passport Header -->
-        <div class="border-b-2 border-slate-900 pb-6 flex items-start justify-between gap-6">
-            <div class="space-y-1">
-                <div class="flex items-center gap-2 text-brand-700 font-extrabold text-xs uppercase tracking-widest">
-                    <i class="fa-solid fa-paw"></i> PetCare Ветеринарна документация
-                </div>
-                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">ЗДРАВЕН ПАСПОРТ И МЕДИЦИНСКО КАРТОНЧЕ</h1>
-                <p class="text-xs text-slate-500">Генерирано на {{ today|date:"d.m.Y" }} г. за нуждите на ветеринарни прегледи и манипулации</p>
-            </div>
-            <div class="w-16 h-16 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-3xl shrink-0">
-                <i class="fa-solid fa-notes-medical"></i>
-            </div>
-        </div>
+    <!-- ================= THE DOCUMENT ================= -->
+    <article class="card p-8 print-sheet sm:p-12">
 
-        <!-- Section 1: Identification & Owner -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 items-start">
-            <!-- Photo -->
-            <div class="w-full aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
+        <!-- Header -->
+        <header class="flex items-start justify-between gap-6 border-b-2 border-ink-900 pb-6">
+            <div class="space-y-1.5">
+                <p class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-brand-700">
+                    <i class="fa-solid fa-paw" aria-hidden="true"></i>
+                    VetLink &middot; {% translate "Ветеринарна документация" %}
+                </p>
+                <h1 class="text-2xl font-extrabold tracking-tight text-ink-900 sm:text-3xl">
+                    {% translate "ЗДРАВЕН ПАСПОРТ И МЕДИЦИНСКО КАРТОНЧЕ" %}
+                </h1>
+                <p class="text-xs text-ink-500">
+                    {% blocktranslate with day=today|date:"SHORT_DATE_FORMAT" %}Генерирано на {{ day }} г. за нуждите на ветеринарни прегледи и манипулации{% endblocktranslate %}
+                </p>
+            </div>
+            <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-ink-900 text-2xl text-white print:bg-transparent print:text-ink-900">
+                <i class="fa-solid fa-notes-medical" aria-hidden="true"></i>
+            </span>
+        </header>
+
+        <!-- Identity -->
+        <section class="grid grid-cols-1 gap-6 pt-6 sm:grid-cols-3">
+            <div class="aspect-square overflow-hidden rounded-xl border border-ink-200 bg-ink-100">
                 {% if pet.photo %}
-                    <img src="{{ pet.photo.url }}" alt="{{ pet.name }}" class="w-full h-full object-cover">
+                    <img src="{{ pet.photo.url }}"
+                         alt="{% blocktranslate with name=pet.name %}Снимка на {{ name }}{% endblocktranslate %}"
+                         class="h-full w-full object-cover">
                 {% else %}
-                    <div class="w-full h-full flex flex-col items-center justify-center text-4xl text-slate-400">
-                        <i class="{{ pet.species_icon }}"></i>
+                    <div class="flex h-full w-full flex-col items-center justify-center text-4xl text-ink-400">
+                        <i class="{{ pet.species_icon }}" aria-hidden="true"></i>
                     </div>
                 {% endif %}
             </div>
 
-            <!-- Pet Basic Info -->
-            <div class="space-y-2 text-sm sm:col-span-2">
-                <h2 class="text-2xl font-black text-slate-900">{{ pet.name }}</h2>
-                <div class="grid grid-cols-2 gap-x-4 gap-y-2 pt-2 border-t border-slate-100">
+            <dl class="space-y-2 text-sm sm:col-span-2">
+                <dd class="text-2xl font-black text-ink-900">{{ pet.name }}</dd>
+
+                <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-ink-100 pt-3">
                     <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Вид:</span>
-                        <span class="font-bold text-slate-800">{{ pet.get_species_display }}</span>
+                        <dt class="block text-xs font-semibold text-ink-400">{% translate "Вид" %}</dt>
+                        <dd class="font-bold text-ink-800">{{ pet.get_species_display }}</dd>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Порода:</span>
-                        <span class="font-bold text-slate-800">{{ pet.breed|default:"Смесена" }}</span>
+                        <dt class="block text-xs font-semibold text-ink-400">{% translate "Порода" %}</dt>
+                        <dd class="font-bold text-ink-800">{{ pet.breed|default:mixed_breed }}</dd>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Пол:</span>
-                        <span class="font-bold text-slate-800">{{ pet.get_gender_display }}</span>
+                        <dt class="block text-xs font-semibold text-ink-400">{% translate "Пол" %}</dt>
+                        <dd class="font-bold text-ink-800">{{ pet.get_gender_display }}</dd>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Кастриран/а:</span>
-                        <span class="font-bold text-slate-800">{% if pet.is_neutered %}Да{% else %}Не{% endif %}</span>
+                        <dt class="block text-xs font-semibold text-ink-400">{% translate "Кастриран/а" %}</dt>
+                        <dd class="font-bold text-ink-800">{% if pet.is_neutered %}{{ yes }}{% else %}{{ no }}{% endif %}</dd>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Дата на раждане / Възраст:</span>
-                        <span class="font-bold text-slate-800">{{ pet.age_display }}</span>
+                        <dt class="block text-xs font-semibold text-ink-400">{% translate "Възраст" %}</dt>
+                        <dd class="font-bold text-ink-800">{{ pet.age_display }}</dd>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Тегло:</span>
-                        <span class="font-bold text-slate-800">{% if pet.weight %}{{ pet.weight }} кг{% else %}—{% endif %}</span>
+                        <dt class="block text-xs font-semibold text-ink-400">{% translate "Тегло" %}</dt>
+                        <dd class="font-bold text-ink-800">{% if pet.weight %}{{ pet.weight }} {{ unit_kg }}{% else %}—{% endif %}</dd>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Микрочип:</span>
-                        <span class="font-mono font-bold text-slate-800">{{ pet.microchip_number|default:"Няма въведен" }}</span>
+                        <dt class="block text-xs font-semibold text-ink-400">{% translate "Микрочип" %}</dt>
+                        <dd class="font-mono font-bold text-ink-800">{{ pet.microchip_number|default:not_provided }}</dd>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400 block font-semibold">Европейски паспорт №:</span>
-                        <span class="font-mono font-bold text-slate-800">{{ pet.passport_number|default:"Няма въведен" }}</span>
+                        <dt class="block text-xs font-semibold text-ink-400">{% translate "Европейски паспорт №" %}</dt>
+                        <dd class="font-mono font-bold text-ink-800">{{ pet.passport_number|default:not_provided }}</dd>
                     </div>
                 </div>
 
-                <!-- Owner contact -->
-                <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-600 bg-slate-50 p-3 rounded-xl">
-                    <span class="font-bold text-slate-800 uppercase tracking-wider block mb-1">Собственик:</span>
-                    <p>{{ pet.owner.get_full_name|default:pet.owner.username }} • Имейл: {{ pet.owner.email|default:"—" }} • Тел: {{ pet.owner.profile.phone|default:"—" }}</p>
+                <div class="mt-4 rounded-xl border border-ink-200 bg-ink-50 p-3 text-xs text-ink-600 print:bg-transparent">
+                    <dt class="mb-1 block font-bold uppercase tracking-wide text-ink-800">{% translate "Собственик" %}</dt>
+                    <dd>
+                        {{ pet.owner.get_full_name|default:pet.owner.username }}
+                        &middot; {% translate "Имейл" %}: {{ pet.owner.email|default:"—" }}
+                        &middot; {% translate "Тел" %}: {{ pet.owner.profile.phone|default:"—" }}
+                    </dd>
                 </div>
-            </div>
-        </div>
+            </dl>
+        </section>
 
-        <!-- Section 2: Important Health & Food Alerts -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/50 space-y-1">
-                <span class="font-bold text-rose-800 uppercase tracking-wider block">
-                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> Алергии и непоносимости:
-                </span>
-                <p class="text-rose-900 font-medium">{{ pet.allergies|default:"Няма установени алергии." }}</p>
+        <!-- Safety alerts -->
+        <section class="grid grid-cols-1 gap-4 pt-6 text-xs sm:grid-cols-2">
+            <div class="space-y-1 rounded-xl border border-rose-200 bg-rose-50/60 p-4 print:bg-transparent">
+                <dt class="block font-bold uppercase tracking-wide text-rose-800">
+                    <i class="fa-solid fa-triangle-exclamation mr-1" aria-hidden="true"></i>
+                    {% translate "Алергии и непоносимости" %}
+                </dt>
+                <dd class="font-medium text-rose-900">{{ pet.allergies|default:no_allergies }}</dd>
             </div>
-            <div class="p-4 rounded-xl border border-orange-200 bg-orange-50/50 space-y-1">
-                <span class="font-bold text-orange-800 uppercase tracking-wider block">
-                    <i class="fa-solid fa-bowl-food mr-1"></i> Диетичен режим и хранене:
-                </span>
-                <p class="text-orange-900 font-medium">{{ pet.food_diet|default:"Стандартен режим на хранене." }}</p>
+            <div class="space-y-1 rounded-xl border border-amber-200 bg-amber-50/60 p-4 print:bg-transparent">
+                <dt class="block font-bold uppercase tracking-wide text-amber-800">
+                    <i class="fa-solid fa-bowl-food mr-1" aria-hidden="true"></i>
+                    {% translate "Диетичен режим и хранене" %}
+                </dt>
+                <dd class="font-medium text-amber-900">{{ pet.food_diet|default:standard_diet }}</dd>
             </div>
-        </div>
+        </section>
 
-        <!-- Section 3: Vaccinations Table -->
-        <div class="space-y-3">
-            <h3 class="text-base font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1">
-                Ваксинационен календар
-            </h3>
+        <!-- Vaccinations -->
+        <section class="pt-6">
+            <h2 class="border-b border-ink-200 pb-1 text-sm font-bold uppercase tracking-wide text-ink-900">
+                {% translate "Ваксинационен календар" %}
+            </h2>
             {% if vaccinations %}
-            <table class="w-full text-left text-xs border border-slate-200">
-                <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-                    <tr>
-                        <th class="p-2.5">Ваксина</th>
-                        <th class="p-2.5">Дата на поставяне</th>
-                        <th class="p-2.5">Следваща доза</th>
-                        <th class="p-2.5">Партида / Сериен №</th>
-                        <th class="p-2.5">Клиника / Лекар</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200">
-                    {% for vac in vaccinations %}
-                    <tr>
-                        <td class="p-2.5 font-bold text-slate-800">{{ vac.name }}</td>
-                        <td class="p-2.5">{{ vac.date_administered|date:"d.m.Y" }}</td>
-                        <td class="p-2.5 font-semibold {% if vac.is_overdue %}text-rose-600 font-bold{% endif %}">{{ vac.next_due_date|date:"d.m.Y"|default:"—" }}</td>
-                        <td class="p-2.5 font-mono text-[11px]">{{ vac.batch_number|default:"—" }}</td>
-                        <td class="p-2.5">{{ vac.clinic_or_vet|default:"—" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="mt-3 w-full border-collapse border border-ink-200 text-left text-xs">
+                    <thead class="border-b border-ink-200 bg-ink-50 font-bold text-ink-700 print:bg-transparent">
+                        <tr>
+                            <th scope="col" class="p-2.5">{% translate "Ваксина" %}</th>
+                            <th scope="col" class="p-2.5">{% translate "Поставена" %}</th>
+                            <th scope="col" class="p-2.5">{% translate "Следваща доза" %}</th>
+                            <th scope="col" class="p-2.5">{% translate "Партиден №" %}</th>
+                            <th scope="col" class="p-2.5">{% translate "Клиника / Лекар" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-ink-100">
+                        {% for vac in vaccinations %}
+                        <tr>
+                            <td class="p-2.5 font-bold text-ink-800">{{ vac.name }}</td>
+                            <td class="p-2.5">{{ vac.date_administered|date:"SHORT_DATE_FORMAT" }}</td>
+                            <td class="p-2.5 font-semibold {% if vac.is_overdue %}text-rose-600{% endif %}">
+                                {{ vac.next_due_date|date:"SHORT_DATE_FORMAT"|default:"—" }}
+                            </td>
+                            <td class="p-2.5 font-mono text-[11px]">{{ vac.batch_number|default:"—" }}</td>
+                            <td class="p-2.5">{{ vac.clinic_or_vet|default:"—" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             {% else %}
-            <p class="text-xs text-slate-400 italic">Няма въведени ваксинации.</p>
+            <p class="pt-3 text-xs italic text-ink-400">{% translate "Няма въведени ваксинации." %}</p>
             {% endif %}
-        </div>
+        </section>
 
-        <!-- Section 4: Active Medications -->
-        <div class="space-y-3">
-            <h3 class="text-base font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1">
-                Текущ прием на лекарства и терапия
-            </h3>
+        <!-- Medications -->
+        <section class="pt-6">
+            <h2 class="border-b border-ink-200 pb-1 text-sm font-bold uppercase tracking-wide text-ink-900">
+                {% translate "Текущ прием на лекарства и терапия" %}
+            </h2>
             {% if medications %}
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="mt-3 grid grid-cols-1 gap-3 text-xs sm:grid-cols-2">
                 {% for med in medications %}
-                <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
-                    <div class="flex justify-between font-bold text-slate-800">
+                <div class="space-y-1 rounded-lg border border-ink-200 bg-ink-50 p-3 print:bg-transparent">
+                    <div class="flex justify-between gap-2 font-bold text-ink-800">
                         <span>{{ med.name }}</span>
-                        <span class="{% if med.is_active %}text-purple-700{% else %}text-slate-400{% endif %}">
-                            {% if med.is_active %}Активно{% else %}Приключило{% endif %}
+                        <span class="{% if med.is_active %}text-purple-700{% else %}text-ink-400{% endif %}">
+                            {% if med.is_active %}{{ active }}{% else %}{{ finished }}{% endif %}
                         </span>
                     </div>
-                    <p class="text-slate-600">Дозировка: {{ med.dosage }} • Честота: {{ med.frequency }}</p>
-                    {% if med.instructions %}<p class="italic text-slate-500">"{{ med.instructions }}"</p>{% endif %}
+                    <p class="text-ink-600">
+                        {% translate "Дозировка" %}: {{ med.dosage }} &middot; {% translate "Честота" %}: {{ med.frequency }}
+                    </p>
+                    {% if med.instructions %}<p class="italic text-ink-500">“{{ med.instructions }}”</p>{% endif %}
                 </div>
                 {% endfor %}
             </div>
             {% else %}
-            <p class="text-xs text-slate-400 italic">Няма регистрирани медикаменти.</p>
+            <p class="pt-3 text-xs italic text-ink-400">{% translate "Няма регистрирани медикаменти." %}</p>
             {% endif %}
-        </div>
+        </section>
 
-        <!-- Section 5: Medical History & Surgeries -->
-        <div class="space-y-3">
-            <h3 class="text-base font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1">
-                Медицинска история и извършени процедури
-            </h3>
+        <!-- Medical history -->
+        <section class="pt-6">
+            <h2 class="border-b border-ink-200 pb-1 text-sm font-bold uppercase tracking-wide text-ink-900">
+                {% translate "Медицинска история и извършени процедури" %}
+            </h2>
             {% if medical_records %}
-            <div class="space-y-2 text-xs">
+            <div class="mt-3 space-y-2 text-xs">
                 {% for rec in medical_records %}
-                <div class="p-3 rounded-lg border border-slate-200 space-y-1">
-                    <div class="flex justify-between font-bold text-slate-800">
+                <div class="space-y-1 rounded-lg border border-ink-200 p-3">
+                    <div class="flex justify-between gap-2 font-bold text-ink-800">
                         <span>{{ rec.title }}</span>
-                        <span class="text-slate-500 font-normal">{{ rec.date|date:"d.m.Y" }} г.</span>
+                        <span class="font-normal text-ink-500">{{ rec.date|date:"SHORT_DATE_FORMAT" }} г.</span>
                     </div>
-                    {% if rec.diagnosis %}<p class="text-slate-600"><strong class="text-slate-700">Диагноза:</strong> {{ rec.diagnosis }}</p>{% endif %}
-                    {% if rec.treatment %}<p class="text-slate-600"><strong class="text-slate-700">Лечение:</strong> {{ rec.treatment }}</p>{% endif %}
-                    <p class="text-slate-400 text-[11px]">{{ rec.veterinarian }} - {{ rec.clinic }}</p>
+                    {% if rec.diagnosis %}<p class="text-ink-600"><strong class="text-ink-700">{{ diagnosis }}:</strong> {{ rec.diagnosis }}</p>{% endif %}
+                    {% if rec.treatment %}<p class="text-ink-600"><strong class="text-ink-700">{{ treatment }}:</strong> {{ rec.treatment }}</p>{% endif %}
+                    <p class="text-[11px] text-ink-400">{{ rec.veterinarian }} &mdash; {{ rec.clinic }}</p>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
-            <p class="text-xs text-slate-400 italic">Няма въведени медицински записи.</p>
+            <p class="pt-3 text-xs italic text-ink-400">{% translate "Няма въведени медицински записи." %}</p>
             {% endif %}
-        </div>
+        </section>
 
-        <!-- Section 6: Vet Signature & Stamp -->
-        <div class="pt-8 border-t-2 border-slate-200 flex justify-between items-end text-xs text-slate-500">
+        <!-- Signature -->
+        <footer class="mt-8 flex flex-col gap-8 border-t-2 border-ink-200 pt-6 text-xs text-ink-500 sm:flex-row sm:items-end sm:justify-between">
             <div>
-                <p>Издаден чрез електронна система PetCare</p>
-                <p>Дата: {{ today|date:"d.m.Y" }} г.</p>
+                <p>{% translate "Издаден чрез електронна система VetLink" %}</p>
+                <p>{% blocktranslate with day=today|date:"SHORT_DATE_FORMAT" %}Дата: {{ day }} г.{% endblocktranslate %}</p>
             </div>
-            <div class="text-right space-y-8">
-                <p class="font-bold text-slate-700">Подпис и печат на ветеринарния лекар:</p>
-                <div class="w-48 border-b border-slate-400 ml-auto"></div>
+            <div class="sm:text-right">
+                <p class="mb-8 font-bold text-ink-700">{% translate "Подпис и печат на ветеринарния лекар:" %}</p>
+                <div class="ml-auto w-48 border-b border-ink-400"></div>
             </div>
-        </div>
-
-    </div>
-
+        </footer>
+    </article>
 </div>
 {% endblock %}

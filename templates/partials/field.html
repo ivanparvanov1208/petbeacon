@@ -1,0 +1,52 @@
+{% comment %}
+Renders a single form field: label, control, inline error and help text.
+
+Usage:
+    {% include "partials/field.html" with field=form.name %}
+    {% include "partials/field.html" with field=form.photo span=True %}
+
+Styling is applied by `petcare_tags.add_class`, not by hard-coded class
+attributes on the widgets in pets/forms.py — that keeps one source of truth in
+static/css/input.css. See also: partials/checkbox.html for booleans.
+
+Context:
+    field  BoundField (required)
+    span   Optional; wraps the control in a 2-column grid cell
+    cols   Optional explicit column classes for the wrapper
+{% endcomment %}
+{% load petcare_tags i18n %}
+
+<div class="{% if span %}sm:col-span-2{% else %}{{ cols|default:'' }}{% endif %}">
+    {% if field.field.widget.input_type != "checkbox" %}
+        <label for="{{ field.id_for_label }}" class="label {% if field.errors %}text-rose-700{% endif %}">
+            {{ field.label }}{% if field.field.required %}
+                <span class="ml-0.5 text-rose-500" aria-hidden="true">*</span>
+                <span class="sr-only">{% translate "(задължително поле)" %}</span>
+            {% endif %}
+        </label>
+    {% endif %}
+
+    {% comment %}File inputs get a restyled native button, not the plain field look.{% endcomment %}
+    {% if field.field.widget.input_type == 'file' %}
+        {% if field.errors %}
+            {% with widget_class="file-input field-error" %}{{ field|add_class:widget_class }}{% endwith %}
+        {% else %}
+            {{ field|add_class:"file-input" }}
+        {% endif %}
+    {% elif field.errors %}
+        {{ field|add_class:"field field-error" }}
+    {% else %}
+        {{ field|add_class:"field" }}
+    {% endif %}
+
+    {% if field.errors %}
+        <p class="error-text" id="{{ field.auto_id }}_error">
+            <i class="fa-solid fa-circle-exclamation mt-px shrink-0" aria-hidden="true"></i>
+            <span>{{ field.errors.0 }}</span>
+        </p>
+    {% endif %}
+
+    {% if field.help_text %}
+        <p class="hint" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>
+    {% endif %}
+</div>

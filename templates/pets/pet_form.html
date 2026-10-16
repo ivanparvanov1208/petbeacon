@@ -1,149 +1,80 @@
 {% extends 'base.html' %}
+{% load petcare_tags i18n %}
 
-{% block title %}{{ title }} | PetCare{% endblock %}
+{% block title %}{{ title }} | VetLink{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto space-y-6">
+{% translate "Назад" as back_label %}
+{% translate "Основна информация" as basics %}
+{% translate "Възраст и физически данни" as age_section %}
+{% translate "Идентификация и снимка" as id_section %}
+{% translate "Хранене, алергии и характер" as care_section %}
+{% translate "Текуща снимка:" as current_photo %}
+{% translate "Преглед" as preview %}
 
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <a href="{% if pet %}{% url 'pets:pet_detail' pet.pk %}{% else %}{% url 'pets:pet_list' %}{% endif %}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition mb-1">
-                <i class="fa-solid fa-arrow-left"></i> Назад
-            </a>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">{{ title }}</h1>
-        </div>
-    </div>
+<div class="mx-auto max-w-3xl space-y-6">
 
-    <!-- Form Card -->
-    <form method="POST" enctype="multipart/form-data" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-8">
-        {% csrf_token %}
+    {% include "partials/page_header.html" with
+        title=title
+        icon="fa-solid fa-paw"
+        back_url=cancel_url
+        back_label=back_label
+    %}
 
-        {% if form.errors %}
-        <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
-            <p class="font-bold">Моля, коригирайте грешките по-долу:</p>
-            <ul class="list-disc list-inside mt-1 text-xs">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
+    {% include "partials/form_open.html" with form=form submit_label=button_text cancel_url=cancel_url %}
 
-        <!-- Section 1: Основни данни -->
-        <div class="space-y-4">
-            <h2 class="text-base font-bold text-slate-900 pb-2 border-b border-slate-100 flex items-center gap-2">
-                <i class="fa-solid fa-paw text-brand-600"></i> 1. Основна информация
-            </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.name.label }} *</label>
-                    {{ form.name }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.species.label }} *</label>
-                    {{ form.species }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.breed.label }}</label>
-                    {{ form.breed }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.gender.label }}</label>
-                    {{ form.gender }}
-                </div>
-                <div class="sm:col-span-2 flex items-center gap-3 pt-1">
-                    {{ form.is_neutered }}
-                    <label for="{{ form.is_neutered.id_for_label }}" class="text-sm font-semibold text-slate-700 cursor-pointer">
-                        {{ form.is_neutered.label }}
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 2: Възраст и тегло -->
-        <div class="space-y-4">
-            <h2 class="text-base font-bold text-slate-900 pb-2 border-b border-slate-100 flex items-center gap-2">
-                <i class="fa-solid fa-calendar-days text-brand-600"></i> 2. Възраст и физически данни
-            </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.birth_date.label }}</label>
-                    {{ form.birth_date }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.approximate_age.label }}</label>
-                    {{ form.approximate_age }}
-                    <span class="text-[11px] text-slate-400 mt-1 block">Ако датата не е точна</span>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.weight.label }}</label>
-                    {{ form.weight }}
-                </div>
-            </div>
-        </div>
-
-        <!-- Section 3: Идентификация и Снимка -->
-        <div class="space-y-4">
-            <h2 class="text-base font-bold text-slate-900 pb-2 border-b border-slate-100 flex items-center gap-2">
-                <i class="fa-solid fa-id-badge text-brand-600"></i> 3. Идентификация и снимка
-            </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.microchip_number.label }}</label>
-                    {{ form.microchip_number }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.passport_number.label }}</label>
-                    {{ form.passport_number }}
-                </div>
+        <!-- 1. Basic details -->
+        <section class="space-y-4">
+            {% include "partials/section_header.html" with title=basics icon="fa-solid fa-id-card" %}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {% include "partials/field.html" with field=form.name %}
+                {% include "partials/field.html" with field=form.species %}
+                {% include "partials/field.html" with field=form.breed %}
+                {% include "partials/field.html" with field=form.gender %}
                 <div class="sm:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.photo.label }}</label>
-                    {{ form.photo }}
+                    {% include "partials/checkbox.html" with field=form.is_neutered %}
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Age and measurements -->
+        <section class="space-y-4">
+            {% include "partials/section_header.html" with title=age_section icon="fa-solid fa-calendar-days" %}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {% include "partials/field.html" with field=form.birth_date %}
+                {% include "partials/field.html" with field=form.approximate_age %}
+                {% include "partials/field.html" with field=form.weight %}
+            </div>
+        </section>
+
+        <!-- 3. Identification and photo -->
+        <section class="space-y-4">
+            {% include "partials/section_header.html" with title=id_section icon="fa-solid fa-fingerprint" %}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {% include "partials/field.html" with field=form.microchip_number %}
+                {% include "partials/field.html" with field=form.passport_number %}
+                <div class="sm:col-span-2">
+                    {% include "partials/field.html" with field=form.photo %}
                     {% if pet and pet.photo %}
-                    <p class="text-xs text-slate-500 mt-1">Текуща снимка: <a href="{{ pet.photo.url }}" target="_blank" class="text-brand-600 hover:underline">Преглед</a></p>
+                        <p class="hint flex items-center gap-1.5">
+                            <i class="fa-solid fa-image text-[10px]" aria-hidden="true"></i>
+                            {{ current_photo }}
+                            <a href="{{ pet.photo.url }}" target="_blank" rel="noopener"
+                               class="font-semibold text-brand-700 hover:underline dark:text-brand-300">{{ preview }}</a>
+                        </p>
                     {% endif %}
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Section 4: Хранене и особености -->
-        <div class="space-y-4">
-            <h2 class="text-base font-bold text-slate-900 pb-2 border-b border-slate-100 flex items-center gap-2">
-                <i class="fa-solid fa-bowl-food text-brand-600"></i> 4. Хранене, алергии и характер
-            </h2>
+        <!-- 4. Feeding, allergies and temperament -->
+        <section class="space-y-4">
+            {% include "partials/section_header.html" with title=care_section icon="fa-solid fa-bowl-food" %}
+            {% include "partials/field.html" with field=form.food_diet %}
+            {% include "partials/field.html" with field=form.allergies %}
+            {% include "partials/field.html" with field=form.special_notes %}
+        </section>
 
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.food_diet.label }}</label>
-                    {{ form.food_diet }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.allergies.label }}</label>
-                    {{ form.allergies }}
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">{{ form.special_notes.label }}</label>
-                    {{ form.special_notes }}
-                </div>
-            </div>
-        </div>
-
-        <!-- Buttons -->
-        <div class="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
-            <a href="{% if pet %}{% url 'pets:pet_detail' pet.pk %}{% else %}{% url 'pets:pet_list' %}{% endif %}" class="px-5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 font-semibold text-sm transition">
-                Отказ
-            </a>
-            <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xs hover:shadow transition">
-                {{ button_text|default:"Запази" }}
-            </button>
-        </div>
-
-    </form>
+    {% include "partials/form_close.html" %}
 </div>
 {% endblock %}

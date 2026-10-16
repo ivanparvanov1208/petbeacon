@@ -1,0 +1,14 @@
+{% comment %}
+Checkbox + label pair, used for boolean model fields.
+
+Usage: {% include "partials/checkbox.html" with field=form.is_neutered %}
+{% endcomment %}
+<div class="flex items-start gap-3 rounded-lg border border-ink-200 bg-ink-50/60 px-3.5 py-3 transition hover:border-ink-300 hover:bg-ink-50">
+    {{ field }}
+    <label for="{{ field.id_for_label }}" class="cursor-pointer text-sm font-medium leading-snug text-ink-700">
+        {{ field.label }}
+        {% if field.errors %}
+            <span class="error-text">{{ field.errors.0 }}</span>
+        {% endif %}
+    </label>
+</div>

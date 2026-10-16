@@ -1,48 +1,71 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
+from django.utils.translation import ngettext
 from datetime import date
 
 
 class Pet(models.Model):
+    # Choice labels are lazy so they resolve per request language. The stored
+    # value is always the code on the left, never the label, so switching
+    # language never touches existing rows.
     SPECIES_CHOICES = [
-        ('dog', 'Куче'),
-        ('cat', 'Котка'),
-        ('bird', 'Птица'),
-        ('rodent', 'Гризач'),
-        ('rabbit', 'Заек'),
-        ('fish', 'Рибки / Аквариум'),
-        ('reptile', 'Влечуго'),
-        ('other', 'Друго'),
+        ('dog', gettext_lazy("Куче")),
+        ('cat', gettext_lazy("Котка")),
+        ('bird', gettext_lazy("Птица")),
+        ('rodent', gettext_lazy("Гризач")),
+        ('rabbit', gettext_lazy("Заек")),
+        ('fish', gettext_lazy("Рибки / Аквариум")),
+        ('reptile', gettext_lazy("Влечуго")),
+        ('other', gettext_lazy("Друго")),
     ]
 
     GENDER_CHOICES = [
-        ('male', 'Мъжки'),
-        ('female', 'Женски'),
-        ('unknown', 'Неизвестен'),
+        ('male', gettext_lazy("Мъжки")),
+        ('female', gettext_lazy("Женски")),
+        ('unknown', gettext_lazy("Неизвестен")),
     ]
 
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pets', verbose_name="Собственик")
-    name = models.CharField(max_length=100, verbose_name="Име на любимеца")
-    species = models.CharField(max_length=20, choices=SPECIES_CHOICES, default='dog', verbose_name="Вид животно")
-    breed = models.CharField(max_length=100, blank=True, verbose_name="Порода")
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='unknown', verbose_name="Пол")
-    is_neutered = models.BooleanField(default=False, verbose_name="Кастриран / Кастрирана")
-    birth_date = models.DateField(null=True, blank=True, verbose_name="Дата на раждане")
-    approximate_age = models.CharField(max_length=50, blank=True, verbose_name="Приблизителна възраст", help_text="Ако не знаете точната дата на раждане (напр. '2 години')")
-    weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="Тегло (кг)")
-    microchip_number = models.CharField(max_length=50, blank=True, verbose_name="Номер на микрочип")
-    passport_number = models.CharField(max_length=50, blank=True, verbose_name="Номер на европейски паспорт")
-    photo = models.ImageField(upload_to='pets/', blank=True, null=True, verbose_name="Снимка")
-    food_diet = models.TextField(blank=True, verbose_name="Хранене и диета", help_text="Любима храна, дневна дажба, график на хранене, забранени лакомства")
-    allergies = models.TextField(blank=True, verbose_name="Алергии и непоносимости", help_text="Хранителни или медикаментозни алергии")
-    special_notes = models.TextField(blank=True, verbose_name="Специални бележки и характер", help_text="Особености в поведението, навици, страх от гръмотевици и т.н.")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Създаден на")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновен на")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pets', verbose_name=gettext_lazy("Собственик"))
+    name = models.CharField(max_length=100, verbose_name=gettext_lazy("Име на любимеца"))
+    species = models.CharField(max_length=20, choices=SPECIES_CHOICES, default='dog', verbose_name=gettext_lazy("Вид животно"))
+    breed = models.CharField(max_length=100, blank=True, verbose_name=gettext_lazy("Порода"))
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='unknown', verbose_name=gettext_lazy("Пол"))
+    is_neutered = models.BooleanField(default=False, verbose_name=gettext_lazy("Кастриран / Кастрирана"))
+    birth_date = models.DateField(null=True, blank=True, verbose_name=gettext_lazy("Дата на раждане"))
+    approximate_age = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name=gettext_lazy("Приблизителна възраст"),
+        help_text=gettext_lazy("Ако не знаете точната дата на раждане (напр. '2 години')"),
+    )
+    weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name=gettext_lazy("Тегло (кг)"))
+    microchip_number = models.CharField(max_length=50, blank=True, verbose_name=gettext_lazy("Номер на микрочип"))
+    passport_number = models.CharField(max_length=50, blank=True, verbose_name=gettext_lazy("Номер на европейски паспорт"))
+    photo = models.ImageField(upload_to='pets/', blank=True, null=True, verbose_name=gettext_lazy("Снимка"))
+    food_diet = models.TextField(
+        blank=True,
+        verbose_name=gettext_lazy("Хранене и диета"),
+        help_text=gettext_lazy("Любима храна, дневна дажба, график на хранене, забранени лакомства"),
+    )
+    allergies = models.TextField(
+        blank=True,
+        verbose_name=gettext_lazy("Алергии и непоносимости"),
+        help_text=gettext_lazy("Хранителни или медикаментозни алергии"),
+    )
+    special_notes = models.TextField(
+        blank=True,
+        verbose_name=gettext_lazy("Специални бележки и характер"),
+        help_text=gettext_lazy("Особености в поведението, навици, страх от гръмотевици и т.н."),
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=gettext_lazy("Създаден на"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=gettext_lazy("Обновен на"))
 
     class Meta:
-        verbose_name = "Домашен любимец"
-        verbose_name_plural = "Домашни любимци"
+        verbose_name = gettext_lazy("Домашен любимец")
+        verbose_name_plural = gettext_lazy("Домашни любимци")
         ordering = ['name']
         indexes = [
             models.Index(fields=['microchip_number'], name='pet_microchip_idx'),
@@ -59,12 +82,18 @@ class Pet(models.Model):
 
     @property
     def age_display(self):
+        """A human-readable age, localised for the active language.
+
+        The units are spelled out rather than abbreviated because a short
+        English form ("2y 4m") would not fit the badges this renders into, and
+        the plural rule differs between the two languages.
+        """
         if not self.birth_date:
-            return self.approximate_age or "Не е посочена"
+            return self.approximate_age or _("Не е посочена")
 
         today = date.today()
         if self.birth_date > today:
-            return "Невалидна дата"
+            return _("Невалидна дата")
 
         months = (today.year - self.birth_date.year) * 12 + today.month - self.birth_date.month
         if today.day < self.birth_date.day:
@@ -72,11 +101,14 @@ class Pet(models.Model):
         months = max(months, 0)
 
         years, rem_months = divmod(months, 12)
+        if years and rem_months:
+            return _("%(years)d г. и %(months)d мес.") % {"years": years, "months": rem_months}
         if years:
-            return f"{years} г. и {rem_months} мес." if rem_months else f"{years} г."
+            return _("%(years)d г.") % {"years": years}
         if months:
-            return f"{months} мес."
-        return f"{(today - self.birth_date).days} дни"
+            return _("%(months)d мес.") % {"months": months}
+        days = (today - self.birth_date).days
+        return ngettext("%(days)d ден", "%(days)d дни", days) % {"days": days}
 
     @property
     def species_icon(self):
@@ -100,18 +132,22 @@ class Pet(models.Model):
 
 
 class Vaccination(models.Model):
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='vaccinations', verbose_name="Любимец")
-    name = models.CharField(max_length=150, verbose_name="Име на ваксината", help_text="Напр. Бяс, DHPPi, Tricat, Годишна поливалентна")
-    date_administered = models.DateField(verbose_name="Дата на поставяне")
-    next_due_date = models.DateField(null=True, blank=True, verbose_name="Следваща ваксинация (краен срок)")
-    batch_number = models.CharField(max_length=100, blank=True, verbose_name="Сериен / партиден номер")
-    clinic_or_vet = models.CharField(max_length=150, blank=True, verbose_name="Клиника / Лекар")
-    notes = models.TextField(blank=True, verbose_name="Бележки / странични реакции")
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='vaccinations', verbose_name=gettext_lazy("Любимец"))
+    name = models.CharField(
+        max_length=150,
+        verbose_name=gettext_lazy("Име на ваксината"),
+        help_text=gettext_lazy("Напр. Бяс, DHPPi, Tricat, Годишна поливалентна"),
+    )
+    date_administered = models.DateField(verbose_name=gettext_lazy("Дата на поставяне"))
+    next_due_date = models.DateField(null=True, blank=True, verbose_name=gettext_lazy("Следваща ваксинация (краен срок)"))
+    batch_number = models.CharField(max_length=100, blank=True, verbose_name=gettext_lazy("Сериен / партиден номер"))
+    clinic_or_vet = models.CharField(max_length=150, blank=True, verbose_name=gettext_lazy("Клиника / Лекар"))
+    notes = models.TextField(blank=True, verbose_name=gettext_lazy("Бележки / странични реакции"))
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Ваксинация"
-        verbose_name_plural = "Ваксинации"
+        verbose_name = gettext_lazy("Ваксинация")
+        verbose_name_plural = gettext_lazy("Ваксинации")
         ordering = ['-date_administered']
         indexes = [
             models.Index(fields=['next_due_date'], name='vacc_next_due_idx'),
@@ -154,21 +190,25 @@ class Vaccination(models.Model):
 
 
 class MedicalRecord(models.Model):
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='medical_records', verbose_name="Любимец")
-    date = models.DateField(default=date.today, verbose_name="Дата на процедурата / прегледа")
-    title = models.CharField(max_length=200, verbose_name="Причина / Диагноза / Процедура", help_text="Напр. Годишен преглед, почистване на зъбен камък, гастрит")
-    diagnosis = models.TextField(blank=True, verbose_name="Констатации и диагноза")
-    treatment = models.TextField(blank=True, verbose_name="Назначено лечение и процедури")
-    veterinarian = models.CharField(max_length=150, blank=True, verbose_name="Ветеринарен лекар")
-    clinic = models.CharField(max_length=150, blank=True, verbose_name="Ветеринарна клиника")
-    cost = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, verbose_name="Стойност (лв.)")
-    notes = models.TextField(blank=True, verbose_name="Допълнителни бележки")
-    document = models.FileField(upload_to='medical_docs/', blank=True, null=True, verbose_name="Прикачен файл / резултати")
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='medical_records', verbose_name=gettext_lazy("Любимец"))
+    date = models.DateField(default=date.today, verbose_name=gettext_lazy("Дата на процедурата / прегледа"))
+    title = models.CharField(
+        max_length=200,
+        verbose_name=gettext_lazy("Причина / Диагноза / Процедура"),
+        help_text=gettext_lazy("Напр. Годишен преглед, почистване на зъбен камък, гастрит"),
+    )
+    diagnosis = models.TextField(blank=True, verbose_name=gettext_lazy("Констатации и диагноза"))
+    treatment = models.TextField(blank=True, verbose_name=gettext_lazy("Назначено лечение и процедури"))
+    veterinarian = models.CharField(max_length=150, blank=True, verbose_name=gettext_lazy("Ветеринарен лекар"))
+    clinic = models.CharField(max_length=150, blank=True, verbose_name=gettext_lazy("Ветеринарна клиника"))
+    cost = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, verbose_name=gettext_lazy("Стойност (лв.)"))
+    notes = models.TextField(blank=True, verbose_name=gettext_lazy("Допълнителни бележки"))
+    document = models.FileField(upload_to='medical_docs/', blank=True, null=True, verbose_name=gettext_lazy("Прикачен файл / резултати"))
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Медицински запис"
-        verbose_name_plural = "Медицинска история"
+        verbose_name = gettext_lazy("Медицински запис")
+        verbose_name_plural = gettext_lazy("Медицинска история")
         ordering = ['-date', '-created_at']
 
     def __str__(self):
@@ -176,20 +216,36 @@ class MedicalRecord(models.Model):
 
 
 class Medication(models.Model):
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='medications', verbose_name="Любимец")
-    name = models.CharField(max_length=150, verbose_name="Име на медикамента", help_text="Напр. Антибиотик, Витамини, Капки за очи")
-    dosage = models.CharField(max_length=100, verbose_name="Дозировка", help_text="Напр. 1 таблетка, 2.5 мл")
-    frequency = models.CharField(max_length=100, verbose_name="Честота на прием", help_text="Напр. 2 пъти дневно, сутрин и вечер, на всеки 8 часа")
-    start_date = models.DateField(default=date.today, verbose_name="Начална дата")
-    end_date = models.DateField(null=True, blank=True, verbose_name="Крайна дата (по избор)")
-    instructions = models.TextField(blank=True, verbose_name="Специфични указания", help_text="По време на хранене, разтворено във вода и др.")
-    is_active = models.BooleanField(default=True, verbose_name="Активен прием в момента")
-    notes = models.TextField(blank=True, verbose_name="Бележки")
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='medications', verbose_name=gettext_lazy("Любимец"))
+    name = models.CharField(
+        max_length=150,
+        verbose_name=gettext_lazy("Име на медикамента"),
+        help_text=gettext_lazy("Напр. Антибиотик, Витамини, Капки за очи"),
+    )
+    dosage = models.CharField(
+        max_length=100,
+        verbose_name=gettext_lazy("Дозировка"),
+        help_text=gettext_lazy("Напр. 1 таблетка, 2.5 мл"),
+    )
+    frequency = models.CharField(
+        max_length=100,
+        verbose_name=gettext_lazy("Честота на прием"),
+        help_text=gettext_lazy("Напр. 2 пъти дневно, сутрин и вечер, на всеки 8 часа"),
+    )
+    start_date = models.DateField(default=date.today, verbose_name=gettext_lazy("Начална дата"))
+    end_date = models.DateField(null=True, blank=True, verbose_name=gettext_lazy("Крайна дата (по избор)"))
+    instructions = models.TextField(
+        blank=True,
+        verbose_name=gettext_lazy("Специфични указания"),
+        help_text=gettext_lazy("По време на хранене, разтворено във вода и др."),
+    )
+    is_active = models.BooleanField(default=True, verbose_name=gettext_lazy("Активен прием в момента"))
+    notes = models.TextField(blank=True, verbose_name=gettext_lazy("Бележки"))
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Прием на лекарство"
-        verbose_name_plural = "Прием на лекарства"
+        verbose_name = gettext_lazy("Прием на лекарство")
+        verbose_name_plural = gettext_lazy("Прием на лекарства")
         ordering = ['-is_active', '-start_date']
         constraints = [
             models.CheckConstraint(
@@ -206,58 +262,66 @@ class Medication(models.Model):
 
 
 class VetVisit(models.Model):
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='vet_visits', verbose_name="Любимец")
-    visit_date = models.DateField(default=date.today, verbose_name="Дата на посещението")
-    clinic_name = models.CharField(max_length=150, verbose_name="Име на клиниката")
-    vet_name = models.CharField(max_length=150, blank=True, verbose_name="Име на лекаря")
-    phone = models.CharField(max_length=50, blank=True, verbose_name="Телефон за връзка с клиниката")
-    reason = models.CharField(max_length=250, verbose_name="Причина за посещението", help_text="Профилактика, спешен преглед, контролен преглед...")
-    examination_summary = models.TextField(blank=True, verbose_name="Резултати от прегледа")
-    recommendations = models.TextField(blank=True, verbose_name="Препоръки и следващи стъпки")
-    total_cost = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, verbose_name="Стойност (лв.)")
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='vet_visits', verbose_name=gettext_lazy("Любимец"))
+    visit_date = models.DateField(default=date.today, verbose_name=gettext_lazy("Дата на посещението"))
+    clinic_name = models.CharField(max_length=150, verbose_name=gettext_lazy("Име на клиниката"))
+    vet_name = models.CharField(max_length=150, blank=True, verbose_name=gettext_lazy("Име на лекаря"))
+    phone = models.CharField(max_length=50, blank=True, verbose_name=gettext_lazy("Телефон за връзка с клиниката"))
+    reason = models.CharField(
+        max_length=250,
+        verbose_name=gettext_lazy("Причина за посещението"),
+        help_text=gettext_lazy("Профилактика, спешен преглед, контролен преглед..."),
+    )
+    examination_summary = models.TextField(blank=True, verbose_name=gettext_lazy("Резултати от прегледа"))
+    recommendations = models.TextField(blank=True, verbose_name=gettext_lazy("Препоръки и следващи стъпки"))
+    total_cost = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, verbose_name=gettext_lazy("Стойност (лв.)"))
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Ветеринарно посещение"
-        verbose_name_plural = "Ветеринарни посещения"
+        verbose_name = gettext_lazy("Ветеринарно посещение")
+        verbose_name_plural = gettext_lazy("Ветеринарни посещения")
         ordering = ['-visit_date', '-created_at']
 
     def __str__(self):
-        return f"{self.pet.name} при {self.clinic_name} на {self.visit_date}"
+        return _("%(pet)s при %(clinic)s на %(date)s") % {
+            "pet": self.pet.name,
+            "clinic": self.clinic_name,
+            "date": self.visit_date,
+        }
 
 
 class Reminder(models.Model):
     TYPE_CHOICES = [
-        ('vaccination', 'Ваксинация'),
-        ('vet_visit', 'Ветеринарен преглед'),
-        ('medication', 'Прием на лекарство'),
-        ('deworming', 'Обезпаразитяване'),
-        ('grooming', 'Груминг / Къпане'),
-        ('food_refill', 'Покупка на храна'),
-        ('other', 'Друго напомняне'),
+        ('vaccination', gettext_lazy("Ваксинация")),
+        ('vet_visit', gettext_lazy("Ветеринарен преглед")),
+        ('medication', gettext_lazy("Прием на лекарство")),
+        ('deworming', gettext_lazy("Обезпаразитяване")),
+        ('grooming', gettext_lazy("Груминг / Къпане")),
+        ('food_refill', gettext_lazy("Покупка на храна")),
+        ('other', gettext_lazy("Друго напомняне")),
     ]
 
     PRIORITY_CHOICES = [
-        ('high', 'Висок приоритет'),
-        ('normal', 'Нормален приоритет'),
-        ('low', 'Нисък приоритет'),
+        ('high', gettext_lazy("Висок приоритет")),
+        ('normal', gettext_lazy("Нормален приоритет")),
+        ('low', gettext_lazy("Нисък приоритет")),
     ]
 
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reminders', verbose_name="Потребител")
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='reminders', null=True, blank=True, verbose_name="Любимец")
-    reminder_type = models.CharField(max_length=30, choices=TYPE_CHOICES, default='vaccination', verbose_name="Тип напомняне")
-    title = models.CharField(max_length=200, verbose_name="Заглавие на напомнянето")
-    due_date = models.DateField(verbose_name="Крайна дата")
-    due_time = models.TimeField(null=True, blank=True, verbose_name="Час (по избор)")
-    priority = models.CharField(max_length=15, choices=PRIORITY_CHOICES, default='normal', verbose_name="Приоритет")
-    is_completed = models.BooleanField(default=False, verbose_name="Изпълнено")
-    completed_at = models.DateTimeField(null=True, blank=True, verbose_name="Дата на изпълнение")
-    notes = models.TextField(blank=True, verbose_name="Бележки / детайли")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reminders', verbose_name=gettext_lazy("Потребител"))
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='reminders', null=True, blank=True, verbose_name=gettext_lazy("Любимец"))
+    reminder_type = models.CharField(max_length=30, choices=TYPE_CHOICES, default='vaccination', verbose_name=gettext_lazy("Тип напомняне"))
+    title = models.CharField(max_length=200, verbose_name=gettext_lazy("Заглавие на напомнянето"))
+    due_date = models.DateField(verbose_name=gettext_lazy("Крайна дата"))
+    due_time = models.TimeField(null=True, blank=True, verbose_name=gettext_lazy("Час (по избор)"))
+    priority = models.CharField(max_length=15, choices=PRIORITY_CHOICES, default='normal', verbose_name=gettext_lazy("Приоритет"))
+    is_completed = models.BooleanField(default=False, verbose_name=gettext_lazy("Изпълнено"))
+    completed_at = models.DateTimeField(null=True, blank=True, verbose_name=gettext_lazy("Дата на изпълнение"))
+    notes = models.TextField(blank=True, verbose_name=gettext_lazy("Бележки / детайли"))
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Напомняне"
-        verbose_name_plural = "Напомняния"
+        verbose_name = gettext_lazy("Напомняне")
+        verbose_name_plural = gettext_lazy("Напомняния")
         ordering = ['is_completed', 'due_date', 'due_time']
         indexes = [
             models.Index(
@@ -267,8 +331,11 @@ class Reminder(models.Model):
         ]
 
     def __str__(self):
-        pet_str = f" за {self.pet.name}" if self.pet else ""
-        return f"{self.title}{pet_str} ({self.due_date})"
+        if self.pet:
+            return _("%(title)s за %(pet)s (%(date)s)") % {
+                "title": self.title, "pet": self.pet.name, "date": self.due_date,
+            }
+        return _("%(title)s (%(date)s)") % {"title": self.title, "date": self.due_date}
 
     def save(self, *args, **kwargs):
         """Keep ``completed_at`` in sync with ``is_completed``.
