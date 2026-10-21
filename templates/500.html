@@ -1,12 +1,3 @@
-{% comment %}
-Deliberately does NOT extend base.html: if base.html itself is what failed to
-render, extending it would raise a TemplateSyntaxError inside the 500 handler.
-
-The same robustness argument applies to the two things it would otherwise take
-from the shared layout: the active language and the home URL. `{% ... as var %}`
-swallows a NoReverseMatch and leaves the variable empty, so a broken URLconf
-degrades to a literal "/" instead of raising a second error inside the handler.
-{% endcomment %}
 {% load static i18n %}
 {% get_current_language as CURRENT_LANGUAGE %}
 {% url 'pets:home' as home_url %}
@@ -15,7 +6,7 @@ degrades to a literal "/" instead of raising a second error inside the handler.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% translate "Възникна неочаквана грешка | VetLink" %}</title>
+    <title>{% translate "Възникна неочаквана грешка | PetBeacon" %}</title>
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body class="flex min-h-screen items-center justify-center bg-ink-50 px-4 text-ink-800 dark:bg-ink-950 dark:text-ink-200">

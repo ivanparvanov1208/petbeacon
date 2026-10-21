@@ -1,11 +1,9 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{% blocktranslate with name=pet.name %}{{ name }} | Профил на любимеца — VetLink{% endblocktranslate %}{% endblock %}
+{% block title %}{% blocktranslate with name=pet.name %}{{ name }} | Профил на любимеца — PetBeacon{% endblocktranslate %}{% endblock %}
 
 {% block content %}
-{% comment %} Literals passed to `include ... with` are never translated, so every one of
-   them is resolved into a variable first. {% endcomment %}
 {% translate "Неуточнена порода" as unknown_breed %}
 {% translate "Здравен паспорт" as passport %}
 {% translate "Редакция" as edit %}
@@ -47,11 +45,9 @@
 
 <div class="space-y-6">
 
-    <!-- ================= HERO ================= -->
     <div class="card overflow-hidden print-sheet">
         <div class="flex flex-col gap-6 p-5 sm:p-7 md:flex-row md:items-start">
 
-            <!-- Photo -->
             <div class="relative h-36 w-36 shrink-0 overflow-hidden rounded-2xl border border-ink-200 bg-ink-100 dark:border-ink-800 dark:bg-ink-800">
                 {% if pet.photo %}
                     <img src="{{ pet.photo.url }}"
@@ -99,7 +95,6 @@
                     </div>
                 </div>
 
-                <!-- Key facts -->
                 <dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {% for label, value, icon in facts %}
                     <div class="rounded-xl border border-ink-100 bg-ink-50/60 px-3 py-2.5 dark:border-ink-800 dark:bg-ink-800/40">
@@ -131,7 +126,6 @@
             </div>
         </div>
 
-        <!-- Tabs -->
         <nav class="flex gap-1 overflow-x-auto border-t border-ink-100 px-2 dark:border-ink-800"
              aria-label="{% translate 'Раздели на профила' %}">
             {% for key, label, icon, count in tabs %}
@@ -146,9 +140,7 @@
         </nav>
     </div>
 
-    <!-- ================= TAB PANELS ================= -->
 
-    <!-- ---- Overview ---- -->
     {% if active_tab == 'overview' %}
     {% translate "Хранене и диетичен режим" as diet_title %}
     {% translate "Не са въведени бележки за хранителния режим на любимеца." as diet_empty %}
@@ -158,24 +150,11 @@
     {% translate "Няма въведени специфични бележки." as notes_empty %}
     <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
 
-        {% include "partials/note_card.html" with
-            icon="fa-solid fa-bowl-food" tone="amber"
-            title=diet_title body=pet.food_diet
-            empty=diet_empty
-        %}
+        {% include "partials/note_card.html" with icon="fa-solid fa-bowl-food" tone="amber" title=diet_title body=pet.food_diet empty=diet_empty %}
 
-        {% include "partials/note_card.html" with
-            icon="fa-solid fa-triangle-exclamation" tone="rose"
-            title=allergy_title body=pet.allergies
-            empty=allergy_empty
-        %}
+        {% include "partials/note_card.html" with icon="fa-solid fa-triangle-exclamation" tone="rose" title=allergy_title body=pet.allergies empty=allergy_empty %}
 
-        {% include "partials/note_card.html" with
-            icon="fa-solid fa-paw" tone="brand"
-            title=notes_title body=pet.special_notes
-            empty=notes_empty
-            wide=True
-        %}
+        {% include "partials/note_card.html" with icon="fa-solid fa-paw" tone="brand" title=notes_title body=pet.special_notes empty=notes_empty wide=True %}
     </div>
     {% endif %}
 
@@ -234,7 +213,6 @@
                        aria-label="{% blocktranslate with name=vac.name %}Редактирай {{ name }}{% endblocktranslate %}">
                         <i class="fa-solid fa-pen text-xs" aria-hidden="true"></i>
                     </a>
-                    {# Confirm copy comes from a data attribute so it can be translated. #}
                     <form method="POST" action="{% url 'pets:vaccination_delete' vac.pk %}"
                           data-confirm="{% translate 'Сигурни ли сте, че искате да изтриете тази ваксинация?' %}"
                           onsubmit="return !this.dataset.confirm || confirm(this.dataset.confirm)">
@@ -250,11 +228,7 @@
             {% endfor %}
         </ul>
         {% else %}
-            {% include "partials/empty_state.html" with
-                icon="fa-solid fa-syringe"
-                title=no_vaccinations
-                body=empty_vaccinations
-            %}
+            {% include "partials/empty_state.html" with icon="fa-solid fa-syringe" title=no_vaccinations body=empty_vaccinations %}
             <div class="text-center">
                 <a href="{% url 'pets:vaccination_create' pet.pk %}" class="btn-primary">
                     <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ add_first_vaccination }}
@@ -345,13 +319,7 @@
             {% endfor %}
         </div>
         {% else %}
-            {% include "partials/empty_state.html" with
-                icon="fa-solid fa-file-medical"
-                title=no_records
-                body=empty_records
-                action_url=record_create_url
-                action_label=add_record
-            %}
+            {% include "partials/empty_state.html" with icon="fa-solid fa-file-medical" title=no_records body=empty_records action_url=record_create_url action_label=add_record %}
         {% endif %}
     </section>
     {% endif %}
@@ -436,13 +404,7 @@
             {% endfor %}
         </div>
         {% else %}
-            {% include "partials/empty_state.html" with
-                icon="fa-solid fa-pills"
-                title=no_meds
-                body=empty_meds
-                action_url=medication_create_url
-                action_label=add_med
-            %}
+            {% include "partials/empty_state.html" with icon="fa-solid fa-pills" title=no_meds body=empty_meds action_url=medication_create_url action_label=add_med %}
         {% endif %}
     </section>
     {% endif %}
@@ -516,13 +478,7 @@
             {% endfor %}
         </div>
         {% else %}
-            {% include "partials/empty_state.html" with
-                icon="fa-solid fa-stethoscope"
-                title=no_visits
-                body=empty_visits
-                action_url=visit_create_url
-                action_label=log_visit
-            %}
+            {% include "partials/empty_state.html" with icon="fa-solid fa-stethoscope" title=no_visits body=empty_visits action_url=visit_create_url action_label=log_visit %}
         {% endif %}
     </section>
     {% endif %}
@@ -597,13 +553,7 @@
             {% endfor %}
         </ul>
         {% else %}
-            {% include "partials/empty_state.html" with
-                icon="fa-solid fa-bell"
-                title=no_reminders
-                body=empty_reminders
-                action_url=pet_reminder_create_url
-                action_label=add_reminder
-            %}
+            {% include "partials/empty_state.html" with icon="fa-solid fa-bell" title=no_reminders body=empty_reminders action_url=pet_reminder_create_url action_label=add_reminder %}
         {% endif %}
     </section>
     {% endif %}

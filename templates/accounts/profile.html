@@ -1,24 +1,18 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{% translate "Моят профил | VetLink" %}{% endblock %}
+{% block title %}{% translate "Моят профил | PetBeacon" %}{% endblock %}
 
 {% block content %}
 <div class="mx-auto max-w-2xl space-y-6">
 
-    {% comment %} Literals passed through `include ... with` are never translated, so each
-       one is resolved into a variable first. {% endcomment %}
     {% translate "Моят профил" as page_title %}
     {% translate "Управление на личните данни и контактна информация." as page_subtitle %}
     {% translate "Обнови профила" as submit_label %}
     {% translate "Лични данни" as personal_title %}
     {% translate "Контактна информация" as contact_title %}
 
-    {% include "partials/page_header.html" with
-        title=page_title
-        subtitle=page_subtitle
-        icon="fa-regular fa-user"
-    %}
+    {% include "partials/page_header.html" with title=page_title subtitle=page_subtitle icon="fa-regular fa-user" %}
 
     {% include "partials/form_open.html" with form=form submit_label=submit_label %}
 
@@ -32,9 +26,6 @@
                     {{ user.get_full_name|default:user.username }}
                 </p>
                 <p class="truncate text-xs text-ink-500">
-                    {% comment %} SHORT_DATE_FORMAT resolves per active language, so the
-                       date reads as 2.10.2026 in Bulgarian and 10/02/2026 in
-                       English without any branch in the template. {% endcomment %}
                     <span class="font-mono">@{{ user.username }}</span>
                     &middot; {% blocktranslate with joined=user.date_joined|date:"SHORT_DATE_FORMAT" %}Регистриран на {{ joined }} г.{% endblocktranslate %}
                 </p>

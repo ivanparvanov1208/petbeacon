@@ -1,10 +1,4 @@
-﻿"""Tests for the front-end contract: design tokens, partials and ARIA wiring.
-
-These guard the redesign against silent regressions — e.g. re-introducing the
-Tailwind CDN, breaking the shared field partial, or losing the ARIA wiring that
-ties inputs to their error messages.
-"""
-
+﻿
 import pathlib
 import re
 from datetime import date, timedelta
@@ -26,14 +20,6 @@ INPUT_CSS = BASE_DIR / "static" / "css" / "input.css"
 
 
 def setUpModule():
-    """Start the module from the default language.
-
-    LocaleMiddleware activates a language per request and never deactivates it,
-    so a test that fetches /en/ leaves English active for whatever runs next in
-    the same thread. Several tests here render templates directly — with no
-    request, and therefore no middleware — and assert on Bulgarian text, so the
-    active language has to be pinned rather than inherited.
-    """
     translation.activate(settings.LANGUAGE_CODE)
 
 
@@ -42,7 +28,6 @@ def tearDownModule():
 
 
 class _ButtonParser(HTMLParser):
-    """Collects every <button> as (attrs, inner_text)."""
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
@@ -77,14 +62,6 @@ def _iter_buttons(html):
 
 
 class DefaultLanguageMixin:
-    """Pin the active language to the default for the duration of a test class.
-
-    ``LocaleMiddleware`` activates a language per request and never deactivates
-    it, and Django keeps the active language in thread-local state. A test that
-    fetches ``/en/`` therefore leaves English active for every test that runs
-    after it in the same thread, which breaks assertions on Bulgarian text.
-    Any test that touches an explicitly-prefixed URL must mix this in.
-    """
 
     def setUp(self):
         super().setUp()
@@ -135,14 +112,6 @@ class AssetPipelineTests(DefaultLanguageMixin, TestCase):
 
 
 class TemplateCommentHygieneTests(DefaultLanguageMixin, TestCase):
-    """Template comments must never reach the rendered page.
-
-    Django's ``{# ... #}`` comment syntax is single-line only: the lexer pattern
-    is not DOTALL, so an opening ``{#`` whose ``#}`` sits on a later line is
-    emitted verbatim as page text. It renders as broken markup in the middle of
-    the body and is invisible in the template's visual structure, which makes it
-    an easy mistake to reintroduce.
-    """
 
     def test_no_multiline_brace_comments_exist(self):
         offenders = []
@@ -162,9 +131,22 @@ class TemplateCommentHygieneTests(DefaultLanguageMixin, TestCase):
             + ", ".join(offenders),
         )
 
+    def test_include_tags_do_not_span_multiple_lines(self):
+        offenders = []
+        for path in sorted(TEMPLATE_DIR.rglob("*.html")):
+            source = path.read_text(encoding="utf-8")
+            for match in re.finditer(r"\{% include\b.*?%\}", source, re.DOTALL):
+                if "\n" in match.group():
+                    offenders.append(str(path.relative_to(TEMPLATE_DIR)))
+        self.assertEqual(
+            offenders, [],
+            "multi-line {% include %} tags render as visible text: "
+            + ", ".join(offenders),
+        )
+
     def test_rendered_pages_contain_no_template_syntax(self):
         user = User.objects.create_user(username="comments", password="password123")
-        Pet.objects.create(owner=user, name="Рекс", species="dog")
+        pet = Pet.objects.create(owner=user, name="Рекс", species="dog")
         Reminder.objects.create(owner=user, title="Напомняне", due_date="2030-01-01")
         self.client.force_login(user)
 
@@ -177,8 +159,16 @@ class TemplateCommentHygieneTests(DefaultLanguageMixin, TestCase):
             reverse("pets:reminder_list"),
             reverse("pets:pet_create"),
             reverse("pets:reminder_create"),
+            reverse("pets:vaccination_create", kwargs={"pet_pk": pet.pk}),
+            reverse("pets:medical_record_create", kwargs={"pet_pk": pet.pk}),
+            reverse("pets:medication_create", kwargs={"pet_pk": pet.pk}),
+            reverse("pets:vet_visit_create", kwargs={"pet_pk": pet.pk}),
+            reverse("accounts:profile"),
         ]
-        leftovers = ("{#", "#}", "{% comment", "{% endcomment", "{% translate", "{% blocktranslate")
+        leftovers = (
+            "{#", "#}", "{% comment", "{% endcomment", "{% translate",
+            "{% blocktranslate", "{% include",
+        )
         for url in pages:
             html = self.client.get(url).content.decode()
             for marker in leftovers:
@@ -187,14 +177,6 @@ class TemplateCommentHygieneTests(DefaultLanguageMixin, TestCase):
 
 
 class LanguageSwitcherDisclosureTests(DefaultLanguageMixin, TestCase):
-    """The dropdown must actually open.
-
-    The panel's visibility is owned entirely by the `hidden` utility, which the
-    toggle script adds and removes. If `display: none` is baked into the
-    `lang-panel` utility instead, removing the class changes nothing and the
-    dropdown silently never opens — a failure with no visible cause in the
-    template, so it is pinned here.
-    """
 
     def setUp(self):
         self.client = Client()
@@ -228,7 +210,6 @@ class LanguageSwitcherDisclosureTests(DefaultLanguageMixin, TestCase):
         self.assertIn("lang-trigger", button)
 
     def test_mobile_drawer_switcher_needs_no_toggle(self):
-        """The drawer variant is a segmented control, always visible."""
         self.assertIn("lang-segmented", self.html)
         self.assertNotIn('class="lang-segmented hidden"', self.html)
 
@@ -236,10 +217,6 @@ class LanguageSwitcherDisclosureTests(DefaultLanguageMixin, TestCase):
 class BaseTemplateContractTests(DefaultLanguageMixin, TestCase):
     def setUp(self):
         self.client = Client()
-        # `<html lang>` now reflects the active language, and LocaleMiddleware
-        # activates it per request without a matching deactivate — so a test that
-        # visited /en/ would otherwise leak into every test that follows it in the
-        # same thread. Pin the default language for this class.
         self.addCleanup(translation.activate, settings.LANGUAGE_CODE)
         translation.activate(settings.LANGUAGE_CODE)
 
@@ -267,7 +244,6 @@ class BaseTemplateContractTests(DefaultLanguageMixin, TestCase):
 
 
 class SharedFieldPartialTests(DefaultLanguageMixin, TestCase):
-    """The field partial is used by all nine form templates."""
 
     FORM_TEMPLATES = [
         "pets/pet_form.html",
@@ -291,13 +267,50 @@ class SharedFieldPartialTests(DefaultLanguageMixin, TestCase):
     def test_field_partial_exists(self):
         self.assertTrue((TEMPLATE_DIR / "partials" / "field.html").exists())
 
-    def test_widgets_carry_no_styling_classes(self):
-        """Regression: hard-coded widget classes fight the design system.
+    def test_every_form_template_uses_the_error_partials(self):
+        """Regression: the login page hand-rolled its error banner.
 
-        `.field` is applied at render time by the partial; if forms.py also
-        pinned e.g. `rounded-xl border-slate-200`, which one wins would depend
-        on Tailwind's output order.
+        It shipped a non-field error block of its own instead of including the
+        shared partial, and never included the consolidated summary at all, so
+        a login form left blank showed inline errors but no summary and no jump
+        links. Every form template must reach both partials, directly or through
+        `form_open.html`.
         """
+        offenders = []
+        for name in self.FORM_TEMPLATES:
+            source = (TEMPLATE_DIR / name).read_text(encoding="utf-8")
+            if "partials/form_open.html" in source:
+                continue
+            if "partials/error_summary.html" not in source:
+                offenders.append(f"{name} (no error_summary)")
+            if "partials/non_field_errors.html" not in source:
+                offenders.append(f"{name} (no non_field_errors)")
+        self.assertEqual(offenders, [], f"Bypassing the error partials: {offenders}")
+
+    def test_non_field_errors_partial_exists(self):
+        self.assertTrue((TEMPLATE_DIR / "partials" / "non_field_errors.html").exists())
+
+    def test_login_page_renders_a_summary_for_blank_credentials(self):
+        """The case that exposed the missing include."""
+        User.objects.create_user(username="blanklogin", password="password123")
+        response = self.client.post(
+            reverse("accounts:login"), {"username": "", "password": ""}
+        )
+        html = response.content.decode()
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('id="form-errors"', html)
+        self.assertIn("Потребителско име", html)
+
+    def test_login_page_shows_no_empty_summary_for_wrong_credentials(self):
+        """Wrong credentials are non-field errors, so the summary stays hidden."""
+        User.objects.create_user(username="wrongcreds", password="password123")
+        html = self.client.post(
+            reverse("accounts:login"), {"username": "wrongcreds", "password": "nope"}
+        ).content.decode()
+        self.assertNotIn('id="form-errors"', html)
+        self.assertIn('role="alert"', html)
+
+    def test_widgets_carry_no_styling_classes(self):
         from . import forms as pet_forms
 
         for name in ("PetForm", "VaccinationForm", "MedicalRecordForm",
@@ -324,12 +337,10 @@ class SharedFieldPartialTests(DefaultLanguageMixin, TestCase):
         rendered = str(add_class(form["weight"], "field field-error"))
         self.assertIn("field", rendered)
         self.assertIn("field-error", rendered)
-        # Django sets aria-invalid for bound fields that have errors.
         self.assertIn('aria-invalid="true"', rendered)
         self.assertIn('aria-describedby="id_weight_error"', rendered)
 
     def test_add_class_filter_does_not_mutate_the_widget(self):
-        """Rendering twice must not accumulate classes on the shared widget."""
         from pets.templatetags.petcare_tags import add_class
 
         form = PetForm()
@@ -363,7 +374,7 @@ class SharedFieldPartialTests(DefaultLanguageMixin, TestCase):
         self.assertIn("hint", rendered)
         self.assertIn('id="id_approximate_age_helptext"', rendered)
         self.assertIn('aria-describedby="id_approximate_age_helptext"', rendered)
-        self.assertIn("не знаете точната дата", rendered)  # the actual help_text
+        self.assertIn("не знаете точната дата", rendered)
 
     def test_checkbox_partial_omits_the_label_header(self):
         from django.template import Context, Template
@@ -374,7 +385,6 @@ class SharedFieldPartialTests(DefaultLanguageMixin, TestCase):
         )
         rendered = template.render(Context({"form": PetForm()}))
         self.assertIn("is_neutered", rendered)
-        # A checkbox is wrapped in its own <label>; it must not get a second one.
         self.assertEqual(rendered.count("<label"), 1)
 
 
@@ -440,7 +450,6 @@ class ErrorStateRenderingTests(DefaultLanguageMixin, TestCase):
         self.assertIn('role="alert"', html)
         self.assertIn('aria-invalid="true"', html)
         self.assertIn("field-error", html)
-        # Summary entries deep-link to the offending input.
         self.assertRegex(html, r'href="#id_\w+"')
 
     def test_valid_form_has_no_error_markup(self):
@@ -461,7 +470,6 @@ class ErrorPageTests(DefaultLanguageMixin, TestCase):
             self.assertTrue((TEMPLATE_DIR / name).exists(), f"{name} missing")
 
     def test_500_template_does_not_extend_base(self):
-        """Extending base.html inside the 500 handler risks a nested failure."""
         text = (TEMPLATE_DIR / "500.html").read_text(encoding="utf-8")
         self.assertNotIn("{% extends", text)
 
@@ -480,12 +488,6 @@ class AccessibleControlsTests(DefaultLanguageMixin, TestCase):
         self.client.force_login(self.user)
 
     def test_every_button_has_an_accessible_name(self):
-        """A button needs aria-label, title, or visible text to be reachable.
-
-        Icon-only buttons are easy to leave unlabelled during a redesign, and
-        the failure mode is a screen reader announcing nothing at all. Uses the
-        standard library parser so the project gains no test dependency.
-        """
         pages = [
             reverse("pets:home"),
             reverse("pets:dashboard"),
@@ -540,8 +542,6 @@ class AccessibleControlsTests(DefaultLanguageMixin, TestCase):
 
     def test_icon_only_buttons_expose_text_or_aria_label(self):
         html = self.client.get(reverse("pets:pet_list")).content.decode()
-        # Every <i class="fa-..."> must be aria-hidden, otherwise screen readers
-        # announce the raw icon name ("fa-solid fa-print") as content.
         icons = re.findall(r'<i class="fa-[^"]*"', html)
         self.assertTrue(icons)
         for match in re.finditer(r'<i class="fa-[^"]*"[^>]*>', html):

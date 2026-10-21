@@ -1,9 +1,3 @@
-"""Compile ``locale/*/LC_MESSAGES/django.po`` into ``django.mo``.
-
-A pure-Python stand-in for ``manage.py compilemessages`` that does not need GNU
-gettext. Django only ever reads the compiled ``.mo``, so this must be run for
-every catalogue that changed.
-"""
 
 from pathlib import Path
 
@@ -36,10 +30,6 @@ class Command(BaseCommand):
             total = len(catalogue)
 
             if code == settings.LANGUAGE_CODE:
-                # The source language stores its text *as* the msgid, so every
-                # msgstr is legitimately empty and gettext falls back to the
-                # msgid. Reporting that as "0% translated" would be alarming
-                # and wrong.
                 self.stdout.write(
                     self.style.SUCCESS(
                         f"  {code} ({name}): source language, {total} strings "

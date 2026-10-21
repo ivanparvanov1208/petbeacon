@@ -1,13 +1,4 @@
-{% comment %}
-Page header: optional back link, title, optional subtitle, optional actions.
-
-Usage:
-    {% include "partials/page_header.html" with title="Любимци" subtitle="..." %}
-    {% include "partials/page_header.html" with title=... back_url=... icon="fa-paw" %}
-{% endcomment %}
 {% load i18n %}
-{% comment %} Resolve the fallback with translate first — a `default:` filter argument is a
-   plain literal and is never translated. {% endcomment %}
 {% translate "Назад" as default_back_label %}
 <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
     <div class="min-w-0">

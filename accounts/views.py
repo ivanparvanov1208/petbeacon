@@ -13,13 +13,9 @@ from .forms import UserRegistrationForm, UserLoginForm, UserProfileUpdateForm
 from .models import UserProfile
 
 
-# ---------------------------------------------------------------------------
-# Login Rate Limiting
-#
-# Tracked in the cache (keyed by client IP *and* submitted username) instead of
-# the session, because a session-scoped counter is reset simply by clearing
-# cookies — which is exactly what a credential-stuffing script would do.
-# ---------------------------------------------------------------------------
+# Counters live in the cache, not the session: a session-scoped count resets
+# whenever cookies are cleared, which is exactly what a credential-stuffing
+# script would do.
 _MAX_ATTEMPTS = getattr(settings, 'LOGIN_MAX_ATTEMPTS', 5)
 _LOCKOUT_SECONDS = getattr(settings, 'LOGIN_LOCKOUT_SECONDS', 300)
 _ATTEMPTS_PREFIX = 'login-fail:'
@@ -41,17 +37,13 @@ def _throttle_keys(request, username):
 
 
 def _is_locked_out(request, username=''):
-    """Return ``(locked, remaining_seconds)`` for the given client/username."""
     ip_attempts_key, user_attempts_key, ip_lock_key, user_lock_key = _throttle_keys(request, username)
 
-    # Lock the narrowest scope first so legitimate users are not affected by
-    # someone else hammering a different account from the same NAT address.
     for lock_key in (user_lock_key, ip_lock_key):
         remaining = cache.get(lock_key)
         if remaining:
             return True, int(remaining)
 
-    # ``max`` (not sum) so a single client/username pair is not counted twice.
     attempts = max(
         cache.get(ip_attempts_key, 0),
         cache.get(user_attempts_key, 0),
@@ -65,7 +57,6 @@ def _is_locked_out(request, username=''):
 
 
 def _record_failed_attempt(request, username=''):
-    """Increment the failure counters and lock once the threshold is reached."""
     ip_attempts_key, user_attempts_key, ip_lock_key, user_lock_key = _throttle_keys(request, username)
     cache.set(ip_attempts_key, cache.get(ip_attempts_key, 0) + 1, _LOCKOUT_SECONDS)
     cache.set(user_attempts_key, cache.get(user_attempts_key, 0) + 1, _LOCKOUT_SECONDS)
@@ -81,10 +72,6 @@ def _clear_login_attempts(request, username=''):
         cache.delete(key)
 
 
-# ---------------------------------------------------------------------------
-# Views
-# ---------------------------------------------------------------------------
-
 def register_view(request):
     if request.user.is_authenticated:
         return redirect('pets:dashboard')
@@ -96,10 +83,8 @@ def register_view(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
 
-            # UserProfile is created by the post_save signal in accounts.models
-            # `role` is deliberately not taken from the form: only an admin may
-            # grant it, so a new account always lands on the model default
-            # (Стопанин) and has to be promoted in the admin panel.
+            # Created by the post_save signal in accounts.models. `role` is left
+            # on the model default: only an admin grants it.
             profile = UserProfile.objects.get_or_create(user=user)[0]
             profile.phone = form.cleaned_data.get('phone', '')
             profile.city = form.cleaned_data.get('city', '')
@@ -108,7 +93,7 @@ def register_view(request):
             login(request, user)
             messages.success(
                 request,
-                _("Добре дошли в VetLink, %(name)s! Вашият профил бе създаден успешно.")
+                _("Добре дошли в PetBeacon, %(name)s! Вашият профил бе създаден успешно.")
                 % {"name": user.first_name or user.username},
             )
             return redirect('pets:dashboard')
@@ -126,7 +111,6 @@ def login_view(request):
 
     username = request.POST.get('username', '')
 
-    # Check rate limiting
     locked, remaining = _is_locked_out(request, username)
     if locked:
         minutes = remaining // 60
@@ -153,7 +137,6 @@ def login_view(request):
                 _("Здравейте отново, %(name)s!") % {"name": user.first_name or user.username},
             )
 
-            # Safe redirect — prevent open redirect attacks
             next_url = request.POST.get('next') or request.GET.get('next', '')
             if next_url and url_has_allowed_host_and_scheme(
                 url=next_url,
@@ -175,8 +158,6 @@ def login_view(request):
                 remaining_attempts = max(0, _MAX_ATTEMPTS - cache.get(
                     f"{_ATTEMPTS_PREFIX}{_client_ip(request)}", 0
                 ))
-                # A real plural: Bulgarian and English disagree on the singular
-                # form, so the two shapes must be separate catalogue entries.
                 messages.error(
                     request,
                     ngettext(
@@ -193,7 +174,6 @@ def login_view(request):
 
 @require_POST
 def logout_view(request):
-    """Logout MUST be POST to prevent CSRF-based logout attacks."""
     logout(request)
     messages.info(request, _("Успешно излязохте от профила си. Очакваме ви отново!"))
     return redirect('pets:home')
@@ -201,8 +181,8 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    # Named, not `_`: binding the `get_or_create` flag to `_` would shadow the
-    # gettext `_` imported above and crash the success message below.
+    # Named, not `_`: binding the get_or_create flag to `_` shadows the gettext
+    # `_` imported above and breaks the message below.
     profile, _profile_created = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':

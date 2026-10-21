@@ -9,20 +9,9 @@ from PIL import Image, UnidentifiedImageError
 from .models import Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder
 
 
-# Visual styling for inputs/selects/textareas is owned by the design system and
-# applied at render time by `partials/field.html` (which calls the `add_class`
-# template filter). Widgets here deliberately carry no styling classes, so there
-# is exactly one place to change how a field looks.
-#
-# Checkboxes are the exception: they are rendered by `partials/checkbox.html`
-# without that filter, so they keep their own class here.
 CHECKBOX_CLASSES = "h-5 w-5 shrink-0 cursor-pointer rounded border-ink-300 text-brand-600 focus:ring-2 focus:ring-brand-500 dark:border-ink-600"
 
 
-# Placeholders and labels are wrapped in gettext_lazy because they are declared
-# at import time, long before a request (and therefore a language) exists.
-# Runtime messages use the eager `_` instead, so the catalogue is consulted once
-# per error rather than on every attribute access.
 _photo_placeholder = gettext_lazy("Напр. Рекс, Бела, Макс")
 _breed_placeholder = gettext_lazy("Напр. Немска овчарка, Сиамска...")
 _age_placeholder = gettext_lazy("Напр. 2 г. и 4 мес. (ако рождената дата е неизвестна)")
@@ -35,14 +24,6 @@ _notes_placeholder = gettext_lazy("Характер, навици, контак�
 
 
 class DefaultCheckedCheckboxInput(forms.CheckboxInput):
-    """Checkbox input that renders ``checked`` for unbound forms.
-
-    Django's ``CheckboxInput.get_value()`` returns ``False`` whenever the field
-    name is absent from the submitted data, so ``initial=True`` is never
-    reflected in the rendered HTML. This restores the intended default while
-    still reflecting the real POST data when the form is re-rendered after a
-    validation error.
-    """
 
     def get_value(self, data, files, name):
         if not self.is_bound and name not in data:
@@ -51,11 +32,6 @@ class DefaultCheckedCheckboxInput(forms.CheckboxInput):
 
 
 def _validate_upload_size(uploaded_file, label):
-    """Reject files above the configured cap.
-
-    `label` is passed in already translated by the caller, so the sentence can
-    be reordered freely per language instead of being glued together here.
-    """
     max_bytes = getattr(settings, 'MAX_UPLOAD_SIZE_BYTES', 5 * 1024 * 1024)
     if uploaded_file.size > max_bytes:
         raise forms.ValidationError(
@@ -81,12 +57,6 @@ def _validate_non_negative_money(value, label):
 
 
 def _validate_image(image):
-    """Validate an uploaded image by size, extension *and* real content.
-
-    The extension check alone is trivially bypassable (any file renamed to
-    ``.jpg``), so the file is also opened with Pillow to confirm it really is
-    a decodable image.
-    """
     if not image:
         return image
 
@@ -119,7 +89,6 @@ def _validate_image(image):
 
 
 def _validate_document(doc):
-    """Validate an uploaded medical document by size and extension."""
     if not doc:
         return doc
 

@@ -1,13 +1,11 @@
 ﻿{% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{% translate "Моите домашни любимци | VetLink" %}{% endblock %}
+{% block title %}{% translate "Моите домашни любимци | PetBeacon" %}{% endblock %}
 
 {% block content %}
 {% url 'pets:pet_create' as pet_create_url %}
 
-{% comment %} Literals handed to `include ... with` are never translated, so each one is
-   resolved into a variable first. {% endcomment %}
 {% translate "Моите домашни любимци" as page_title %}
 {% translate "Всички регистрирани животни под ваше наблюдение." as page_subtitle %}
 {% translate "Добави нов любимец" as add_label %}
@@ -27,13 +25,7 @@
 
 <div class="space-y-6">
 
-    {% include "partials/page_header.html" with
-        title=page_title
-        subtitle=page_subtitle
-        icon="fa-solid fa-shield-cat"
-        action_url=pet_create_url
-        action_label=add_label
-    %}
+    {% include "partials/page_header.html" with title=page_title subtitle=page_subtitle icon="fa-solid fa-shield-cat" action_url=pet_create_url action_label=add_label %}
 
     <!-- Search & filters -->
     <div class="card p-4 print-sheet">
@@ -93,8 +85,6 @@
     <!-- Result summary -->
     {% if query or selected_species and selected_species != 'all' %}
         <p class="muted">
-            {% comment %} `page_obj` is absent when the list is short enough not to paginate,
-               so the count comes from the list itself in that case. {% endcomment %}
             {% if page_obj %}
                 {% blocktranslate count counter=page_obj.paginator.count %}{{ counter }} резултат{% plural %}{{ counter }} резултата{% endblocktranslate %}
             {% else %}
@@ -108,13 +98,11 @@
         </p>
     {% endif %}
 
-    <!-- Pet grid -->
     {% if pets %}
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {% for pet in pets %}
             <article class="card card-hover group flex flex-col overflow-hidden">
 
-                <!-- Photo -->
                 <div class="relative h-44 shrink-0 overflow-hidden bg-ink-100 dark:bg-ink-800">
                     {% if pet.photo %}
                         <img src="{{ pet.photo.url }}"
@@ -129,13 +117,11 @@
 
                     <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900/45 to-transparent"></div>
 
-                    <!-- Species -->
                     <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-ink-800 shadow-xs backdrop-blur">
                         <i class="{{ pet.species_icon }} text-[11px]" aria-hidden="true"></i>
                         {{ pet.get_species_display }}
                     </span>
 
-                    <!-- Gender -->
                     {% if pet.gender != 'unknown' %}
                         <span class="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold shadow-xs backdrop-blur
                                      {% if pet.gender == 'male' %}text-sky-700{% else %}text-pink-700{% endif %}">
@@ -145,7 +131,6 @@
                     {% endif %}
                 </div>
 
-                <!-- Body -->
                 <div class="flex flex-1 flex-col gap-3 p-5">
                     <div>
                         <h2 class="truncate text-lg font-bold text-ink-900 transition group-hover:text-brand-700 dark:text-white">
@@ -178,7 +163,6 @@
                         {% endif %}
                     </div>
 
-                    <!-- Counts -->
                     <p class="mt-auto flex items-center gap-3 border-t border-ink-100 pt-3 text-xs text-ink-500 dark:border-ink-800">
                         <span class="inline-flex items-center gap-1.5">
                             <i class="fa-solid fa-syringe text-brand-500" aria-hidden="true"></i>
@@ -213,11 +197,7 @@
             {% endfor %}
         </div>
     {% else %}
-        {% include "partials/empty_state.html" with
-            icon="fa-solid fa-paw"
-            title=empty_title
-            body=empty_body
-        %}
+        {% include "partials/empty_state.html" with icon="fa-solid fa-paw" title=empty_title body=empty_body %}
     {% endif %}
 
     {% include "partials/pagination.html" %}

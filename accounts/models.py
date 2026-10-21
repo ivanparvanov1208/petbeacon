@@ -7,9 +7,8 @@ from django.utils.translation import gettext_lazy
 
 
 class UserProfile(models.Model):
-    # Role labels are lazy so they resolve per request language. The stored value
-    # is always the code on the left, never the label, so switching language
-    # never touches existing rows.
+    # Only the code on the left is ever stored, so switching language never
+    # touches existing rows.
     ROLE_OWNER = 'owner'
     ROLE_VET = 'vet'
 
@@ -48,10 +47,6 @@ class UserProfile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    """Guarantee a profile row exists for every user.
-
-    Uses ``get_or_create`` and never touches existing rows: ``User.save()`` runs
-    on every login (``update_last_login``), and an unconditional write here
-    turned each sign-in into an extra UPDATE against the profile table.
-    """
+    # get_or_create, not create: User.save() also runs on every login to bump
+    # update_last_login, and an unconditional write cost an extra UPDATE each time.
     UserProfile.objects.get_or_create(user=instance)

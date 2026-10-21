@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{% translate "Вход в профила | VetLink" %}{% endblock %}
+{% block title %}{% translate "Вход в профила | PetBeacon" %}{% endblock %}
 
 {% block content %}
 <div class="mx-auto max-w-md space-y-6 py-6">
@@ -11,7 +11,7 @@
             <i class="fa-solid fa-lock" aria-hidden="true"></i>
         </span>
         <div>
-            <h1 class="text-2xl font-bold tracking-tight text-ink-900 dark:text-white">{% translate "Вход в VetLink" %}</h1>
+            <h1 class="text-2xl font-bold tracking-tight text-ink-900 dark:text-white">{% translate "Вход в PetBeacon" %}</h1>
             <p class="muted mt-1">{% translate "Въведете данните си за достъп до профила." %}</p>
         </div>
     </div>
@@ -35,15 +35,11 @@
             {% csrf_token %}
 
             {% if form.non_field_errors %}
-                <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-200"
-                     role="alert">
-                    {% for error in form.non_field_errors %}
-                        <p class="flex items-start gap-2">
-                            <i class="fa-solid fa-circle-exclamation mt-0.5 shrink-0" aria-hidden="true"></i>
-                            {{ error }}
-                        </p>
-                    {% endfor %}
-                </div>
+                {% include "partials/non_field_errors.html" with variant="inset" %}
+            {% endif %}
+
+            {% if form.username.errors or form.password.errors %}
+                {% include "partials/error_summary.html" with form=form %}
             {% endif %}
 
             {% include "partials/field.html" with field=form.username %}

@@ -1,6 +1,13 @@
 from django import forms
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from .models import Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder
+
+
+admin.site.site_header = _("PetBeacon · Администрация")
+admin.site.site_title = _("PetBeacon — Администрация")
+admin.site.index_title = _("Център за управление")
+admin.site.index_template = "admin/petcare_index.html"
 
 
 class VaccinationInline(admin.TabularInline):

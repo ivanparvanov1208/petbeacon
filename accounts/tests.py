@@ -34,7 +34,6 @@ class UserProfileModelTests(TestCase):
 
 
 class RoleTests(TestCase):
-    """`role` is admin-granted only, and defaults to Стопанин."""
 
     def test_only_two_roles_exist(self):
         codes = [code for code, _label in UserProfile.ROLE_CHOICES]
@@ -60,12 +59,10 @@ class RoleTests(TestCase):
         self.assertEqual(profile.get_role_display(), 'Ветеринар')
 
     def test_role_field_is_not_editable_by_the_user(self):
-        """Neither account form may accept a role from the visitor."""
         self.assertNotIn('role', UserRegistrationForm().fields)
         self.assertNotIn('role', UserProfileUpdateForm().fields)
 
     def test_registering_cannot_self_assign_a_role(self):
-        """A posted `role` is ignored; the account lands on Стопанин."""
         self.client.post(
             reverse('accounts:register'),
             registration_payload(username='selfpromoted', role='vet'),
@@ -102,7 +99,6 @@ class RoleTests(TestCase):
         self.assertIn('role', options.list_filter)
 
     def test_role_is_not_required_on_the_profile_form(self):
-        """The field is absent, so profile edits need no role payload."""
         user = User.objects.create_user(
             username='norole', password='password123', email='n@example.com'
         )
@@ -125,7 +121,6 @@ class RegistrationFormTests(TestCase):
         self.assertIn('password_confirm', form.errors)
 
     def test_weak_password_is_rejected(self):
-        """Regression: AUTH_PASSWORD_VALIDATORS were never applied."""
         form = UserRegistrationForm(data=registration_payload(
             password='password',
             password_confirm='password',
@@ -216,11 +211,6 @@ class RegistrationViewTests(TestCase):
 
 
 class LoginRateLimitTests(TestCase):
-    """The counter must live in the cache, not the session.
-
-    A session-scoped counter is reset simply by dropping cookies, which is what
-    a credential-stuffing client would do on every request.
-    """
 
     def setUp(self):
         cache.clear()
@@ -237,7 +227,6 @@ class LoginRateLimitTests(TestCase):
             self.attempt()
         self.assertEqual(self.attempt().status_code, 200)
 
-        # Threshold reached — the next attempt is refused before authentication.
         response = self.attempt()
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['locked_out'])
@@ -246,7 +235,6 @@ class LoginRateLimitTests(TestCase):
         for _ in range(self.max_attempts):
             self.attempt()
 
-        # Simulate an attacker dropping cookies to reset a session counter.
         self.client.cookies.clear()
 
         response = self.attempt()
@@ -268,7 +256,6 @@ class LoginRateLimitTests(TestCase):
         self.client.post(self.url, {'username': 'victim', 'password': 'password123'})
         self.assertNotIn('login_attempts', str(cache._cache))
 
-        # A later wrong attempt must not be treated as attempt #5.
         self.attempt()
         response = self.client.post(self.url, {
             'username': 'victim', 'password': 'password123',

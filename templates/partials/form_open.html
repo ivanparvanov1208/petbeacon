@@ -1,28 +1,10 @@
 {% load i18n %}
-{% comment %}
-Form shell: optional error summary, an opener for field groups, and the
-sticky action bar with Cancel / Save.
-
-Usage:
-    {% include "partials/form_open.html" with form=form submit_label="Запази" cancel_url="..." %}
-      ...fields...
-    {% include "partials/form_close.html" %}
-{% endcomment %}
 <form method="POST" enctype="multipart/form-data" novalidate
       class="card overflow-hidden print-sheet">
     {% csrf_token %}
 
     {% if form.non_field_errors %}
-        <div class="border-b border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800 print-hidden"
-             role="alert">
-            <p class="flex items-center gap-2 font-semibold">
-                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-                {% translate "Възникна проблем при изпращането на формуляра" %}
-            </p>
-            <ul class="mt-1.5 list-disc space-y-0.5 pl-6 text-xs">
-                {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
-            </ul>
-        </div>
+        {% include "partials/non_field_errors.html" %}
     {% endif %}
 
     {% if form.errors %}

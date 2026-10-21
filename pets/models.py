@@ -8,9 +8,8 @@ from datetime import date
 
 
 class Pet(models.Model):
-    # Choice labels are lazy so they resolve per request language. The stored
-    # value is always the code on the left, never the label, so switching
-    # language never touches existing rows.
+    # Choice labels are lazy so they resolve per request language; only the
+    # code is stored.
     SPECIES_CHOICES = [
         ('dog', gettext_lazy("Куче")),
         ('cat', gettext_lazy("Котка")),
@@ -82,12 +81,6 @@ class Pet(models.Model):
 
     @property
     def age_display(self):
-        """A human-readable age, localised for the active language.
-
-        The units are spelled out rather than abbreviated because a short
-        English form ("2y 4m") would not fit the badges this renders into, and
-        the plural rule differs between the two languages.
-        """
         if not self.birth_date:
             return self.approximate_age or _("Не е посочена")
 
@@ -338,11 +331,6 @@ class Reminder(models.Model):
         return _("%(title)s (%(date)s)") % {"title": self.title, "date": self.due_date}
 
     def save(self, *args, **kwargs):
-        """Keep ``completed_at`` in sync with ``is_completed``.
-
-        ``is_completed`` is the source of truth; the timestamp is derived so no
-        caller can leave the two fields inconsistent.
-        """
         if self.is_completed:
             if self.completed_at is None:
                 self.completed_at = timezone.now()

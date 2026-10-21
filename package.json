@@ -1,8 +1,8 @@
 {
-  "name": "vetlink",
+  "name": "petbeacon",
   "version": "1.0.0",
   "private": true,
-  "description": "Front-end build for VetLink (Django). Compiles Tailwind CSS from templates/ into static/css/app.css.",
+  "description": "Front-end build for PetBeacon (Django). Compiles Tailwind CSS from templates/ into static/css/app.css.",
   "scripts": {
     "build": "tailwindcss -i ./static/css/input.css -o ./static/css/app.css --minify",
     "dev": "tailwindcss -i ./static/css/input.css -o ./static/css/app.css --watch --poll=1000",

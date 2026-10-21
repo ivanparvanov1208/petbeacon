@@ -1,0 +1,40 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="petcare-admin-welcome" aria-labelledby="petcare-admin-title">
+    <div class="petcare-admin-welcome__copy">
+        <p class="petcare-admin-eyebrow"><span aria-hidden="true">✦</span> {% translate "PetBeacon · Администрация" %}</p>
+        <h1 id="petcare-admin-title">{% translate "Добре дошли в PetBeacon" %}</h1>
+        <p>{% translate "Управлявайте любимците, здравните записи, напомнянията и профилите на собствениците от едно място." %}</p>
+        <div class="petcare-admin-actions">
+            <a class="petcare-admin-button" href="#content-main">{% translate "Към приложенията" %}<span aria-hidden="true">→</span></a>
+            <span class="petcare-admin-signoff"><span aria-hidden="true">♥</span> {% translate "Грижа за всеки любимец" %}</span>
+        </div>
+    </div>
+    <div class="petcare-admin-art" aria-hidden="true">
+        <span class="petcare-admin-art__orbit petcare-admin-art__orbit--one"></span>
+        <span class="petcare-admin-art__orbit petcare-admin-art__orbit--two"></span>
+        <span class="petcare-admin-art__spark petcare-admin-art__spark--one">✦</span>
+        <span class="petcare-admin-art__spark petcare-admin-art__spark--two">✧</span>
+        <svg class="petcare-admin-pet" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M73 91C59 54 65 31 79 27C96 22 112 48 119 71" fill="#F7D7B2"/>
+            <path d="M187 91C201 54 195 31 181 27C164 22 148 48 141 71" fill="#F7D7B2"/>
+            <path d="M74 82C68 59 70 44 78 42C87 40 98 56 103 73" fill="#E99B83"/>
+            <path d="M186 82C192 59 190 44 182 42C173 40 162 56 157 73" fill="#E99B83"/>
+            <path d="M130 48C83 48 56 83 58 132C60 178 87 205 130 205C173 205 200 178 202 132C204 83 177 48 130 48Z" fill="#FFF8EA"/>
+            <path d="M96 118C101 110 109 110 114 118" stroke="#315A4F" stroke-width="6" stroke-linecap="round"/>
+            <path d="M146 118C151 110 159 110 164 118" stroke="#315A4F" stroke-width="6" stroke-linecap="round"/>
+            <ellipse cx="130" cy="143" rx="20" ry="15" fill="#E99B83"/>
+            <path d="M130 151V160C130 168 123 172 116 168" stroke="#315A4F" stroke-width="5" stroke-linecap="round"/>
+            <path d="M130 160C130 168 137 172 144 168" stroke="#315A4F" stroke-width="5" stroke-linecap="round"/>
+            <path d="M91 148L68 142M93 160L69 162M169 148L192 142M167 160L191 162" stroke="#D69D75" stroke-width="3" stroke-linecap="round"/>
+            <path d="M76 191C98 207 162 207 184 191L190 211C162 231 98 231 70 211L76 191Z" fill="#62B6A3"/>
+            <path d="M130 204L139 214L130 224L121 214L130 204Z" fill="#F4BB68"/>
+            <circle cx="130" cy="214" r="3" fill="#FFF8EA"/>
+        </svg>
+        <span class="petcare-admin-art__label"><span aria-hidden="true">✦</span> PetBeacon</span>
+    </div>
+</section>
+{{ block.super }}
+{% endblock %}

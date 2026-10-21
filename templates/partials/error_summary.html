@@ -1,10 +1,4 @@
 {% load i18n %}
-{% comment %}
-Consolidated error summary shown at the top of a form when validation fails.
-Each entry links to the offending field.
-
-Usage: {% include "partials/error_summary.html" with form=form %}
-{% endcomment %}
 {% translate "Поле" as fallback_label %}
 <div class="border-b border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-800 print-hidden"
      role="alert" tabindex="-1" id="form-errors">

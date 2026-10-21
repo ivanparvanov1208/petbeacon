@@ -1,18 +1,13 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{{ title }} | VetLink{% endblock %}
+{% block title %}{{ title }} | PetBeacon{% endblock %}
 
 {% block content %}
 {% translate "Назад към напомнянията" as back_label %}
 <div class="mx-auto max-w-2xl space-y-6">
 
-    {% include "partials/page_header.html" with
-        title=title
-        icon="fa-solid fa-bell"
-        back_url=cancel_url
-        back_label=back_label
-    %}
+    {% include "partials/page_header.html" with title=title icon="fa-solid fa-bell" back_url=cancel_url back_label=back_label %}
 
     {% include "partials/form_open.html" with form=form submit_label=button_text cancel_url=cancel_url %}
 

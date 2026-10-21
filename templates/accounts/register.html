@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{% translate "Регистрация на нов профил | VetLink" %}{% endblock %}
+{% block title %}{% translate "Регистрация на нов профил | PetBeacon" %}{% endblock %}
 
 {% block content %}
 <div class="mx-auto max-w-lg space-y-6 py-6">
@@ -11,7 +11,7 @@
             <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
         </span>
         <div>
-            <h1 class="text-2xl font-bold tracking-tight text-ink-900 dark:text-white">{% translate "Регистрация в VetLink" %}</h1>
+            <h1 class="text-2xl font-bold tracking-tight text-ink-900 dark:text-white">{% translate "Регистрация в PetBeacon" %}</h1>
             <p class="muted mt-1">{% translate "Създайте профил и организирайте грижата за любимците си." %}</p>
         </div>
     </div>
@@ -19,6 +19,10 @@
     <div class="card p-6 sm:p-7 print-sheet">
         <form method="POST" class="space-y-5" novalidate>
             {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                {% include "partials/non_field_errors.html" with variant="inset" %}
+            {% endif %}
 
             {% if form.errors %}
                 {% include "partials/error_summary.html" with form=form %}

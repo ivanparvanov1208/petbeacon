@@ -1,9 +1,3 @@
-"""Extract translatable strings into ``locale/<lang>/LC_MESSAGES/django.po``.
-
-A pure-Python stand-in for ``manage.py makemessages`` that does not need GNU
-gettext. Run it after changing any translatable string, then fill in the
-untranslated entries and run ``manage.py i18n_compile``.
-"""
 
 from pathlib import Path
 
@@ -39,9 +33,6 @@ class Command(BaseCommand):
             merged, removed = i18n_tools.merge(found, existing)
 
             if check_only:
-                # For the source language an empty msgstr is the finished state:
-                # the msgid *is* the text, and gettext falls back to it. Only
-                # obsolete entries are a problem there.
                 if code == settings.LANGUAGE_CODE:
                     pending = removed
                     label = f"{len(removed)} obsolete"

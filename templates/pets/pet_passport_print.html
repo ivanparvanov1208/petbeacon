@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% blocktranslate with name=pet.name %}Здравен паспорт — {{ name }} | VetLink{% endblocktranslate %}{% endblock %}
+{% block title %}{% blocktranslate with name=pet.name %}Здравен паспорт — {{ name }} | PetBeacon{% endblocktranslate %}{% endblock %}
 
 {% block content %}
 {% translate "Принтирай / Запази като PDF" as print_label %}
@@ -35,15 +35,13 @@
         {% translate "Този документ е предназначен за носене при ветеринарен лекар. Използвайте „Принтирай“ и изберете „Запази като PDF“, за да го споделите електронно." %}
     </p>
 
-    <!-- ================= THE DOCUMENT ================= -->
     <article class="card p-8 print-sheet sm:p-12">
 
-        <!-- Header -->
         <header class="flex items-start justify-between gap-6 border-b-2 border-ink-900 pb-6">
             <div class="space-y-1.5">
                 <p class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-brand-700">
                     <i class="fa-solid fa-paw" aria-hidden="true"></i>
-                    VetLink &middot; {% translate "Ветеринарна документация" %}
+                    PetBeacon &middot; {% translate "Ветеринарна документация" %}
                 </p>
                 <h1 class="text-2xl font-extrabold tracking-tight text-ink-900 sm:text-3xl">
                     {% translate "ЗДРАВЕН ПАСПОРТ И МЕДИЦИНСКО КАРТОНЧЕ" %}
@@ -57,7 +55,6 @@
             </span>
         </header>
 
-        <!-- Identity -->
         <section class="grid grid-cols-1 gap-6 pt-6 sm:grid-cols-3">
             <div class="aspect-square overflow-hidden rounded-xl border border-ink-200 bg-ink-100">
                 {% if pet.photo %}
@@ -229,7 +226,7 @@
         <!-- Signature -->
         <footer class="mt-8 flex flex-col gap-8 border-t-2 border-ink-200 pt-6 text-xs text-ink-500 sm:flex-row sm:items-end sm:justify-between">
             <div>
-                <p>{% translate "Издаден чрез електронна система VetLink" %}</p>
+                <p>{% translate "Издаден чрез електронна система PetBeacon" %}</p>
                 <p>{% blocktranslate with day=today|date:"SHORT_DATE_FORMAT" %}Дата: {{ day }} г.{% endblocktranslate %}</p>
             </div>
             <div class="sm:text-right">

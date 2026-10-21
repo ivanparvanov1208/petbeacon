@@ -1,20 +1,7 @@
-/* ==========================================================================
-   VetLink — design system
-   Tailwind CSS v4, CSS-first configuration.
-
-   Everything visual derives from the tokens in @theme. Templates should
-   reference the semantic class names defined here (.btn, .card, .field …)
-   rather than long ad-hoc utility strings, so the whole UI can be re-skinned
-   from this single file.
-
-   Components are declared with @utility (not @layer components) so that they
-   are real Tailwind utilities and can therefore be composed with @apply and
-   overridden by any utility class.
-   ========================================================================== */
 
 @import "tailwindcss";
 
-/* Scan Django templates as well as Python sources for class names. */
+/* Templates and Python hold most of the class names. */
 @source "../../templates/**/*.html";
 @source "../../pets/**/*.py";
 @source "../../accounts/**/*.py";
@@ -22,11 +9,8 @@
 /* Honour the OS colour scheme; .dark can also be toggled manually. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* --------------------------------------------------------------------------
-   1. Design tokens
-   -------------------------------------------------------------------------- */
 @theme {
-    /* -- Brand: deep teal, the VetLink identity ---------------------------- */
+    /* -- Brand: deep teal, the PetBeacon identity ---------------------------- */
     --color-brand-50: oklch(0.977 0.014 182);
     --color-brand-100: oklch(0.949 0.029 182);
     --color-brand-200: oklch(0.902 0.058 182);
@@ -52,7 +36,6 @@
     --color-ink-900: oklch(0.208 0.008 250);
     --color-ink-950: oklch(0.145 0.007 250);
 
-    /* -- Typography ------------------------------------------------------- */
     --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
         "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", Menlo, monospace;
@@ -73,7 +56,6 @@
     --shadow-lg: 0 12px 28px -6px rgb(15 23 42 / 0.12), 0 6px 12px -6px rgb(15 23 42 / 0.06);
     --shadow-xl: 0 24px 48px -12px rgb(15 23 42 / 0.16);
 
-    /* -- Motion ----------------------------------------------------------- */
     --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
     --animate-fade-in-up: fade-in-up 0.35s var(--ease-out-soft) both;
     --animate-shimmer: shimmer 1.6s linear infinite;
@@ -99,9 +81,6 @@
     }
 }
 
-/* --------------------------------------------------------------------------
-   2. Base layer
-   -------------------------------------------------------------------------- */
 @layer base {
     html {
         -webkit-text-size-adjust: 100%;
@@ -182,9 +161,6 @@
     }
 }
 
-/* --------------------------------------------------------------------------
-   3. Components
-   -------------------------------------------------------------------------- */
 
 /* ---- Layout primitives ---- */
 
@@ -200,7 +176,6 @@
     @apply transition duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md;
 }
 
-/* ---- Buttons ---- */
 
 @utility btn {
     @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5
@@ -271,8 +246,6 @@
     @apply border-rose-400 focus:border-rose-500 focus:ring-rose-500/20;
 }
 
-/* File inputs need a restyled native button, so they get their own utility
-   rather than the plain `.field` treatment. */
 @utility file-input {
     @apply w-full cursor-pointer rounded-lg border border-ink-200 bg-white px-3 py-2.5 text-sm
            text-ink-600 shadow-xs transition
@@ -327,7 +300,6 @@
     @apply bg-brand-50 text-brand-700 hover:bg-brand-100 hover:text-brand-800;
 }
 
-/* ---- Tabs ---- */
 
 @utility tab {
     @apply relative flex items-center gap-2 whitespace-nowrap border-b-2 border-transparent
@@ -350,8 +322,6 @@
            hover:border-ink-200 hover:bg-ink-100 hover:text-ink-900;
 }
 
-/* Active state is driven from markup (`aria-expanded`), not a hover, so it
-   survives the pointer leaving the button while the panel is open. */
 @utility lang-trigger-open {
     @apply border-ink-200 bg-ink-100 text-ink-900;
 }
@@ -360,11 +330,6 @@
     @apply text-xs font-bold tracking-wide;
 }
 
-/* Dropdown panel, positioned by the parent `.relative` wrapper.
-
-   Deliberately does NOT include `hidden`: visibility is driven purely by the
-   `hidden` utility that the toggle script adds and removes, so baking
-   `display: none` in here would keep the panel closed forever. */
 @utility lang-panel {
     @apply absolute right-0 top-full z-50 w-40 pt-2;
 }
@@ -374,8 +339,6 @@
            text-ink-700 transition hover:bg-ink-100 hover:text-ink-900;
 }
 
-/* The row for the language currently in use: it stays visible but inert, which
-   is friendlier than hiding it and shifting the list under the cursor. */
 @utility lang-option-active {
     @apply cursor-default bg-brand-50 text-brand-700 hover:bg-brand-50 hover:text-brand-700;
 }
@@ -462,10 +425,6 @@
     }
 }
 
-/* --------------------------------------------------------------------------
-   4. Dark-mode counterparts
-   Declared with @custom-variant dark above, so `.dark .foo` works.
-   -------------------------------------------------------------------------- */
 @layer utilities {
     .dark .card {
         @apply border-ink-800 bg-ink-900;
@@ -662,9 +621,6 @@
     }
 }
 
-/* --------------------------------------------------------------------------
-   5. Print — the vet passport must stay clean on paper
-   -------------------------------------------------------------------------- */
 @media print {
     body {
         background: #fff !important;

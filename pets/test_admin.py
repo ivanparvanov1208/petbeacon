@@ -6,11 +6,6 @@ from .models import Pet, Reminder
 
 
 class PetAdminInlineTests(TestCase):
-    """Regression: saving a Pet with an inline Reminder raised ValidationError.
-
-    ``Reminder.owner`` is a non-nullable FK to ``User`` and had no field in the
-    inline form, so every inline save attempted to write ``owner = NULL``.
-    """
 
     def setUp(self):
         self.admin_user = User.objects.create_superuser(
@@ -25,6 +20,15 @@ class PetAdminInlineTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_admin_dashboard_uses_petbeacon_design(self):
+        response = self.client.get(reverse('admin:index'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'petcare-admin-welcome')
+        self.assertContains(response, 'petcare-admin-pet')
+        self.assertContains(response, 'Грижа за всеки любимец')
+        self.assertContains(response, 'css/admin.css')
+
     def test_creating_pet_with_inline_reminder_assigns_owner(self):
         response = self.client.post(reverse('admin:pets_pet_add'), {
             'name': 'Бела',
@@ -36,8 +40,6 @@ class PetAdminInlineTests(TestCase):
             'special_notes': '',
             'birth_date_0': '',
             'birth_date_1': '',
-            # Inline prefixes: vaccinations / medical records / medications /
-            # vet visits / reminders.
             'vaccinations-TOTAL_FORMS': '0',
             'vaccinations-INITIAL_FORMS': '0',
             'vaccinations-MIN_NUM_FORMS': '0',

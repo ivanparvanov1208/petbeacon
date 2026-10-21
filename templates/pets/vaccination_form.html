@@ -1,23 +1,14 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{{ title }} | VetLink{% endblock %}
+{% block title %}{{ title }} | PetBeacon{% endblock %}
 
 {% block content %}
 {% translate "Назад към ваксинациите" as back_label %}
 {% translate "Запази ваксинацията" as submit_label %}
 <div class="mx-auto max-w-2xl space-y-6">
 
-    {% comment %} The subtitle interpolates the pet's name, so it is assembled in the view
-       where the page's copy lives — a `concat` of a literal and a variable
-       cannot be translated. {% endcomment %}
-    {% include "partials/page_header.html" with
-        title=title
-        subtitle=subtitle
-        icon="fa-solid fa-syringe"
-        back_url=cancel_url
-        back_label=back_label
-    %}
+    {% include "partials/page_header.html" with title=title subtitle=subtitle icon="fa-solid fa-syringe" back_url=cancel_url back_label=back_label %}
 
     {% include "partials/form_open.html" with form=form submit_label=submit_label cancel_url=cancel_url %}
 

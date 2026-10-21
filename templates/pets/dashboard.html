@@ -1,22 +1,18 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{% translate "Табло за управление | VetLink" %}{% endblock %}
+{% block title %}{% translate "Табло за управление | PetBeacon" %}{% endblock %}
 
 {% block content %}
-{# Resolved up front because a `default:` filter argument is never translated. #}
 {% translate "През целия ден" as all_day %}
 <div class="space-y-6">
 
-    <!-- ================= WELCOME ================= -->
     <div class="card flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between print-sheet">
         <div class="min-w-0">
             <h1 class="page-title">
                 {% blocktranslate with name=user.first_name|default:user.username %}Здравейте, {{ name }}!{% endblocktranslate %}
             </h1>
             <p class="muted mt-1.5">
-                {% comment %} SHORT_DATE_FORMAT follows the active language, so the
-                   localised month name comes for free. {% endcomment %}
                 {% blocktranslate with day=today|date:"SHORT_DATE_FORMAT" %}Обобщение на здравето и задачите за {{ day }}{% endblocktranslate %}
             </p>
         </div>
@@ -31,7 +27,6 @@
         </div>
     </div>
 
-    <!-- ================= STATS ================= -->
     <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <a href="{% url 'pets:pet_list' %}" class="card card-hover group p-4 sm:p-5">
             <div class="flex items-start justify-between gap-3">
@@ -85,7 +80,6 @@
         </a>
     </div>
 
-    <!-- ================= URGENT ALERTS ================= -->
     {% if urgent_total %}
     <section class="overflow-hidden rounded-2xl border border-rose-200 bg-gradient-to-r from-rose-50 to-amber-50 dark:border-rose-900/60 dark:from-rose-950/40 dark:to-amber-950/20"
              aria-labelledby="alerts-heading">
@@ -102,21 +96,12 @@
                     {% for vac in vaccinations_overdue %}
                         <li class="flex items-start gap-2">
                             <i class="fa-solid fa-syringe mt-1 shrink-0 text-rose-500" aria-hidden="true"></i>
-                            {% comment %} A blocktranslate may contain text and variables but no block
-                               tags, so the pet link cannot live inside it. The sentence is
-                               split either side of the link — a boundary that falls in the
-                               same place in both languages, and the link text itself is
-                               user data rather than translatable copy. The separating space
-                               lives in the markup, not in the msgid, so a translator never
-                               has to reproduce leading whitespace. {% endcomment %}
                             <span>{% blocktranslate with vaccine=vac.name due=vac.next_due_date|date:"SHORT_DATE_FORMAT" %}Ваксина <strong>{{ vaccine }}</strong> за{% endblocktranslate %} <a href="{% url 'pets:pet_detail' vac.pet.pk %}?tab=vaccinations" class="font-semibold underline decoration-rose-300 underline-offset-2 hover:decoration-rose-600">{{ vac.pet.name }}</a> {% blocktranslate with due=vac.next_due_date|date:"SHORT_DATE_FORMAT" %}е била дължима на {{ due }}{% endblocktranslate %}</span>
                         </li>
                     {% endfor %}
                     {% for rem in overdue_reminders %}
                         <li class="flex items-start gap-2">
                             <i class="fa-solid fa-clock mt-1 shrink-0 text-rose-500" aria-hidden="true"></i>
-                            {% comment %} The optional pet name sits at a natural boundary after a dash,
-                               which keeps it outside the blocktranslate. {% endcomment %}
                             <span>{% blocktranslate with title=rem.title due=rem.due_date|date:"SHORT_DATE_FORMAT" %}Напомняне: <strong>{{ title }}</strong>{% endblocktranslate %}{% if rem.pet %} — {{ rem.pet.name }}{% endif %} {% blocktranslate with due=rem.due_date|date:"SHORT_DATE_FORMAT" %}&middot; краен срок {{ due }}{% endblocktranslate %}</span>
                         </li>
                     {% endfor %}
@@ -130,7 +115,6 @@
     </section>
     {% endif %}
 
-    <!-- ================= MAIN GRID ================= -->
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
 
         <!-- ---------- Left column ---------- -->
@@ -278,7 +262,6 @@
         <!-- ---------- Right column ---------- -->
         <div class="space-y-6 lg:col-span-5">
 
-            <!-- Pets -->
             <section class="card p-5 print-sheet" aria-labelledby="pets-heading">
                 <div class="mb-4 flex items-center justify-between">
                     <h2 id="pets-heading" class="section-title">

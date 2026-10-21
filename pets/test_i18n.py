@@ -1,12 +1,3 @@
-"""Tests for the Bulgarian/English language switcher and the translation catalogues.
-
-Two things are easy to break silently and expensive to notice:
-
-* a catalogue drifting out of date with the source, so new or reworded strings
-  silently fall back to Bulgarian on the English site, and
-* the switcher itself — a form that posts to the wrong endpoint, or a ``next``
-  that drops the visitor somewhere other than the page they were reading.
-"""
 
 import pathlib
 import re
@@ -23,8 +14,6 @@ from pets.models import Pet, Reminder
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 LOCALE_DIR = BASE_DIR / "locale"
 
-# Any run of Cyrillic characters. Used to assert that the English pages carry no
-# untranslated source text, and (as a control) that the Bulgarian pages do.
 CYRILLIC_RE = re.compile(r"[Ѐ-ӿ]")
 
 
@@ -33,12 +22,6 @@ def po_path(code):
 
 
 def setUpModule():
-    """Start from the default language.
-
-    LocaleMiddleware activates a language per request and never deactivates it,
-    so the /en/ fetches below would otherwise leave English active for any test
-    module that happens to run next in the same thread.
-    """
     translation.activate(settings.LANGUAGE_CODE)
 
 
@@ -47,11 +30,6 @@ def tearDownModule():
 
 
 class DefaultLanguageMixin:
-    """Pin the active language to the default for one test class.
-
-    Tests in this module fetch /en/… on purpose, which activates English in
-    thread-local state for the rest of the process.
-    """
 
     def setUp(self):
         super().setUp()
@@ -60,7 +38,6 @@ class DefaultLanguageMixin:
 
 
 class CatalogueIntegrityTests(DefaultLanguageMixin, TestCase):
-    """The compiled catalogues must exist and be in step with the source."""
 
     def test_every_language_has_a_po_and_a_mo(self):
         for code, _name in settings.LANGUAGES:
@@ -79,7 +56,6 @@ class CatalogueIntegrityTests(DefaultLanguageMixin, TestCase):
         )
 
     def test_catalogue_matches_the_current_source(self):
-        """Run `manage.py i18n_extract` when this fails."""
         stale = []
         for code, _name in settings.LANGUAGES:
             existing = i18n_tools.parse_po(po_path(code))
@@ -124,12 +100,9 @@ class CatalogueIntegrityTests(DefaultLanguageMixin, TestCase):
 
 
 class LanguageSwitcherTests(TestCase):
-    """The switcher posts to set_language and returns to the same page."""
 
     def setUp(self):
         self.client = Client()
-        # `reverse` bakes the active language into the URL, and a previous test
-        # may have left one activated, so every reverse here is pinned.
         self.addCleanup(translation.activate, settings.LANGUAGE_CODE)
         translation.activate(settings.LANGUAGE_CODE)
 
@@ -158,13 +131,10 @@ class LanguageSwitcherTests(TestCase):
         self.assertIn("Започнете безплатно", html)
 
     def test_language_prefix_alone_selects_the_language(self):
-        """The URL prefix must work even with no cookie set."""
         self.assertIn("Get started for free", self.client.get("/en/").content.decode())
         self.assertIn("Започнете безплатно", self.client.get("/bg/").content.decode())
 
     def test_switcher_is_rendered_for_anonymous_and_authenticated_users(self):
-        # Bulgarian is the active language here, so it is the *English* options
-        # that are rendered as submit buttons.
         html = self.client.get(reverse("pets:home")).content.decode()
         self.assertIn(reverse("set_language"), html)
         self.assertEqual(html.count('name="language" value="en"'), 2)
@@ -179,17 +149,11 @@ class LanguageSwitcherTests(TestCase):
         self.assertEqual(html.count('name="language" value="bg"'), 0)
 
     def test_switcher_marks_the_active_language_and_hides_it_from_tab_order(self):
-        """The current language is inert text, not a button.
-
-        A button that switches to the language already in use is a dead control
-        in the tab sequence, so it is rendered as a labelled span instead. Two
-        switchers exist per page (desktop dropdown + mobile segment), hence two.
-        """
         html = self.client.get("/en/").content.decode()
         self.assertIn('aria-current="true"', html)
         self.assertEqual(html.count('name="language" value="bg"'), 2)
         self.assertEqual(html.count('name="language" value="en"'), 0)
-        self.assertIn("Български", html)   # endonyms, shown natively
+        self.assertIn("Български", html)
 
     def test_switcher_preserves_the_current_path_in_next(self):
         user = User.objects.create_user(username="nextpath", password="password123")
@@ -201,13 +165,11 @@ class LanguageSwitcherTests(TestCase):
         self.assertIn(f'value="{url}"', html)
 
     def test_switcher_works_without_javascript(self):
-        """A plain form submit is the whole mechanism; no JS is involved."""
         html = self.client.get("/bg/").content.decode()
         self.assertIn(f'<form method="POST" action="{reverse("set_language")}">', html)
         self.assertIn('type="submit" name="language"', html)
 
     def test_bare_root_redirects_to_the_default_language_prefix(self):
-        """LocaleMiddleware adds the prefix rather than 404-ing on `/`."""
         response = self.client.get("/", follow=False)
         self.assertRedirects(
             response, f"/{settings.LANGUAGE_CODE}/", fetch_redirect_response=False
@@ -221,7 +183,6 @@ class LanguageSwitcherTests(TestCase):
 
 @override_settings(LANGUAGES=[("bg", "Български"), ("en", "English")])
 class TranslationRenderingTests(DefaultLanguageMixin, TestCase):
-    """The two languages must render materially different pages."""
 
     def setUp(self):
         self.user = User.objects.create_user(username="render", password="password123")
@@ -233,12 +194,6 @@ class TranslationRenderingTests(DefaultLanguageMixin, TestCase):
         )
 
     def _unprefixed(self, patterns):
-        """Resolve `patterns` and strip the language prefix `reverse` inserts.
-
-        `reverse` uses the active language's prefix, so the paths are built under
-        the default language and the prefix removed; each test then re-attaches
-        whichever prefix it wants to exercise.
-        """
         with translation.override(settings.LANGUAGE_CODE):
             paths = [
                 reverse(name, kwargs=kwargs) if kwargs else reverse(name)
@@ -267,8 +222,6 @@ class TranslationRenderingTests(DefaultLanguageMixin, TestCase):
         ])
 
     def test_every_page_renders_in_both_languages(self):
-        # The auth pages redirect an already-authenticated visitor, so they are
-        # exercised signed out and the rest signed in.
         for path in self._public_paths():
             for code in ("bg", "en"):
                 with self.subTest(path=path, lang=code):
@@ -281,10 +234,6 @@ class TranslationRenderingTests(DefaultLanguageMixin, TestCase):
                     self.assertEqual(self.client.get(f"/{code}{path}").status_code, 200)
 
     def test_english_pages_contain_no_cyrillic_chrome(self):
-        """Catches a string that was added to the source but never translated."""
-        # The pet is named in Cyrillic, which is user data and must survive, so
-        # this asserts on specific nav/label strings rather than scanning the
-        # whole document for any Cyrillic at all.
         chrome = [
             "Табло", "Любимци", "Напомняния", "Назад", "Отказ", "Запази",
             "Моят профил", "Моите любимци", "Вход", "Изход", "Търсене",
@@ -307,7 +256,6 @@ class TranslationRenderingTests(DefaultLanguageMixin, TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, html)
     def test_switcher_next_never_double_prefixes_the_language(self):
-        """`next` must be the current path exactly once, or the switch 404s."""
         self.client.force_login(self.user)
         for code in ("bg", "en"):
             for path in self._private_paths():
@@ -339,7 +287,7 @@ class TranslationRenderingTests(DefaultLanguageMixin, TestCase):
         with translation.override("en"):
             pet.birth_date = today.replace(year=today.year - 2)
             self.assertIn("yr", pet.age_display)
-            pet.birth_date = today  # 0 months -> falls through to days
+            pet.birth_date = today
             self.assertEqual(pet.age_display, "0 days")
             pet.birth_date = date(today.year - 1, today.month, today.day - 1) \
                 if today.day > 1 else today
@@ -347,7 +295,6 @@ class TranslationRenderingTests(DefaultLanguageMixin, TestCase):
 
 
 class FormTranslationTests(TestCase):
-    """Form labels, placeholders and validation messages are translated."""
 
     def test_pet_form_placeholders_translate(self):
         from pets.forms import PetForm
@@ -383,7 +330,6 @@ class FormTranslationTests(TestCase):
 
 
 class PoRoundTripTests(TestCase):
-    """The hand-rolled .po/.mo tooling must round-trip losslessly."""
 
     def test_po_round_trip_preserves_contexts_and_plurals(self):
         original = i18n_tools.Catalogue([
@@ -404,13 +350,6 @@ class PoRoundTripTests(TestCase):
             path.unlink(missing_ok=True)
 
     def test_mo_keys_match_python_gettext_conventions(self):
-        """Plural keys split on NUL; context keys use EOT, never NUL.
-
-        Python's gettext splits a NUL-bearing key in half to recover the plural
-        forms, and Django's pgettext builds `context + CONTEXT_SEPARATOR + msgid`
-        with EOT. Getting either separator wrong yields a catalogue that loads
-        without error but silently never matches.
-        """
         from gettext import GNUTranslations
 
         catalogue = i18n_tools.Catalogue([

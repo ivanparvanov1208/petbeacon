@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="{% block meta_description %}{% translate "VetLink — платформа за грижа за домашни любимци: профили, ваксинации, медицинска история и напомняния." %}{% endblock %}">
-    <title>{% block title %}{% translate "VetLink — Грижа и здраве за вашия любимец" %}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% translate "PetBeacon — платформа за грижа за домашни любимци: профили, ваксинации, медицинска история и напомняния." %}{% endblock %}">
+    <title>{% block title %}{% translate "PetBeacon — Грижа и здраве за вашия любимец" %}{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 
-    <!-- Typography & iconography.
-         TODO(self-host): both are third-party CDN requests on the critical path.
-         Move to self-hosted woff2 + a subsetted icon font for production. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
@@ -23,9 +20,8 @@
 
     {% block extra_head %}{% endblock %}
 
+    {# Runs before first paint so the page never flashes the wrong theme. #}
     <script>
-        // Apply the stored colour-scheme preference before first paint so the
-        // page never flashes the wrong theme.
         (function () {
             try {
                 var stored = localStorage.getItem('petcare-theme');
@@ -41,19 +37,17 @@
 
 <a href="#main" class="skip-link">{% translate "Към съдържанието" %}</a>
 
-<!-- ===================== HEADER ===================== -->
 <header class="sticky top-0 z-40 border-b border-ink-200/80 bg-white/85 backdrop-blur-md print-hidden dark:border-ink-800 dark:bg-ink-900/85">
     <div class="page">
         <div class="flex h-16 items-center gap-3">
 
-            <!-- Brand -->
             <a href="{% if user.is_authenticated %}{% url 'pets:dashboard' %}{% else %}{% url 'pets:home' %}{% endif %}"
                class="flex shrink-0 items-center gap-2.5 rounded-lg transition hover:opacity-90">
                 <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 text-white shadow-sm">
                     <i class="fa-solid fa-paw text-sm" aria-hidden="true"></i>
                 </span>
                 <span class="text-lg font-extrabold tracking-tight text-ink-900 dark:text-white">
-                    Vet<span class="text-brand-600 dark:text-brand-400">Link</span>
+                    Pet<span class="text-brand-600 dark:text-brand-400">Beacon</span>
                 </span>
             </a>
 
@@ -97,10 +91,6 @@
                     <i class="fa-solid fa-moon" data-theme-icon="dark" aria-hidden="true"></i>
                 </button>
 
-                <!-- Language switcher (desktop).
-                     A plain POST form so it works with JavaScript disabled; the
-                     hidden `next` field is what Django's set_language view
-                     rewrites into the equivalent URL in the new language. -->
                 {% include "partials/language_switcher.html" %}
 
                 {% if user.is_authenticated %}
@@ -108,7 +98,6 @@
                         <i class="fa-solid fa-plus" aria-hidden="true"></i> {% translate "Нов любимец" %}
                     </a>
 
-                    <!-- User menu -->
                     <div class="relative" id="userMenu">
                         <button type="button" id="userMenuButton"
                                 aria-label="{% blocktranslate with name=user.get_full_name|default:user.username %}Отвори менюто на потребителя: {{ name }}{% endblocktranslate %}"
@@ -217,7 +206,6 @@
     </div>
 </header>
 
-<!-- ===================== FLASH MESSAGES ===================== -->
 {% if messages %}
 <div class="page pt-4 print-hidden" role="region" aria-label="{% translate 'Съобщения' %}">
     <div class="space-y-2" aria-live="polite">
@@ -244,19 +232,17 @@
 </div>
 {% endif %}
 
-<!-- ===================== MAIN ===================== -->
 <main id="main" class="page flex-1 py-6 sm:py-8">
     {% block content %}{% endblock %}
 </main>
 
-<!-- ===================== FOOTER ===================== -->
 <footer class="mt-auto border-t border-ink-200 bg-white print-hidden dark:border-ink-800 dark:bg-ink-900">
     <div class="page flex flex-col items-center justify-between gap-3 py-6 text-sm text-ink-500 sm:flex-row dark:text-ink-400">
         <div class="flex items-center gap-2.5">
             <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-600 text-white">
                 <i class="fa-solid fa-paw text-[11px]" aria-hidden="true"></i>
             </span>
-            <span class="font-bold text-ink-800 dark:text-ink-100">VetLink</span>
+            <span class="font-bold text-ink-800 dark:text-ink-100">PetBeacon</span>
             <span class="text-ink-300 dark:text-ink-700" aria-hidden="true">&bull;</span>
             <span>{% translate "Платформа за грижа за домашни любимци" %}</span>
         </div>
@@ -277,8 +263,6 @@
             if (!icon) return;
             icon.className = root.classList.contains('dark')
                 ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-            // Labels come from data-* attributes so they stay translated rather
-            // than hard-coded in this file.
             if (toggle) {
                 toggle.setAttribute('title', root.classList.contains('dark')
                     ? toggle.dataset.titleLight : toggle.dataset.titleDark);

@@ -1,18 +1,9 @@
-{% comment %}
-Pagination control. Preserves the active filters via petcare_tags.query_transform.
-
-Usage: {% include "partials/pagination.html" %}
-Requires: {% load petcare_tags i18n %}
-Expects context: page_obj
-{% endcomment %}
 {% load petcare_tags i18n %}
 
 {% if page_obj and page_obj.paginator.num_pages > 1 %}
 <nav class="flex flex-col items-center justify-between gap-3 sm:flex-row print-hidden"
      aria-label="{% translate 'Навигация по страници' %}">
 
-    {% comment %} Word order differs between the two languages, so this is a block
-       translation rather than three separate fragments. {% endcomment %}
     <p class="text-xs text-ink-500">
         {% blocktranslate with start=page_obj.start_index end=page_obj.end_index total=page_obj.paginator.count %}Показани {{ start }}–{{ end }} от {{ total }}{% endblocktranslate %}
     </p>

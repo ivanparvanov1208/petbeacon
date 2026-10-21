@@ -1,5 +1,5 @@
 """
-Django settings for VetLink project.
+Django settings for PetBeacon project.
 """
 
 from pathlib import Path
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Local apps
+    'admin_interface',
+    'colorfield',
     'accounts.apps.AccountsConfig',
     'pets.apps.PetsConfig',
 ]

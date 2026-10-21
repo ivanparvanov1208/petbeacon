@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% translate "VetLink — Грижа и здраве за вашия домашен любимец" %}{% endblock %}
+{% block title %}{% translate "PetBeacon — Грижа и здраве за вашия домашен любимец" %}{% endblock %}
 
-{% block meta_description %}{% translate "VetLink е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния." %}{% endblock %}
+{% block meta_description %}{% translate "PetBeacon е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния." %}{% endblock %}
 
 {% block content %}
 <div class="space-y-16 py-4 sm:py-8">
 
-    <!-- ================= HERO ================= -->
     <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-900 via-brand-800 to-brand-950 text-white shadow-lg">
         <div class="absolute inset-0 bg-grid opacity-70" aria-hidden="true"></div>
         <div class="pointer-events-none absolute -bottom-16 -right-10 select-none text-[280px] leading-none text-white/5"
@@ -57,7 +56,6 @@
         </div>
     </section>
 
-    <!-- ================= FEATURES ================= -->
     <section class="space-y-8">
         <div class="mx-auto max-w-2xl space-y-3 text-center">
             <h2 class="text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl dark:text-white">
@@ -68,8 +66,6 @@
             </p>
         </div>
 
-        {% comment %} Feature copy is built in the view so the list stays in one place; the
-           strings there are translated at render time. {% endcomment %}
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {% for icon, tone, title, body in features %}
             <article class="card card-hover p-6">
@@ -89,7 +85,6 @@
         </div>
     </section>
 
-    <!-- ================= CTA ================= -->
     <section class="card mx-auto max-w-4xl bg-dot p-8 text-center sm:p-12">
         <span class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 text-2xl text-white shadow-md">
             <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>

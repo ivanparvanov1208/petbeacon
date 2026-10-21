@@ -6,10 +6,10 @@ from datetime import date, timedelta
 
 
 class Command(BaseCommand):
-    help = "Loads sample demo data for VetLink application"
+    help = "Loads sample demo data for PetBeacon application"
 
     def handle(self, *args, **options):
-        self.stdout.write("[VetLink] Creating / updating demo user...")
+        self.stdout.write("[PetBeacon] Creating / updating demo user...")
         demo_user, created = User.objects.get_or_create(
             username="demo_owner",
             defaults={
@@ -35,12 +35,11 @@ class Command(BaseCommand):
 
         today = date.today()
 
-        self.stdout.write("[VetLink] Clearing previous pets and reminders for demo user...")
+        self.stdout.write("[PetBeacon] Clearing previous pets and reminders for demo user...")
         Pet.objects.filter(owner=demo_user).delete()
         Reminder.objects.filter(owner=demo_user).delete()
 
-        # 1. Куче Рекс
-        self.stdout.write("[VetLink] Creating Pet 1: Rex...")
+        self.stdout.write("[PetBeacon] Creating Pet 1: Rex...")
         rex = Pet.objects.create(
             owner=demo_user,
             name="Рекс",
@@ -48,7 +47,7 @@ class Command(BaseCommand):
             breed="Немска овчарка",
             gender="male",
             is_neutered=True,
-            birth_date=today - timedelta(days=365 * 2 + 180),  # approx 2.5 yrs
+            birth_date=today - timedelta(days=365 * 2 + 180),
             weight=32.50,
             microchip_number="642098100123456",
             passport_number="BG 0482910",
@@ -57,7 +56,6 @@ class Command(BaseCommand):
             special_notes="Много енергичен и умен. Обича да носи топки за тенис и да плува в реката. Има навика да лае по звънеца на вратата."
         )
 
-        # Рекс - Ваксинации
         Vaccination.objects.create(
             pet=rex,
             name="Годишна поливалентна DHPPi+L",
@@ -86,7 +84,6 @@ class Command(BaseCommand):
             notes="Интраназално приложение."
         )
 
-        # Рекс - Медицински записи
         MedicalRecord.objects.create(
             pet=rex,
             date=today - timedelta(days=45),
@@ -110,7 +107,6 @@ class Command(BaseCommand):
             notes="Препоръчани дентални лакомства 2 пъти седмично."
         )
 
-        # Рекс - Медикаменти
         Medication.objects.create(
             pet=rex,
             name="АртроВет Комплекс (глюкозамин за стави)",
@@ -123,7 +119,6 @@ class Command(BaseCommand):
             notes="Профилактичен курс за едри породи кучета."
         )
 
-        # Рекс - Ветеринарни посещения
         VetVisit.objects.create(
             pet=rex,
             visit_date=today - timedelta(days=45),
@@ -136,7 +131,6 @@ class Command(BaseCommand):
             total_cost=85.00
         )
 
-        # Рекс - Напомняния
         Reminder.objects.create(
             owner=demo_user,
             pet=rex,
@@ -157,8 +151,7 @@ class Command(BaseCommand):
             notes="3 таблетки и половина според теглото от 32.5 кг."
         )
 
-        # 2. Котка Мая
-        self.stdout.write("[VetLink] Creating Pet 2: Maya...")
+        self.stdout.write("[PetBeacon] Creating Pet 2: Maya...")
         maya = Pet.objects.create(
             owner=demo_user,
             name="Мая",
@@ -166,7 +159,7 @@ class Command(BaseCommand):
             breed="Британска късокосместа",
             gender="female",
             is_neutered=True,
-            birth_date=today - timedelta(days=365 + 150),  # approx 1.4 yrs
+            birth_date=today - timedelta(days=365 + 150),
             weight=4.20,
             microchip_number="642098100876543",
             passport_number="BG 0591234",
@@ -227,8 +220,7 @@ class Command(BaseCommand):
             notes="Бентонит пясък с аромат на лавандула + паучове."
         )
 
-        # 3. Папагал Чарли
-        self.stdout.write("[VetLink] Creating Pet 3: Charlie...")
+        self.stdout.write("[PetBeacon] Creating Pet 3: Charlie...")
         charlie = Pet.objects.create(
             owner=demo_user,
             name="Чарли",
@@ -275,5 +267,5 @@ class Command(BaseCommand):
             notes="Прегледът мина супер, всичко е наред."
         )
 
-        self.stdout.write(self.style.SUCCESS("[VetLink] Sample data created successfully!"))
-        self.stdout.write(self.style.SUCCESS("[VetLink] Demo Username: demo_owner | Password: demo12345"))
+        self.stdout.write(self.style.SUCCESS("[PetBeacon] Sample data created successfully!"))
+        self.stdout.write(self.style.SUCCESS("[PetBeacon] Demo Username: demo_owner | Password: demo12345"))

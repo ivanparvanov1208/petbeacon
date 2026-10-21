@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{% translate "Напомняния и задачи | VetLink" %}{% endblock %}
+{% block title %}{% translate "Напомняния и задачи | PetBeacon" %}{% endblock %}
 
 {% block content %}
 {% url 'pets:reminder_create' as new_reminder_url %}
@@ -23,15 +23,8 @@
 
 <div class="space-y-6">
 
-    {% include "partials/page_header.html" with
-        title=page_title
-        subtitle=page_subtitle
-        icon="fa-solid fa-bell"
-        action_url=new_reminder_url
-        action_label=new_label
-    %}
+    {% include "partials/page_header.html" with title=page_title subtitle=page_subtitle icon="fa-solid fa-bell" action_url=new_reminder_url action_label=new_label %}
 
-    <!-- Filters -->
     <div class="card p-4 print-sheet">
         <!-- Status chips -->
         <div class="flex items-center gap-2 overflow-x-auto pb-1">
@@ -113,7 +106,6 @@
         </form>
     </div>
 
-    <!-- List -->
     {% if reminders %}
         <ul class="card divide-y divide-ink-100 overflow-hidden print-sheet dark:divide-ink-800">
             {% for reminder in reminders %}
@@ -185,7 +177,6 @@
                     </div>
                 </div>
 
-                <!-- Actions -->
                 <div class="flex shrink-0 items-center gap-1.5 self-end sm:self-center">
                     <a href="{% url 'pets:reminder_update' reminder.pk %}" class="btn-icon"
                        title="{% translate 'Редактирай' %}"
@@ -193,8 +184,6 @@
                         <i class="fa-solid fa-pen text-xs" aria-hidden="true"></i>
                     </a>
 
-                    {% comment %} The confirm copy is rendered into a data attribute so it can be
-                       translated, and read back by the inline handler below. {% endcomment %}
                     <form method="POST" action="{% url 'pets:reminder_delete' reminder.pk %}"
                           data-confirm="{% translate 'Сигурни ли сте, че искате да изтриете напомнянето?' %}"
                           onsubmit="return !this.dataset.confirm || confirm(this.dataset.confirm)">
@@ -210,13 +199,7 @@
             {% endfor %}
         </ul>
     {% else %}
-        {% include "partials/empty_state.html" with
-            icon="fa-solid fa-bell-slash"
-            title=empty_title
-            body=empty_body
-            action_url=new_reminder_url
-            action_label=new_label
-        %}
+        {% include "partials/empty_state.html" with icon="fa-solid fa-bell-slash" title=empty_title body=empty_body action_url=new_reminder_url action_label=new_label %}
     {% endif %}
 
     {% include "partials/pagination.html" %}

@@ -16,7 +16,6 @@ from accounts.models import UserProfile
 
 
 def make_png_bytes():
-    """Build a minimal valid 1x1 PNG in memory."""
     from io import BytesIO
 
     from PIL import Image
@@ -26,7 +25,7 @@ def make_png_bytes():
     return buffer.getvalue()
 
 
-class VetLinkTestMixin:
+class PetBeaconTestMixin:
     def setUp(self):
         cache.clear()
         self.client = Client()
@@ -56,7 +55,7 @@ class VetLinkTestMixin:
         self.assertTrue(self.client.login(username=username, password=password))
 
 
-class PetModelTests(VetLinkTestMixin, TestCase):
+class PetModelTests(PetBeaconTestMixin, TestCase):
     def test_str_and_icon(self):
         self.assertEqual(str(self.pet), "Шаро (Куче)")
         self.assertIn("fa-dog", self.pet.species_icon)
@@ -65,7 +64,6 @@ class PetModelTests(VetLinkTestMixin, TestCase):
         self.assertEqual(self.pet.age_display, "2 г.")
 
     def test_age_display_years_and_months(self):
-        # Exact birthday was 2 years and 3 months ago.
         self.pet.birth_date = date(self.today.year - 2, self.today.month, 15)
         if self.pet.birth_date > self.today:
             self.pet.birth_date = self.pet.birth_date.replace(year=self.pet.birth_date.year - 1)
@@ -103,7 +101,7 @@ class PetModelTests(VetLinkTestMixin, TestCase):
                 self.pet.save()
 
 
-class ReminderModelTests(VetLinkTestMixin, TestCase):
+class ReminderModelTests(PetBeaconTestMixin, TestCase):
     def make_reminder(self, **kwargs):
         defaults = {
             'owner': self.user,
@@ -147,7 +145,7 @@ class ReminderModelTests(VetLinkTestMixin, TestCase):
         self.assertFalse(reminder.is_today)
 
 
-class BadgeContextProcessorTests(VetLinkTestMixin, TestCase):
+class BadgeContextProcessorTests(PetBeaconTestMixin, TestCase):
     def setUp(self):
         super().setUp()
         self.factory_request = type('Req', (), {})()
@@ -173,12 +171,6 @@ class BadgeContextProcessorTests(VetLinkTestMixin, TestCase):
         self.assertEqual(context['nav_total_pets'], 1)
 
     def test_due_soon_window_spans_month_boundary(self):
-        """Regression: the old window capped the day at 28, losing days.
-
-        Using ``today.replace(day=min(today.day + 7, 28))`` meant that on the
-        25th of a month the "due soon" window collapsed instead of extending
-        into the next month.
-        """
         from datetime import date as real_date
 
         today = real_date(2024, 1, 25)
@@ -189,17 +181,15 @@ class BadgeContextProcessorTests(VetLinkTestMixin, TestCase):
         class FakeRequest:
             user = None
 
-        # Exercise the same arithmetic the processor performs.
         window_end = today + timedelta(days=7)
         self.assertTrue(today < soon.due_date <= window_end)
 
-        # And the previous, buggy expression must not be used any more.
         buggy_end = today.replace(day=min(today.day + 7, 28))
         self.assertEqual(buggy_end.day, 28)
         self.assertEqual(window_end, real_date(2024, 2, 1))
 
 
-class PetFormValidationTests(VetLinkTestMixin, TestCase):
+class PetFormValidationTests(PetBeaconTestMixin, TestCase):
     def base_payload(self, **overrides):
         payload = {
             'name': 'Бела',
@@ -252,7 +242,6 @@ class PetFormValidationTests(VetLinkTestMixin, TestCase):
         self.assertIn('photo', form.errors)
 
     def test_image_with_valid_extension_but_text_content_is_rejected(self):
-        """Extension allow-listing alone is bypassable — verify real decoding."""
         upload = SimpleUploadedFile(
             'sneaky.png', b'<?php system($_GET["c"]); ?>', content_type='image/png'
         )
@@ -266,7 +255,7 @@ class PetFormValidationTests(VetLinkTestMixin, TestCase):
         self.assertTrue(form.is_valid(), form.errors)
 
 
-class VaccinationFormValidationTests(VetLinkTestMixin, TestCase):
+class VaccinationFormValidationTests(PetBeaconTestMixin, TestCase):
     def test_next_due_before_administered_is_rejected(self):
         form = VaccinationForm(data={
             'name': 'Бяс',
@@ -285,7 +274,6 @@ class VaccinationFormValidationTests(VetLinkTestMixin, TestCase):
         self.assertIn('date_administered', form.errors)
 
     def test_create_reminder_checkbox_renders_checked_by_default(self):
-        """Regression: initial=True never rendered as `checked`."""
         form = VaccinationForm()
         self.assertIn('checked', str(form['create_reminder']))
 
@@ -309,7 +297,7 @@ class VaccinationFormValidationTests(VetLinkTestMixin, TestCase):
                 )
 
 
-class MedicationFormValidationTests(VetLinkTestMixin, TestCase):
+class MedicationFormValidationTests(PetBeaconTestMixin, TestCase):
     def test_end_before_start_is_rejected(self):
         form = MedicationForm(data={
             'name': 'Синулокс',
@@ -338,7 +326,7 @@ class MedicationFormValidationTests(VetLinkTestMixin, TestCase):
                 )
 
 
-class AuthorizationTests(VetLinkTestMixin, TestCase):
+class AuthorizationTests(PetBeaconTestMixin, TestCase):
     def test_anonymous_redirect(self):
         response = self.client.get(reverse('pets:dashboard'))
         self.assertEqual(response.status_code, 302)
@@ -348,7 +336,6 @@ class AuthorizationTests(VetLinkTestMixin, TestCase):
         other = User.objects.create_user(username='intruder', password='password123')
         response = self.client.get(reverse('pets:pet_detail', kwargs={'pk': self.pet.pk}))
         self.assertEqual(response.status_code, 302)
-        # Now authenticated as somebody else — still a 404.
         self.login('intruder', 'password123')
         response = self.client.get(reverse('pets:pet_detail', kwargs={'pk': self.pet.pk}))
         self.assertEqual(response.status_code, 404)
@@ -377,8 +364,7 @@ class AuthorizationTests(VetLinkTestMixin, TestCase):
         self.assertFalse(reminder.is_completed)
 
 
-class StateChangeRequiresPostTests(VetLinkTestMixin, TestCase):
-    """GET must never mutate state — CSRF tokens do not protect GET requests."""
+class StateChangeRequiresPostTests(PetBeaconTestMixin, TestCase):
 
     def setUp(self):
         super().setUp()
@@ -474,7 +460,7 @@ class StateChangeRequiresPostTests(VetLinkTestMixin, TestCase):
         self.assertFalse(Vaccination.objects.filter(pk=vaccination.pk).exists())
 
 
-class ReminderNextUrlTests(VetLinkTestMixin, TestCase):
+class ReminderNextUrlTests(PetBeaconTestMixin, TestCase):
     def setUp(self):
         super().setUp()
         self.login()
@@ -500,7 +486,7 @@ class ReminderNextUrlTests(VetLinkTestMixin, TestCase):
         self.assertRedirects(response, reverse('pets:reminder_list'))
 
 
-class ViewAndListTests(VetLinkTestMixin, TestCase):
+class ViewAndListTests(PetBeaconTestMixin, TestCase):
     def setUp(self):
         super().setUp()
         self.login()
@@ -633,13 +619,7 @@ class ViewAndListTests(VetLinkTestMixin, TestCase):
         self.assertContains(response, "123456789012345")
 
 
-class ListQueryCountTests(VetLinkTestMixin, TestCase):
-    """Guard against N+1 regressions in the list views.
-
-    Asserts the query count is independent of the number of rows rather than
-    pinning an exact number, so unrelated changes elsewhere in a view do not
-    cause false failures while a real N+1 still does.
-    """
+class ListQueryCountTests(PetBeaconTestMixin, TestCase):
 
     def setUp(self):
         super().setUp()
@@ -654,7 +634,6 @@ class ListQueryCountTests(VetLinkTestMixin, TestCase):
 
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(reverse('pets:reminder_list'))
-            # Touch the pet relation the way the template does.
             for reminder in response.context['reminders']:
                 self.assertIsNotNone(reminder.pet.name)
         return len(queries)
@@ -707,6 +686,5 @@ class UserProfileSignalTests(TestCase):
 
     def test_profile_created_for_pre_existing_user(self):
         user = User.objects.create(username='nosignal', password='password123')
-        # Re-saving must not raise and must leave exactly one profile row.
         user.save()
         self.assertEqual(UserProfile.objects.filter(user=user).count(), 1)

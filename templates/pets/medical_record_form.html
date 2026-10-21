@@ -1,21 +1,14 @@
 {% extends 'base.html' %}
 {% load petcare_tags i18n %}
 
-{% block title %}{{ title }} | VetLink{% endblock %}
+{% block title %}{{ title }} | PetBeacon{% endblock %}
 
 {% block content %}
 {% translate "Назад към историята" as back_label %}
 {% translate "Запази медицинския запис" as submit_label %}
 <div class="mx-auto max-w-2xl space-y-6">
 
-    {# Subtitle is built in the view — it interpolates the pet's name. #}
-    {% include "partials/page_header.html" with
-        title=title
-        subtitle=subtitle
-        icon="fa-solid fa-file-medical"
-        back_url=cancel_url
-        back_label=back_label
-    %}
+    {% include "partials/page_header.html" with title=title subtitle=subtitle icon="fa-solid fa-file-medical" back_url=cancel_url back_label=back_label %}
 
     {% include "partials/form_open.html" with form=form submit_label=submit_label cancel_url=cancel_url %}
 

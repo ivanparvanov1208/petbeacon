@@ -1,10 +1,10 @@
-# English translation for the VetLink project.
-# Copyright (C) VetLink
-# This file is distributed under the same licence as the VetLink package.
+# English translation for the PetBeacon project.
+# Copyright (C) PetBeacon
+# This file is distributed under the same licence as the PetBeacon package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: VetLink 1.0\n"
+"Project-Id-Version: PetBeacon 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,8 +47,8 @@ msgstr "%(label)s cannot be negative."
 msgid "%(months)d мес."
 msgstr "%(months)d mo"
 
-msgid "%(name)s | Профил на любимеца — VetLink"
-msgstr "%(name)s | Pet profile — VetLink"
+msgid "%(name)s | Профил на любимеца — PetBeacon"
+msgstr "%(name)s | Pet profile — PetBeacon"
 
 msgid "%(pet)s при %(clinic)s на %(date)s"
 msgstr "%(pet)s at %(clinic)s on %(date)s"
@@ -80,23 +80,44 @@ msgstr "(required field)"
 msgid "15-цифрен код на микрочип"
 msgstr "15-digit microchip code"
 
-msgid "VetLink Администрация"
-msgstr "VetLink Administration"
+msgid "PetBeacon Администрация"
+msgstr "PetBeacon Administration"
 
-msgid "VetLink Портал"
-msgstr "VetLink Portal"
+msgid "PetBeacon · Администрация"
+msgstr "PetBeacon · Administration"
 
-msgid "VetLink е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния."
-msgstr "VetLink is a web platform for caring for pets: profiles, a vaccination schedule, medical history, medications and smart reminders."
+msgid "PetBeacon — Администрация"
+msgstr "PetBeacon — Administration"
 
-msgid "VetLink — Грижа и здраве за вашия домашен любимец"
-msgstr "VetLink — Care and health for your pet"
+msgid "Център за управление"
+msgstr "Control center"
 
-msgid "VetLink — Грижа и здраве за вашия любимец"
-msgstr "VetLink — Care and health for your companion"
+msgid "Добре дошли в PetBeacon"
+msgstr "Welcome to PetBeacon"
 
-msgid "VetLink — платформа за грижа за домашни любимци: профили, ваксинации, медицинска история и напомняния."
-msgstr "VetLink — a platform for caring for pets: profiles, vaccinations, medical history and reminders."
+msgid "Управлявайте любимците, здравните записи, напомнянията и профилите на собствениците от едно място."
+msgstr "Manage pets, health records, reminders, and owner profiles in one place."
+
+msgid "Към приложенията"
+msgstr "Go to apps"
+
+msgid "Грижа за всеки любимец"
+msgstr "Care for every companion"
+
+msgid "PetBeacon Портал"
+msgstr "PetBeacon Portal"
+
+msgid "PetBeacon е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния."
+msgstr "PetBeacon is a web platform for caring for pets: profiles, a vaccination schedule, medical history, medications and smart reminders."
+
+msgid "PetBeacon — Грижа и здраве за вашия домашен любимец"
+msgstr "PetBeacon — Care and health for your pet"
+
+msgid "PetBeacon — Грижа и здраве за вашия любимец"
+msgstr "PetBeacon — Care and health for your companion"
+
+msgid "PetBeacon — платформа за грижа за домашни любимци: профили, ваксинации, медицинска история и напомняния."
+msgstr "PetBeacon — a platform for caring for pets: profiles, vaccinations, medical history and reminders."
 
 msgid "Админ панел"
 msgstr "Admin panel"
@@ -266,14 +287,14 @@ msgstr "Everything about your pet"
 msgid "Вход"
 msgstr "Log in"
 
-msgid "Вход в VetLink"
-msgstr "Log in to VetLink"
+msgid "Вход в PetBeacon"
+msgstr "Log in to PetBeacon"
 
 msgid "Вход в профила"
 msgstr "Log in"
 
-msgid "Вход в профила | VetLink"
-msgstr "Log in | VetLink"
+msgid "Вход в профила | PetBeacon"
+msgstr "Log in | PetBeacon"
 
 msgid "Вход с съществуващ акаунт"
 msgstr "Log in with an existing account"
@@ -287,8 +308,8 @@ msgstr "Enter your username"
 msgid "Възникна неочаквана грешка"
 msgstr "An unexpected error occurred"
 
-msgid "Възникна неочаквана грешка | VetLink"
-msgstr "An unexpected error occurred | VetLink"
+msgid "Възникна неочаквана грешка | PetBeacon"
+msgstr "An unexpected error occurred | PetBeacon"
 
 msgid "Възникна проблем при изпращането на формуляра"
 msgstr "A problem occurred while submitting the form"
@@ -448,8 +469,8 @@ msgstr "Add a medical record for %(name)s"
 msgid "Добавяне на нов домашен любимец"
 msgstr "Add a new pet"
 
-msgid "Добре дошли в VetLink, %(name)s! Вашият профил бе създаден успешно."
-msgstr "Welcome to VetLink, %(name)s! Your account was created successfully."
+msgid "Добре дошли в PetBeacon, %(name)s! Вашият профил бе създаден успешно."
+msgstr "Welcome to PetBeacon, %(name)s! Your account was created successfully."
 
 msgid "Дозировка"
 msgstr "Dosage"
@@ -481,8 +502,8 @@ msgstr "Additional instructions..."
 msgid "Достъпът е отказан"
 msgstr "Access denied"
 
-msgid "Достъпът е отказан | VetLink"
-msgstr "Access denied | VetLink"
+msgid "Достъпът е отказан | PetBeacon"
+msgstr "Access denied | PetBeacon"
 
 msgid "Друго"
 msgstr "Other"
@@ -580,8 +601,8 @@ msgstr "Printable health passport"
 msgid "Здравен паспорт на %(name)s"
 msgstr "Health passport for %(name)s"
 
-msgid "Здравен паспорт — %(name)s | VetLink"
-msgstr "Health passport — %(name)s | VetLink"
+msgid "Здравен паспорт — %(name)s | PetBeacon"
+msgstr "Health passport — %(name)s | PetBeacon"
 
 msgid "Иван"
 msgstr "Ivan"
@@ -595,8 +616,8 @@ msgstr "Identification and photo"
 msgid "Изградено с Python & Django"
 msgstr "Built with Python & Django"
 
-msgid "Издаден чрез електронна система VetLink"
-msgstr "Issued via the VetLink online system"
+msgid "Издаден чрез електронна система PetBeacon"
+msgstr "Issued via the PetBeacon online system"
 
 msgid "Изпълнени"
 msgstr "Completed"
@@ -622,8 +643,8 @@ msgstr "Delete this reminder?"
 msgid "Изтриване на посещението?"
 msgstr "Delete this visit?"
 
-msgid "Изтриване на профил | VetLink"
-msgstr "Delete profile | VetLink"
+msgid "Изтриване на профил | PetBeacon"
+msgstr "Delete profile | PetBeacon"
 
 msgid "Изтрий"
 msgstr "Delete"
@@ -826,8 +847,8 @@ msgstr "You can attach an X-ray, an epicrisis report, blood test results and mor
 msgid "Моите домашни любимци"
 msgstr "My pets"
 
-msgid "Моите домашни любимци | VetLink"
-msgstr "My pets | VetLink"
+msgid "Моите домашни любимци | PetBeacon"
+msgstr "My pets | PetBeacon"
 
 msgid "Моите любимци"
 msgstr "My pets"
@@ -841,8 +862,8 @@ msgstr "Please check the details you entered in the fields below."
 msgid "Моят профил"
 msgstr "My profile"
 
-msgid "Моят профил | VetLink"
-msgstr "My profile | VetLink"
+msgid "Моят профил | PetBeacon"
+msgstr "My profile | PetBeacon"
 
 msgid "Мъжки"
 msgstr "Male"
@@ -910,8 +931,8 @@ msgstr "Reminders for %(name)s"
 msgid "Напомняния и задачи"
 msgstr "Reminders and tasks"
 
-msgid "Напомняния и задачи | VetLink"
-msgstr "Reminders and tasks | VetLink"
+msgid "Напомняния и задачи | PetBeacon"
+msgstr "Reminders and tasks | PetBeacon"
 
 msgid "Напр. 1 табл., 2.5 мл, 3 капки"
 msgstr "e.g. 1 tablet, 2.5 ml, 3 drops"
@@ -1351,11 +1372,11 @@ msgstr "Profile sections"
 msgid "Регистрация"
 msgstr "Sign up"
 
-msgid "Регистрация в VetLink"
-msgstr "Sign up for VetLink"
+msgid "Регистрация в PetBeacon"
+msgstr "Sign up for PetBeacon"
 
-msgid "Регистрация на нов профил | VetLink"
-msgstr "Create an account | VetLink"
+msgid "Регистрация на нов профил | PetBeacon"
+msgstr "Create an account | PetBeacon"
 
 msgid "Регистрирайте се безплатно"
 msgstr "Sign up for free"
@@ -1516,8 +1537,8 @@ msgstr "Owners manage their own pets, veterinarians work with their medical reco
 msgid "Страницата не е намерена"
 msgstr "Page not found"
 
-msgid "Страницата не е намерена | VetLink"
-msgstr "Page not found | VetLink"
+msgid "Страницата не е намерена | PetBeacon"
+msgstr "Page not found | PetBeacon"
 
 msgid "Съдържанието на файла не е валидно изображение. Уверете се, че качвате снимка, а не преименуван документ."
 msgstr "The file contents are not a valid image. Make sure you upload a photo, not a renamed document."
@@ -1552,8 +1573,8 @@ msgstr "Messages"
 msgid "Табло"
 msgstr "Dashboard"
 
-msgid "Табло за управление | VetLink"
-msgstr "Dashboard | VetLink"
+msgid "Табло за управление | PetBeacon"
+msgstr "Dashboard | PetBeacon"
 
 msgid "Твърде много неуспешни опити за вход. Моля, изчакайте %(minutes)dм %(seconds)dс и опитайте отново."
 msgstr "Too many failed sign-in attempts. Please wait %(minutes)dm %(seconds)ds and try again."

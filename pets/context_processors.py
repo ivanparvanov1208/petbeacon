@@ -4,16 +4,10 @@ from django.db.models import Count, Q
 
 from .models import Reminder, Pet
 
-# Window (in days) used for the "due soon" navigation badge.
 DUE_SOON_WINDOW_DAYS = 7
 
 
 def petcare_badges(request):
-    """Notification counters rendered in the navigation bar.
-
-    Runs on every authenticated request, so it issues a single grouped query
-    instead of four separate ``COUNT`` queries.
-    """
     if not request.user.is_authenticated:
         return {}
 

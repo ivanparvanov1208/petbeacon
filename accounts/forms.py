@@ -5,9 +5,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-# Widget styling mirrors the `.field` utility declared in static/css/input.css,
-# so the account forms look identical to the ones rendered through
-# `petcare_tags.add_class` without duplicating the filter on every widget.
 _I = (
     "w-full rounded-lg border border-ink-200 bg-white px-3.5 py-2.5 text-sm text-ink-800 "
     "shadow-xs transition placeholder:text-ink-400 "
@@ -67,11 +64,6 @@ class UserRegistrationForm(forms.ModelForm):
         return username
 
     def _password_candidate(self):
-        """Build an unsaved User so the similarity validator has real context.
-
-        ``self.instance`` is not populated until ``_post_clean()``, which runs
-        after the per-field cleaners, so it cannot be used here.
-        """
         return User(
             username=self.data.get('username', ''),
             first_name=self.data.get('first_name', ''),
@@ -80,7 +72,6 @@ class UserRegistrationForm(forms.ModelForm):
         )
 
     def _validate_password_strength(self, password, user=None):
-        """Run the project's AUTH_PASSWORD_VALIDATORS against the candidate."""
         if not password:
             return
         try:
