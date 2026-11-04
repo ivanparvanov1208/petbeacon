@@ -87,6 +87,13 @@
 
 За да включите checkout локално, инсталирайте зависимостите от `requirements.txt`, задайте двата Stripe тестови ключа и насочете webhook събитие `checkout.session.completed` към `/bg/stripe/webhook/` (или съответния езиков префикс). Stripe автоматично създава 100% еднократен купон за заявката. Не използвайте `sk_live_...` за дипломната демонстрация.
 
+За локална демонстрация създайте `.env` в главната папка на проекта. Файлът се зарежда от `petcare/settings.py` и е изключен от Git:
+
+```dotenv
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
 ---
 
 ## 🚀 Бърз старт и инсталация
@@ -291,8 +298,10 @@ python manage.py collectstatic --noinput
 
 ## 🗄️ Управление на базата данни
 
-`db.sqlite3`, папките `media/` и `staticfiles/` **не се добавят в Git** (вижте
-`.gitignore`). За да архивирате данните си:
+Папките `media/` и `staticfiles/` не се добавят в Git. `db.sqlite3` обаче вече е
+проследяван файл в това хранилище: правилото в `.gitignore` важи само за
+непроследявани файлове. При нова локална база изпълнете миграциите и заредете
+примерните данни. За да архивирате данните си:
 
 ```powershell
 python manage.py dumpdata > ../petcare_backup.json
@@ -317,9 +326,10 @@ petcare_project/
 │   ├── tests.py              # Тестове за пароли, вход, заключване, профил
 │   └── urls.py
 ├── pets/                     # Основен модул PetBeacon
-│   ├── models.py             # Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder
+│   ├── models.py             # Пациенти, медицински записи, напомняния, консултации и чат
 │   ├── forms.py              # Django форми (валидация на полета и файлове)
-│   ├── views.py              # Табло, CRUD, търсене, филтри, пагинация, паспорт
+│   ├── views.py              # Табла, CRUD, търсене, паспорт, Stripe checkout и webhook
+│   ├── i18n_tools.py         # Извличане и компилиране на преводи без GNU gettext
 │   ├── context_processors.py # Динамични броячи за нотификационни значки
 │   ├── admin.py              # Inline формуляри и автодовършване
 │   ├── templatetags/
@@ -327,19 +337,21 @@ petcare_project/
 │   ├── tests.py              # Модели, форми, права достъп, POST-и, заявки
 │   ├── test_admin.py         # Регресия за inline напомнянията в админ панела
 │   ├── test_frontend.py      # Контракт на дизайн системата и достъпността
-│   └── management/commands/  # Команда load_sample_data
+│   ├── test_i18n.py          # Каталози и превключване на езика
+│   └── management/commands/  # i18n_extract, i18n_compile, load_sample_data
 ├── templates/
 │   ├── base.html             # Обвивка: навигация, тъмна тема, съобщения
 │   ├── partials/             # Повторно използваеми компоненти (вж. „Дизайн система“)
-│   ├── pets/                 # Табло, списъци, детайли, паспорт, формуляри
+│   ├── pets/                 # Ветеринарно табло, пациенти, консултации, чат и формуляри
 │   ├── accounts/             # Вход, регистрация, профил
 │   └── 403.html 404.html 500.html
+├── locale/                   # Български и английски каталози за превод
 ├── static/
 │   ├── css/input.css         # ИЗТОЧНИК на дизайн системата (Tailwind v4)
 │   ├── css/app.css           # Компилиран резултат (`npm run build`)
 │   └── img/default-pet.svg
 ├── media/                    # Качени снимки и медицински документи
 ├── package.json              # Front-end build скриптове
-├── db.sqlite3                # База данни SQLite (не се проследява в Git)
+├── db.sqlite3                # Локална база данни SQLite (в момента се проследява в Git)
 └── requirements.txt          # Python зависимости
 ```
