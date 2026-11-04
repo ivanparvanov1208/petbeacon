@@ -15,6 +15,12 @@ class UserProfileInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     inlines = [UserProfileInline]
 
+    def get_inline_instances(self, request, obj=None):
+        # The post_save signal creates the profile when a new user is saved.
+        if obj is None:
+            return []
+        return super().get_inline_instances(request, obj)
+
 
 class UserProfileAdmin(admin.ModelAdmin):
     """The only place a role can be changed.
