@@ -120,7 +120,7 @@ class LanguageSwitcherTests(TestCase):
 
         html = self.client.get("/en/").content.decode()
         self.assertIn('<html lang="en"', html)
-        self.assertIn("Get started for free", html)
+        self.assertIn("Prepare patient records for the next visit", html)
 
     def test_switching_back_restores_bulgarian(self):
         self.client.post(reverse("set_language"), {"next": "/bg/", "language": "en"})
@@ -128,18 +128,18 @@ class LanguageSwitcherTests(TestCase):
 
         html = self.client.get("/bg/").content.decode()
         self.assertIn('<html lang="bg"', html)
-        self.assertIn("Започнете безплатно", html)
+        self.assertIn("Подгответе досиетата за следващия преглед", html)
 
     def test_language_prefix_alone_selects_the_language(self):
-        self.assertIn("Get started for free", self.client.get("/en/").content.decode())
-        self.assertIn("Започнете безплатно", self.client.get("/bg/").content.decode())
+        self.assertIn("Prepare patient records for the next visit", self.client.get("/en/").content.decode())
+        self.assertIn("Подгответе досиетата за следващия преглед", self.client.get("/bg/").content.decode())
 
     def test_switcher_is_rendered_for_anonymous_and_authenticated_users(self):
         html = self.client.get(reverse("pets:home")).content.decode()
         self.assertIn(reverse("set_language"), html)
         self.assertEqual(html.count('name="language" value="en"'), 2)
         self.assertEqual(html.count('name="language" value="bg"'), 0)
-        self.assertIn("Започнете безплатно", html)
+        self.assertIn("Подгответе досиетата за следващия преглед", html)
 
         user = User.objects.create_user(username="switcher", password="password123")
         self.client.force_login(user)

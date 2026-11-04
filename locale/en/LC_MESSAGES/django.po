@@ -80,44 +80,29 @@ msgstr "(required field)"
 msgid "15-цифрен код на микрочип"
 msgstr "15-digit microchip code"
 
-msgid "PetBeacon Администрация"
-msgstr "PetBeacon Administration"
-
 msgid "PetBeacon · Администрация"
 msgstr "PetBeacon · Administration"
 
-msgid "PetBeacon — Администрация"
-msgstr "PetBeacon — Administration"
-
-msgid "Център за управление"
-msgstr "Control center"
-
-msgid "Добре дошли в PetBeacon"
-msgstr "Welcome to PetBeacon"
-
-msgid "Управлявайте любимците, здравните записи, напомнянията и профилите на собствениците от едно място."
-msgstr "Manage pets, health records, reminders, and owner profiles in one place."
-
-msgid "Към приложенията"
-msgstr "Go to apps"
-
-msgid "Грижа за всеки любимец"
-msgstr "Care for every companion"
+msgid "PetBeacon Администрация"
+msgstr "PetBeacon Administration"
 
 msgid "PetBeacon Портал"
 msgstr "PetBeacon Portal"
 
-msgid "PetBeacon е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния."
-msgstr "PetBeacon is a web platform for caring for pets: profiles, a vaccination schedule, medical history, medications and smart reminders."
+msgid "PetBeacon подпомага ветеринарната практика с пациентски досиета, медицинска история и проследяване на последващи грижи."
+msgstr "PetBeacon supports veterinary practices with patient records, medical histories, and follow-up care tracking."
 
-msgid "PetBeacon — Грижа и здраве за вашия домашен любимец"
-msgstr "PetBeacon — Care and health for your pet"
+msgid "PetBeacon — Администрация"
+msgstr "PetBeacon — Administration"
 
 msgid "PetBeacon — Грижа и здраве за вашия любимец"
 msgstr "PetBeacon — Care and health for your companion"
 
 msgid "PetBeacon — платформа за грижа за домашни любимци: профили, ваксинации, медицинска история и напомняния."
 msgstr "PetBeacon — a platform for caring for pets: profiles, vaccinations, medical history and reminders."
+
+msgid "PetBeacon — система за ветеринарна практика"
+msgstr "PetBeacon — Veterinary Practice System"
 
 msgid "Админ панел"
 msgstr "Admin panel"
@@ -155,6 +140,9 @@ msgstr "Notes / side effects"
 msgid "Бележки или поносимост"
 msgstr "Notes or tolerance"
 
+msgid "Бързи действия"
+msgstr "Quick actions"
+
 msgid "Ваксина"
 msgstr "Vaccine"
 
@@ -188,6 +176,9 @@ msgstr "Vaccination “%(vaccine)s” was added successfully for %(pet)s!"
 msgid "Ветеринар"
 msgstr "Veterinarian"
 
+msgid "Ветеринарен кабинет"
+msgstr "Veterinary clinic"
+
 msgid "Ветеринарен лекар"
 msgstr "Veterinarian"
 
@@ -209,8 +200,8 @@ msgstr "Veterinary clinic..."
 msgid "Ветеринарни посещения"
 msgstr "Veterinary visits"
 
-msgid "Ветеринарни прегледи, обезпаразитяване, прием на предписани медикаменти и поръчка на храна."
-msgstr "Vet check-ups, deworming, prescribed medication and food orders."
+msgid "Ветеринарните профили се създават от администратора, за да се контролира достъпът до клиничните функции."
+msgstr "Veterinarian accounts are created by an administrator to control access to clinical features."
 
 msgid "Ветеринарно посещение"
 msgstr "Veterinary visit"
@@ -260,6 +251,9 @@ msgstr "No vaccinations yet"
 msgid "Все още няма въведени ваксинации за %(name)s."
 msgstr "No vaccinations have been recorded for %(name)s yet."
 
+msgid "Все още няма документирани посещения."
+msgstr "No visits have been recorded yet."
+
 msgid "Все още нямате планирани напомняния. Добавете напомняне за ваксина, лекарство или преглед!"
 msgstr "You have no planned reminders yet. Add one for a vaccine, medication or check-up!"
 
@@ -275,14 +269,11 @@ msgstr "All categories"
 msgid "Всички любимци"
 msgstr "All pets"
 
-msgid "Всички необходими инструменти за организиране на здравето и ежедневието на кучета, котки, птици и други животни."
-msgstr "Every tool you need to organise the health and daily routine of dogs, cats, birds and other animals."
+msgid "Всички пациенти"
+msgstr "All patients"
 
 msgid "Всички регистрирани животни под ваше наблюдение."
 msgstr "Every animal registered under your care."
-
-msgid "Всичко за вашия любимец"
-msgstr "Everything about your pet"
 
 msgid "Вход"
 msgstr "Log in"
@@ -295,6 +286,9 @@ msgstr "Log in"
 
 msgid "Вход в профила | PetBeacon"
 msgstr "Log in | PetBeacon"
+
+msgid "Вход за ветеринарен екип"
+msgstr "Veterinary team sign in"
 
 msgid "Вход с съществуващ акаунт"
 msgstr "Log in with an existing account"
@@ -326,17 +320,11 @@ msgstr "Reopen"
 msgid "Върни „%(title)s“ като активно"
 msgstr "Reopen “%(title)s”"
 
-msgid "Генерирайте готов за разпечатване и PDF файл здравен картон с един клик преди посещение при ветеринарния лекар."
-msgstr "Generate a print-ready health card and PDF with a single click before your vet appointment."
-
 msgid "Генерирано на %(day)s г. за нуждите на ветеринарни прегледи и манипулации"
 msgstr "Generated on %(day)s for veterinary check-ups and procedures"
 
 msgid "Годишен профилактичен преглед, проблем с лапата..."
 msgstr "Annual check-up, paw problem..."
-
-msgid "Готови ли сте да поемете пълен контрол над грижата?"
-msgstr "Ready to take full control of their care?"
 
 msgid "Град"
 msgstr "City"
@@ -351,6 +339,9 @@ msgid "Грешно потребителско име или парола. Ос�
 msgid_plural "Грешно потребителско име или парола. Остават ви %(count)d опита."
 msgstr[0] "Wrong username or password. %(count)d attempt left."
 msgstr[1] "Wrong username or password. %(count)d attempts left."
+
+msgid "Грижа за всеки любимец"
+msgstr "Care for every companion"
 
 msgid "Гризач"
 msgstr "Rodent"
@@ -409,8 +400,20 @@ msgstr "The administration date cannot be in the future."
 msgid "Датата на раждане не може да е в бъдещето."
 msgstr "The date of birth cannot be in the future."
 
-msgid "Демо профил"
-msgstr "Demo account"
+msgid "Демо общо за плащане"
+msgstr "Demo checkout total"
+
+msgid "Демо отстъпка"
+msgstr "Demo discount"
+
+msgid "Демо профил стопанин"
+msgstr "Demo pet owner account"
+
+msgid "Демо такса — 0,00 USD"
+msgstr "Demo fee — USD 0.00"
+
+msgid "Демонстрационна 100%% отстъпка. Checkout-ът не събира пари; чатът се отваря след потвърждение от Stripe."
+msgstr "Demo 100%% discount. Checkout does not collect a payment; the chat opens after Stripe confirms the session."
 
 msgid "Диагноза"
 msgstr "Diagnosis"
@@ -430,6 +433,9 @@ msgstr "Due %(due)s"
 msgid "Добавете любимец сега"
 msgstr "Add a pet now"
 
+msgid "Добавете основната информация, след което ще можете да документирате посещения и лечение."
+msgstr "Add the basic details to start documenting visits and treatment."
+
 msgid "Добави в списъка с напомняния"
 msgstr "Add to the reminder list"
 
@@ -448,6 +454,9 @@ msgstr "Add a pet"
 msgid "Добави медикамент"
 msgstr "Add medication"
 
+msgid "Добави медицински запис"
+msgstr "Add medical record"
+
 msgid "Добави напомняне"
 msgstr "Add reminder"
 
@@ -456,6 +465,9 @@ msgstr "Add a reminder for %(name)s"
 
 msgid "Добави нов любимец"
 msgstr "Add a new pet"
+
+msgid "Добави преглед"
+msgstr "Add visit"
 
 msgid "Добави първа ваксинация"
 msgstr "Add the first vaccination"
@@ -469,14 +481,20 @@ msgstr "Add a medical record for %(name)s"
 msgid "Добавяне на нов домашен любимец"
 msgstr "Add a new pet"
 
+msgid "Добре дошли в PetBeacon"
+msgstr "Welcome to PetBeacon"
+
 msgid "Добре дошли в PetBeacon, %(name)s! Вашият профил бе създаден успешно."
 msgstr "Welcome to PetBeacon, %(name)s! Your account was created successfully."
 
 msgid "Дозировка"
 msgstr "Dosage"
 
-msgid "Дозировка, честота, начална и крайна дата и специфични указания за прием с храна или на гладно."
-msgstr "Dosage, frequency, start and end date, and specific instructions for taking it with food or on an empty stomach."
+msgid "Документиране на прегледи"
+msgstr "Visit documentation"
+
+msgid "Документирани посещения"
+msgstr "Recorded visits"
 
 msgid "Документът"
 msgstr "The document"
@@ -529,8 +547,14 @@ msgstr "HEALTH PASSPORT AND MEDICAL CARD"
 msgid "За днес"
 msgstr "Today"
 
+msgid "Завършена"
+msgstr "Completed"
+
 msgid "Заглавие на напомнянето"
 msgstr "Reminder title"
+
+msgid "Задайте въпрос на ветеринар и продължете разговора в личен чат."
+msgstr "Ask a veterinarian a question and continue the conversation in a private chat."
 
 msgid "Задачи за днес"
 msgstr "Today's tasks"
@@ -562,8 +586,11 @@ msgstr "Save visit"
 msgid "Запази промените"
 msgstr "Save changes"
 
-msgid "Записвайте поставените ваксини и крайните срокове за следващите дози, с автоматични сигнали за наближаващи и просрочени."
-msgstr "Record administered vaccines and next-dose due dates, with automatic alerts for upcoming and overdue ones."
+msgid "Записвайте предписани медикаменти, дозировки, честота и указания за прием."
+msgstr "Record prescribed medications, dosages, schedules, and administration instructions."
+
+msgid "Записвайте резултати, диагнози, лечение и препоръки след всяко посещение."
+msgstr "Record findings, diagnoses, treatment, and recommendations after each visit."
 
 msgid "Записване на ветеринарно посещение за %(name)s"
 msgstr "Book a veterinary visit for %(name)s"
@@ -577,14 +604,29 @@ msgstr "Record “%(title)s” was updated successfully!"
 msgid "Запиши посещение"
 msgstr "Log a visit"
 
-msgid "Започнете безплатно"
-msgstr "Get started for free"
+msgid "Започнете с първото пациентско досие"
+msgstr "Start with the first patient record"
 
 msgid "Затвори менюто"
 msgstr "Close menu"
 
 msgid "Затвори съобщението"
 msgstr "Dismiss message"
+
+msgid "Заявете консултация, когато имате въпрос за здравето на любимеца."
+msgstr "Request a consultation if you have a question about your pet’s health."
+
+msgid "Заяви консултация"
+msgstr "Request a consultation"
+
+msgid "Заяви онлайн консултация"
+msgstr "Request an online consultation"
+
+msgid "Заяви онлайн консултация | PetBeacon"
+msgstr "Request an online consultation | PetBeacon"
+
+msgid "Заявките от стопани ще се появят тук."
+msgstr "Requests from pet owners will appear here."
 
 msgid "Здравейте отново, %(name)s!"
 msgstr "Welcome back, %(name)s!"
@@ -613,11 +655,17 @@ msgstr "Ivanov"
 msgid "Идентификация и снимка"
 msgstr "Identification and photo"
 
+msgid "Изберете любимец и ветеринар, след което опишете въпроса. Услугата е платена; за дипломната демонстрация сумата се покрива с 100%% отстъпка в Stripe Checkout."
+msgstr "Select a pet and veterinarian, then describe your question. The service is paid; for the diploma demonstration, the cost is covered by a 100%% discount in Stripe Checkout."
+
 msgid "Изградено с Python & Django"
 msgstr "Built with Python & Django"
 
 msgid "Издаден чрез електронна система PetBeacon"
 msgstr "Issued via the PetBeacon online system"
+
+msgid "Изпрати съобщение"
+msgstr "Send message"
 
 msgid "Изпълнени"
 msgstr "Completed"
@@ -670,6 +718,9 @@ msgstr "Delete “%(title)s”"
 msgid "Изход"
 msgstr "Log out"
 
+msgid "Изчаква"
+msgstr "Pending"
+
 msgid "Изчисти"
 msgstr "Clear"
 
@@ -703,8 +754,8 @@ msgstr "Email"
 msgid "Имейл адрес"
 msgstr "Email address"
 
-msgid "Интелигентни напомняния"
-msgstr "Smart reminders"
+msgid "Инструменти за клинична работа"
+msgstr "Clinical tools"
 
 msgid "Искате ли да тествате веднага?"
 msgstr "Want to try it right away?"
@@ -724,11 +775,29 @@ msgstr "Clinic"
 msgid "Клиника / Лекар"
 msgstr "Clinic / vet"
 
+msgid "Клинично досие на пациента"
+msgstr "Clinical patient record"
+
+msgid "Клинично табло"
+msgstr "Clinical dashboard"
+
+msgid "Клинично табло | PetBeacon"
+msgstr "Clinical dashboard | PetBeacon"
+
 msgid "Констатации и диагноза"
 msgstr "Findings and diagnosis"
 
 msgid "Констатирано състояние / диагноза..."
 msgstr "Observed condition / diagnosis..."
+
+msgid "Консултации"
+msgstr "Consultations"
+
+msgid "Консултации с клиенти"
+msgstr "Client consultations"
+
+msgid "Консултацията е приключена."
+msgstr "The consultation has been closed."
 
 msgid "Контактна информация"
 msgstr "Contact information"
@@ -748,8 +817,14 @@ msgstr "The end date cannot be before the start date."
 msgid "Куче"
 msgstr "Dog"
 
+msgid "Към консултациите"
+msgstr "View consultations"
+
 msgid "Към началната страница"
 msgstr "Back to home"
+
+msgid "Към приложенията"
+msgstr "Go to apps"
 
 msgid "Към съдържанието"
 msgstr "Skip to content"
@@ -777,6 +852,9 @@ msgstr "Treatment"
 
 msgid "Лечение / Процедури"
 msgstr "Treatment / procedures"
+
+msgid "Личен разговор"
+msgstr "Private conversation"
 
 msgid "Лични данни"
 msgstr "Personal details"
@@ -850,6 +928,9 @@ msgstr "My pets"
 msgid "Моите домашни любимци | PetBeacon"
 msgstr "My pets | PetBeacon"
 
+msgid "Моите консултации"
+msgstr "My consultations"
+
 msgid "Моите любимци"
 msgstr "My pets"
 
@@ -889,6 +970,9 @@ msgstr "Back to visits"
 msgid "Назад към историята"
 msgstr "Back to history"
 
+msgid "Назад към консултациите"
+msgstr "Back to consultations"
+
 msgid "Назад към лекарствата"
 msgstr "Back to medications"
 
@@ -900,6 +984,12 @@ msgstr "Back to %(name)s's profile"
 
 msgid "Назначено лечение и процедури"
 msgstr "Prescribed treatment and procedures"
+
+msgid "Намери пациент"
+msgstr "Find a patient"
+
+msgid "Напишете съобщение..."
+msgstr "Write a message..."
 
 msgid "Напомняне"
 msgstr "Reminder"
@@ -979,6 +1069,9 @@ msgstr "e.g. Rex, Bella, Max"
 msgid "Напр. Синулокс, Апоквел, Омега-3..."
 msgstr "e.g. Sinulox, Apoquel, Omega-3..."
 
+msgid "Напр. Сърбеж и зачервяване на кожата"
+msgstr "e.g. Itchy, red skin"
+
 msgid "Начална дата"
 msgstr "Start date"
 
@@ -1006,6 +1099,12 @@ msgstr "Unsupported document format (%(ext)s). Allowed: %(allowed)s."
 msgid "Неразрешен формат на снимката (%(ext)s). Позволени: %(allowed)s."
 msgstr "Unsupported image format (%(ext)s). Allowed: %(allowed)s."
 
+msgid "Неуспешно"
+msgstr "Failed"
+
+msgid "Неуспешно създаване на Stripe Checkout. Проверете тестовия Stripe ключ и опитайте отново."
+msgstr "Could not create a Stripe Checkout session. Check your Stripe test key and try again."
+
 msgid "Неуточнена порода"
 msgstr "Breed not specified"
 
@@ -1017,6 +1116,12 @@ msgstr "New pet"
 
 msgid "Нов медицински запис"
 msgstr "New medical record"
+
+msgid "Нов пациент"
+msgstr "New patient"
+
+msgid "Нова консултация"
+msgstr "New consultation"
 
 msgid "Ново напомняне"
 msgstr "New reminder"
@@ -1075,8 +1180,14 @@ msgstr "No reminders"
 msgid "Няма напомняния, отговарящи на избраните филтри."
 msgstr "No reminders match the selected filters."
 
+msgid "Няма нови консултации"
+msgstr "No new consultations"
+
 msgid "Няма планирани напомняния за следващите 14 дни."
 msgstr "No reminders planned for the next 14 days."
+
+msgid "Няма планирани последващи грижи за следващите 30 дни."
+msgstr "No follow-up care is scheduled for the next 30 days."
 
 msgid "Няма регистрирани алергии или непоносимости."
 msgstr "No known allergies or intolerances."
@@ -1120,17 +1231,38 @@ msgstr "Health summary and tasks for %(day)s"
 msgid "Общ преглед"
 msgstr "Overview"
 
+msgid "Общо"
+msgstr "Total"
+
 msgid "Общо напомняне (без конкретен любимец)"
 msgstr "General reminder (not tied to a specific pet)"
+
+msgid "Онлайн ветеринарна консултация"
+msgstr "Online veterinary consultation"
+
+msgid "Онлайн консултации | PetBeacon"
+msgstr "Online consultations | PetBeacon"
 
 msgid "Опитайте отново след %(seconds)s сек."
 msgstr "Try again in %(seconds)s sec."
 
+msgid "Опишете кога е започнало, какво се е променило и какви лекарства приема любимецът..."
+msgstr "Describe when it started, what changed, and any medication your pet is taking..."
+
+msgid "Опишете проблема"
+msgstr "Describe the issue"
+
 msgid "Основна информация"
 msgstr "Basic details"
 
+msgid "Основна информация, идентификация, алергии и важни особености за пациента."
+msgstr "Basic information, identification, allergies, and important patient notes."
+
 msgid "Основна навигация"
 msgstr "Main navigation"
+
+msgid "Основните медицински данни и последващи грижи за различни видове пациенти са достъпни от едно досие."
+msgstr "Core medical details and follow-up care for patients of different species are available in one record."
 
 msgid "Особености в поведението, навици, страх от гръмотевици и т.н."
 msgstr "Behavioural quirks, habits, fear of thunderstorms, etc."
@@ -1141,14 +1273,29 @@ msgstr "Mark as done"
 msgid "Отбележи „%(title)s“ като изпълнено"
 msgstr "Mark “%(title)s” as done"
 
+msgid "Отворена"
+msgstr "Open"
+
+msgid "Отворете досието на пациента, за да добавите преглед, медицински запис, ваксинация или лечение."
+msgstr "Open the patient record to add a visit, medical record, vaccination, or treatment."
+
+msgid "Отвори досие"
+msgstr "Open record"
+
 msgid "Отвори менюто"
 msgstr "Open menu"
 
 msgid "Отвори менюто на потребителя: %(name)s"
 msgstr "Open the user menu: %(name)s"
 
+msgid "Отговорете на собствениците и прегледайте досието на любимеца."
+msgstr "Reply to pet owners and review the pet’s record."
+
 msgid "Отказ"
 msgstr "Cancel"
+
+msgid "Още нямате консултации"
+msgstr "You do not have any consultations yet"
 
 msgid "Парола"
 msgstr "Password"
@@ -1177,20 +1324,50 @@ msgstr "Passport"
 msgid "Паспорт %(number)s"
 msgstr "Passport %(number)s"
 
+msgid "Пациенти"
+msgstr "Patients"
+
+msgid "Пациенти и последващи грижи към %(day)s"
+msgstr "Patients and follow-up care due by %(day)s"
+
+msgid "Пациентските досиета"
+msgstr "Patient records"
+
 msgid "Период"
 msgstr "Period"
+
+msgid "Планирай последваща грижа"
+msgstr "Schedule follow-up care"
+
+msgid "Платена онлайн консултация"
+msgstr "Paid online consultation"
+
+msgid "Платена услуга · демо checkout"
+msgstr "Paid service · demo checkout"
+
+msgid "Платено"
+msgstr "Paid"
 
 msgid "Платформа за грижа за домашни любимци"
 msgstr "A platform for caring for your pets"
 
-msgid "Платформа за собственици на любимци"
-msgstr "A platform for pet owners"
+msgid "Плащането се потвърждава. Обновете страницата след малко."
+msgstr "Payment is being confirmed. Refresh the page in a moment."
 
 msgid "По време на хранене, разтворено във вода и др."
 msgstr "With food, dissolved in water, etc."
 
 msgid "Повторете паролата"
 msgstr "Repeat the password"
+
+msgid "Подгответе досиетата за следващия преглед"
+msgstr "Prepare patient records for the next visit"
+
+msgid "Подгответе обобщение на здравното досие за собственика и следващия преглед."
+msgstr "Prepare a health record summary for the owner and the next visit."
+
+msgid "Поддържайте подредена история на прегледите и разходите с прикачени резултати."
+msgstr "Keep an organized history of visits and expenses with attached test results."
 
 msgid "Подпис и печат на ветеринарния лекар:"
 msgstr "Signature and stamp of the veterinarian:"
@@ -1207,17 +1384,23 @@ msgstr "Sex"
 msgid "Поле"
 msgstr "Field"
 
-msgid "Попълни данни за демо профил"
-msgstr "Fill in the demo account details"
+msgid "Попълни данни за демо профил на ветеринар"
+msgstr "Fill in the demo veterinarian account details"
+
+msgid "Попълни данни за демо профил на стопанин"
+msgstr "Fill in the demo pet owner account details"
 
 msgid "Порода"
 msgstr "Breed"
 
-msgid "Порода, рождена дата, снимка, тегло, номер на микрочип, европейски паспорт, режим на хранене и алергии."
-msgstr "Breed, date of birth, photo, weight, microchip number, EU passport, feeding routine and allergies."
-
 msgid "Посещение при ветеринарен лекар за %(name)s"
 msgstr "Veterinary visit for %(name)s"
+
+msgid "Последни пациенти"
+msgstr "Recent patients"
+
+msgid "Последни посещения"
+msgstr "Recent visits"
 
 msgid "Поставена"
 msgstr "Administered"
@@ -1252,6 +1435,12 @@ msgstr "Preview"
 msgid "Преглед на всички"
 msgstr "View all"
 
+msgid "Прегледай всички пациенти"
+msgstr "View all patients"
+
+msgid "Прегледайте ваксинациите, диагнозите, процедурите и приложените изследвания."
+msgstr "Review vaccinations, diagnoses, procedures, and attached test results."
+
 msgid "Предишна"
 msgstr "Previous"
 
@@ -1269,6 +1458,9 @@ msgstr "Upcoming"
 
 msgid "Предстоящи (14 дни)"
 msgstr "Upcoming (14 days)"
+
+msgid "Предстоящи последващи грижи"
+msgstr "Upcoming follow-up care"
 
 msgid "През целия ден"
 msgstr "All day"
@@ -1300,6 +1492,9 @@ msgstr "Medication: %(name)s (%(dosage)s)"
 msgid "Прикачен файл / резултати"
 msgstr "Attached file / results"
 
+msgid "Приключи чат"
+msgstr "Close chat"
+
 msgid "Приключило"
 msgstr "Finished"
 
@@ -1330,6 +1525,12 @@ msgstr "Reason / diagnosis / procedure"
 msgid "Причина за посещението"
 msgstr "Reason for the visit"
 
+msgid "Продължи към Stripe Checkout · $0.00"
+msgstr "Continue to Stripe Checkout · $0.00"
+
+msgid "Продължи към плащане"
+msgstr "Continue to checkout"
+
 msgid "Просрочена"
 msgstr "Overdue"
 
@@ -1348,9 +1549,6 @@ msgstr "Profile of %(name)s"
 msgid "Профилактика, спешен преглед, контролен преглед..."
 msgstr "Preventive care, emergency, follow-up..."
 
-msgid "Профили, ваксинации, медицинска история, хранителен режим и ветеринарни визити — организирани така, че нищо важно да не се изгуби. Без риск от пропуснати ваксини или прегледи."
-msgstr "Profiles, vaccinations, medical history, feeding routine and vet visits — organised so nothing important slips through. No risk of missed vaccines or check-ups."
-
 msgid "Профилът е временно заключен"
 msgstr "The account is temporarily locked"
 
@@ -1363,8 +1561,11 @@ msgstr "The profile of %(name)s was deleted successfully."
 msgid "Птица"
 msgstr "Bird"
 
-msgid "Пълен профил на любимеца"
-msgstr "Complete pet profile"
+msgid "Първоначално описание"
+msgstr "Initial description"
+
+msgid "Разговорът е отворен. Изпратете първото съобщение."
+msgstr "The consultation is open. Send the first message."
 
 msgid "Раздели на профила"
 msgstr "Profile sections"
@@ -1378,14 +1579,23 @@ msgstr "Sign up for PetBeacon"
 msgid "Регистрация на нов профил | PetBeacon"
 msgstr "Create an account | PetBeacon"
 
+msgid "Регистрирай пациент"
+msgstr "Register patient"
+
+msgid "Регистрирай първи пациент"
+msgstr "Register the first patient"
+
+msgid "Регистрирайте пациенти, документирайте прегледи и лечения и проследявайте последващите грижи. Стопаните могат да поддържат профили на своите любимци."
+msgstr "Register patients, document visits and treatments, and track follow-up care. Pet owners can maintain profiles for their pets."
+
 msgid "Регистрирайте се безплатно"
 msgstr "Sign up for free"
 
-msgid "Регистрирайте се за по-малко от минута и добавете първия си любимец днес."
-msgstr "Sign up in under a minute and add your first pet today."
-
 msgid "Регистриран на %(joined)s г."
 msgstr "Joined on %(joined)s"
+
+msgid "Регистрирани пациенти"
+msgstr "Registered patients"
 
 msgid "Редактирай"
 msgstr "Edit"
@@ -1435,8 +1645,17 @@ msgstr "Fish / aquarium"
 msgid "Роля"
 msgstr "Role"
 
+msgid "Само стопанин може да заяви консултация."
+msgstr "Only pet owners can request a consultation."
+
 msgid "Светла тема"
 msgstr "Light theme"
+
+msgid "Свържете се с ветеринар"
+msgstr "Contact a veterinarian"
+
+msgid "Свържете стопанина с избран ветеринар в личен чат, с checkout и история на разговора."
+msgstr "Connect pet owners with their chosen veterinarian through private chat, checkout, and conversation history."
 
 msgid "Сериен / партиден номер"
 msgstr "Serial / batch number"
@@ -1449,6 +1668,9 @@ msgstr "Are you sure you want to delete the profile of <strong class=\"text-ink-
 
 msgid "Сигурни ли сте, че искате да изтриете тази ваксинация?"
 msgstr "Are you sure you want to delete this vaccination?"
+
+msgid "Система за ветеринарна практика"
+msgstr "Veterinary practice system"
 
 msgid "Скорошни ветеринарни визити"
 msgstr "Recent vet visits"
@@ -1552,29 +1774,32 @@ msgstr "Create a new reminder"
 msgid "Създаден на"
 msgstr "Created on"
 
-msgid "Създадено с внимание към любимците"
-msgstr "Built with pets in mind"
-
 msgid "Създай автоматично напомняне за следващата доза"
 msgstr "Create an automatic reminder for the next dose"
 
 msgid "Създай профил"
 msgstr "Create account"
 
-msgid "Създайте безплатен профил"
-msgstr "Create a free account"
-
 msgid "Създайте профил и организирайте грижата за любимците си."
 msgstr "Create an account and organise the care of your pets."
 
+msgid "Съобщение"
+msgstr "Message"
+
 msgid "Съобщения"
 msgstr "Messages"
+
+msgid "Съобщенията са видими само за собственика и избрания ветеринар."
+msgstr "Messages are visible only to the pet owner and the selected veterinarian."
 
 msgid "Табло"
 msgstr "Dashboard"
 
 msgid "Табло за управление | PetBeacon"
 msgstr "Dashboard | PetBeacon"
+
+msgid "Тази консултация е приключена и чатът е само за преглед."
+msgstr "This consultation is closed and the chat is read-only."
 
 msgid "Твърде много неуспешни опити за вход. Моля, изчакайте %(minutes)dм %(seconds)dс и опитайте отново."
 msgstr "Too many failed sign-in attempts. Please wait %(minutes)dm %(seconds)ds and try again."
@@ -1615,6 +1840,9 @@ msgstr "Contact phone (optional)"
 msgid "Телефон за връзка с клиниката"
 msgstr "Clinic contact phone"
 
+msgid "Тема"
+msgstr "Subject"
+
 msgid "Температура, състояние на козината, зъби, лимфни възли..."
 msgstr "Temperature, coat condition, teeth, lymph nodes..."
 
@@ -1650,6 +1878,9 @@ msgstr "Pet care database administration"
 
 msgid "Управление на личните данни и контактна информация."
 msgstr "Manage your personal details and contact information."
+
+msgid "Управлявайте любимците, здравните записи, напомнянията и профилите на собствениците от едно място."
+msgstr "Manage pets, health records, reminders, and owner profiles in one place."
 
 msgid "Успешно добавихте профил на %(name)s!"
 msgstr "You successfully added a profile for %(name)s!"
@@ -1687,11 +1918,26 @@ msgstr "Food or medication allergies"
 msgid "Хронология на ветеринарните посещения"
 msgstr "History of veterinary visits"
 
-msgid "Хронология на прегледи, диагнози, манипулации, посетени клиники и разходи, с прикачени резултати от изследвания."
-msgstr "A timeline of check-ups, diagnoses, procedures, clinics visited and costs, with test results attached."
+msgid "Цена"
+msgstr "Price"
+
+msgid "Цена на услугата"
+msgstr "Service price"
+
+msgid "Цена на услугата (центове)"
+msgstr "Service price (cents)"
+
+msgid "Център за управление"
+msgstr "Control center"
+
+msgid "Чака плащане"
+msgstr "Awaiting payment"
 
 msgid "Час (по избор)"
 msgstr "Time (optional)"
+
+msgid "Чатът не е отворен за съобщения."
+msgstr "The chat is not open for messages."
 
 msgid "Честота"
 msgstr "Frequency"
@@ -1726,8 +1972,8 @@ msgstr "kg"
 msgid "лв."
 msgstr "BGN"
 
-msgid "на едно сигурно място."
-msgstr "in one safe place."
-
 msgid "от %(start)s"
 msgstr "from %(start)s"
+
+msgid "подредени за клиничната работа."
+msgstr "organized for clinical work."
