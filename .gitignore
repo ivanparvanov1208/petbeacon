@@ -104,3 +104,6 @@ docs/_build/
 
 # --- Packages ---
 node_modules/
+
+# --- Database ---
+db.sqlite3
