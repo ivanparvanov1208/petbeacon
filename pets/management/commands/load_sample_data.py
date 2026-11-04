@@ -1,7 +1,10 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from accounts.models import UserProfile
-from pets.models import Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder
+from pets.models import (
+    Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder,
+    Consultation, ConsultationMessage,
+)
 from datetime import date, timedelta
 
 
@@ -9,22 +12,22 @@ class Command(BaseCommand):
     help = "Loads sample demo data for PetBeacon application"
 
     def handle(self, *args, **options):
-        self.stdout.write("[PetBeacon] Creating / updating demo user...")
+        self.stdout.write("[PetBeacon] Resetting accounts to the two demo users...")
+        User.objects.exclude(username__in=["demo_owner", "demo_vet"]).delete()
         demo_user, created = User.objects.get_or_create(
             username="demo_owner",
             defaults={
                 "email": "demo@petcare.bg",
                 "first_name": "Елена",
                 "last_name": "Димитрова",
-                "is_staff": True,
-                "is_superuser": True,
             }
         )
         demo_user.set_password("demo12345")
         demo_user.first_name = "Елена"
         demo_user.last_name = "Димитрова"
-        demo_user.is_staff = True
-        demo_user.is_superuser = True
+        demo_user.email = "owner@petbeacon.demo"
+        demo_user.is_staff = False
+        demo_user.is_superuser = False
         demo_user.save()
 
         profile, _ = UserProfile.objects.get_or_create(user=demo_user)
@@ -33,11 +36,36 @@ class Command(BaseCommand):
         profile.city = "София"
         profile.save()
 
+        demo_vet, _ = User.objects.get_or_create(
+            username="demo_vet",
+            defaults={
+                "email": "vet@petbeacon.demo",
+                "first_name": "Николай",
+                "last_name": "Тодоров",
+            },
+        )
+        demo_vet.set_password("VetDemo123!")
+        demo_vet.email = "vet@petbeacon.demo"
+        demo_vet.first_name = "Николай"
+        demo_vet.last_name = "Тодоров"
+        demo_vet.is_staff = False
+        demo_vet.is_superuser = False
+        demo_vet.save()
+        vet_profile, _ = UserProfile.objects.get_or_create(user=demo_vet)
+        vet_profile.role = UserProfile.ROLE_VET
+        vet_profile.phone = "+359 2 987 6543"
+        vet_profile.city = "София"
+        vet_profile.save()
+
         today = date.today()
 
         self.stdout.write("[PetBeacon] Clearing previous pets and reminders for demo user...")
         Pet.objects.filter(owner=demo_user).delete()
         Reminder.objects.filter(owner=demo_user).delete()
+        Pet.objects.filter(owner=demo_vet).delete()
+        Reminder.objects.filter(owner=demo_vet).delete()
+        Consultation.objects.filter(owner__in=[demo_user, demo_vet]).delete()
+        Consultation.objects.filter(veterinarian__in=[demo_user, demo_vet]).delete()
 
         self.stdout.write("[PetBeacon] Creating Pet 1: Rex...")
         rex = Pet.objects.create(
@@ -267,5 +295,129 @@ class Command(BaseCommand):
             notes="Прегледът мина супер, всичко е наред."
         )
 
+        self.stdout.write("[PetBeacon] Creating vet clinic patient records...")
+        luna = Pet.objects.create(
+            owner=demo_vet,
+            name="Луна",
+            species="dog",
+            breed="Лабрадор ретривър",
+            gender="female",
+            is_neutered=True,
+            birth_date=today - timedelta(days=365 * 4),
+            weight=27.40,
+            microchip_number="642098100765432",
+            passport_number="BG 0614820",
+            allergies="Чувствителност към говежди протеин.",
+            special_notes="Пациент на ВетСити. Собственикът съобщава за сезонен сърбеж.",
+        )
+        VetVisit.objects.create(
+            pet=luna,
+            visit_date=today - timedelta(days=3),
+            clinic_name="Ветеринарна клиника ВетСити",
+            vet_name="Д-р Николай Тодоров",
+            phone="+359 2 987 6543",
+            reason="Контролен преглед за кожно раздразнение",
+            examination_summary="Леко зачервяване по корема, общото състояние е добро.",
+            recommendations="Контрол след 14 дни; избягване на нова храна до контролния преглед.",
+            total_cost=65.00,
+        )
+        MedicalRecord.objects.create(
+            pet=luna,
+            date=today - timedelta(days=3),
+            title="Дерматологичен контролен преглед",
+            diagnosis="Лек сезонен дерматит; няма признаци за вторична инфекция.",
+            treatment="Измиване с ветеринарен шампоан два пъти седмично за 2 седмици.",
+            veterinarian="Д-р Николай Тодоров",
+            clinic="Ветеринарна клиника ВетСити",
+            cost=65.00,
+            notes="Алергията към говежди протеин е отбелязана в досието.",
+        )
+        Vaccination.objects.create(
+            pet=luna,
+            name="Годишна поливалентна ваксина",
+            date_administered=today - timedelta(days=355),
+            next_due_date=today + timedelta(days=10),
+            batch_number="DH-2026-1842",
+            clinic_or_vet="Д-р Николай Тодоров · ВетСити",
+            notes="Без нежелани реакции.",
+        )
+        Medication.objects.create(
+            pet=luna,
+            name="Омега-3 ветеринарна добавка",
+            dosage="1 капсула",
+            frequency="Веднъж дневно с храната",
+            start_date=today - timedelta(days=3),
+            end_date=today + timedelta(days=11),
+            instructions="Да се приема с основното хранене.",
+            is_active=True,
+            notes="Кратък курс до контролния преглед.",
+        )
+        Reminder.objects.create(
+            owner=demo_vet,
+            pet=luna,
+            reminder_type="vet_visit",
+            title="Контролен преглед на Луна",
+            due_date=today + timedelta(days=11),
+            due_time="11:00",
+            priority="high",
+            notes="Проследяване на кожното раздразнение и поносимостта към режима.",
+        )
+
+        milo = Pet.objects.create(
+            owner=demo_vet,
+            name="Мило",
+            species="cat",
+            breed="Европейска късокосместа",
+            gender="male",
+            is_neutered=True,
+            birth_date=today - timedelta(days=365 * 7),
+            weight=5.10,
+            microchip_number="642098100234567",
+            allergies="Не са известни.",
+            special_notes="Нужен е ежегоден контрол на зъбите и теглото.",
+        )
+        VetVisit.objects.create(
+            pet=milo,
+            visit_date=today - timedelta(days=21),
+            clinic_name="Ветеринарна клиника ВетСити",
+            vet_name="Д-р Николай Тодоров",
+            phone="+359 2 987 6543",
+            reason="Годишен профилактичен преглед",
+            examination_summary="Стабилно общо състояние; препоръчано е проследяване на теглото.",
+            recommendations="Контролно претегляне след 30 дни и постепенно намаляване на лакомствата.",
+            total_cost=45.00,
+        )
+        Reminder.objects.create(
+            owner=demo_vet,
+            pet=milo,
+            reminder_type="vet_visit",
+            title="Контролно претегляне на Мило",
+            due_date=today + timedelta(days=9),
+            priority="normal",
+            notes="Сравнете теглото с последния профилактичен преглед.",
+        )
+
+        demo_chat = Consultation.objects.create(
+            owner=demo_user,
+            veterinarian=demo_vet,
+            pet=rex,
+            subject="Рекс се чеше след разходка",
+            initial_message="От вчера Рекс се чеше по корема след разходка в парка. Няма промяна в храната и се храни нормално. Има ли нещо, което да следя?",
+            status=Consultation.STATUS_OPEN,
+            payment_status=Consultation.PAYMENT_COMPED,
+            listed_price_cents=1000,
+        )
+        ConsultationMessage.objects.create(
+            consultation=demo_chat,
+            sender=demo_vet,
+            body="Благодаря за описанието. Проверете дали има зачервяване или подуване и изпратете снимка, ако се появи. Ако сърбежът се усили или Рекс стане отпаднал, уговорете преглед.",
+        )
+        ConsultationMessage.objects.create(
+            consultation=demo_chat,
+            sender=demo_user,
+            body="Разгледах кожата и има само леко зачервяване. Ще наблюдавам и ще пиша отново утре.",
+        )
+
         self.stdout.write(self.style.SUCCESS("[PetBeacon] Sample data created successfully!"))
-        self.stdout.write(self.style.SUCCESS("[PetBeacon] Demo Username: demo_owner | Password: demo12345"))
+        self.stdout.write(self.style.SUCCESS("[PetBeacon] Owner: demo_owner | Password: demo12345"))
+        self.stdout.write(self.style.SUCCESS("[PetBeacon] Vet: demo_vet | Password: VetDemo123!"))

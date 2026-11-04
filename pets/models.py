@@ -8,8 +8,7 @@ from datetime import date
 
 
 class Pet(models.Model):
-    # Choice labels are lazy so they resolve per request language; only the
-    # code is stored.
+    # Store stable choice codes and translate labels at render time.
     SPECIES_CHOICES = [
         ('dog', gettext_lazy("Куче")),
         ('cat', gettext_lazy("Котка")),
@@ -372,3 +371,61 @@ class Reminder(models.Model):
             'other': 'fa-solid fa-bell text-gray-600',
         }
         return icons.get(self.reminder_type, 'fa-solid fa-bell text-gray-600')
+
+
+class Consultation(models.Model):
+    STATUS_PENDING_PAYMENT = 'pending_payment'
+    STATUS_OPEN = 'open'
+    STATUS_CLOSED = 'closed'
+    STATUS_CHOICES = [
+        (STATUS_PENDING_PAYMENT, gettext_lazy("Чака плащане")),
+        (STATUS_OPEN, gettext_lazy("Отворена")),
+        (STATUS_CLOSED, gettext_lazy("Завършена")),
+    ]
+    PAYMENT_PENDING = 'pending'
+    PAYMENT_PAID = 'paid'
+    PAYMENT_COMPED = 'comped'
+    PAYMENT_FAILED = 'failed'
+    PAYMENT_CHOICES = [
+        (PAYMENT_PENDING, gettext_lazy("Изчаква")),
+        (PAYMENT_PAID, gettext_lazy("Платено")),
+        (PAYMENT_COMPED, gettext_lazy("Демо такса — 0,00 USD")),
+        (PAYMENT_FAILED, gettext_lazy("Неуспешно")),
+    ]
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='consultations_as_owner')
+    veterinarian = models.ForeignKey(User, on_delete=models.CASCADE, related_name='consultations_as_vet')
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='consultations')
+    subject = models.CharField(max_length=160, verbose_name=gettext_lazy("Тема"))
+    initial_message = models.TextField(verbose_name=gettext_lazy("Опишете проблема"))
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING_PAYMENT)
+    payment_status = models.CharField(max_length=12, choices=PAYMENT_CHOICES, default=PAYMENT_PENDING)
+    listed_price_cents = models.PositiveIntegerField(default=1000, verbose_name=gettext_lazy("Цена на услугата (центове)"))
+    stripe_session_id = models.CharField(max_length=255, blank=True, unique=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    closed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-updated_at', '-created_at']
+        indexes = [models.Index(fields=['owner', 'status'], name='consult_owner_status_idx')]
+
+    def __str__(self):
+        return f"{self.subject} — {self.pet.name}"
+
+    @property
+    def demo_price_display(self):
+        return f"${self.listed_price_cents / 100:.2f}"
+
+
+class ConsultationMessage(models.Model):
+    consultation = models.ForeignKey(Consultation, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='consultation_messages')
+    body = models.TextField(max_length=5000, verbose_name=gettext_lazy("Съобщение"))
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at', 'pk']
+
+    def __str__(self):
+        return f"{self.sender.username}: {self.body[:60]}"

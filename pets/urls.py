@@ -6,6 +6,15 @@ app_name = 'pets'
 urlpatterns = [
     path('', views.home_view, name='home'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
+
+    # Paid vet consultations and private chat
+    path('consultations/', views.consultation_list_view, name='consultation_list'),
+    path('consultations/new/', views.consultation_create_view, name='consultation_create'),
+    path('consultations/<int:pk>/', views.consultation_detail_view, name='consultation_detail'),
+    path('consultations/<int:pk>/checkout/', views.consultation_checkout_view, name='consultation_checkout'),
+    path('consultations/<int:pk>/checkout/success/', views.consultation_checkout_success_view, name='consultation_checkout_success'),
+    path('consultations/<int:pk>/close/', views.consultation_close_view, name='consultation_close'),
+    path('stripe/webhook/', views.stripe_webhook_view, name='stripe_webhook'),
     
     # Pets
     path('pets/', views.pet_list_view, name='pet_list'),

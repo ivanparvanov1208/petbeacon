@@ -6,7 +6,10 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from PIL import Image, UnidentifiedImageError
 
-from .models import Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder
+from .models import (
+    Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder,
+    Consultation, ConsultationMessage,
+)
 
 
 CHECKBOX_CLASSES = "h-5 w-5 shrink-0 cursor-pointer rounded border-ink-300 text-brand-600 focus:ring-2 focus:ring-brand-500 dark:border-ink-600"
@@ -295,4 +298,40 @@ class ReminderForm(forms.ModelForm):
             'priority': forms.Select(attrs={'class': ''}),
             'is_completed': forms.CheckboxInput(attrs={'class': CHECKBOX_CLASSES}),
             'notes': forms.Textarea(attrs={'class': '', 'rows': 2, 'placeholder': gettext_lazy("Допълнителни детайли, час за запазване...")}),
+        }
+
+
+class ConsultationRequestForm(forms.ModelForm):
+    class Meta:
+        model = Consultation
+        fields = ['pet', 'veterinarian', 'subject', 'initial_message']
+        widgets = {
+            'pet': forms.Select(attrs={'class': ''}),
+            'veterinarian': forms.Select(attrs={'class': ''}),
+            'subject': forms.TextInput(attrs={'class': '', 'placeholder': gettext_lazy("Напр. Сърбеж и зачервяване на кожата")} ),
+            'initial_message': forms.Textarea(attrs={'class': '', 'rows': 5, 'placeholder': gettext_lazy("Опишете кога е започнало, какво се е променило и какви лекарства приема любимецът...")} ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        owner = kwargs.pop('owner')
+        super().__init__(*args, **kwargs)
+        from django.contrib.auth.models import User
+        self.fields['pet'].queryset = Pet.objects.filter(owner=owner).order_by('name')
+        self.fields['veterinarian'].queryset = User.objects.filter(
+            profile__role='vet', is_active=True
+        ).order_by('first_name', 'last_name', 'username')
+        self.fields['veterinarian'].label_from_instance = lambda vet: (
+            vet.get_full_name() or vet.username
+        )
+
+
+class ConsultationMessageForm(forms.ModelForm):
+    class Meta:
+        model = ConsultationMessage
+        fields = ['body']
+        widgets = {
+            'body': forms.Textarea(attrs={
+                'class': '', 'rows': 3,
+                'placeholder': gettext_lazy("Напишете съобщение..."),
+            }),
         }

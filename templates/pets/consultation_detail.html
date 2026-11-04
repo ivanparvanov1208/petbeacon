@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{{ consultation.subject }} | PetBeacon{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-3xl space-y-5">
+    <a class="text-sm font-semibold text-brand-700 hover:underline" href="{% url 'pets:consultation_list' %}">← {% translate "Към консултациите" %}</a>
+    <section class="card p-5 sm:p-6">
+        <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-xs font-bold uppercase tracking-wider text-brand-600">{% translate "Онлайн ветеринарна консултация" %}</p><h1 class="page-title mt-1">{{ consultation.subject }}</h1><p class="muted mt-1">{{ consultation.pet.name }} · {% if is_vet %}{{ consultation.owner.get_full_name|default:consultation.owner.username }}{% else %}{{ consultation.veterinarian.get_full_name|default:consultation.veterinarian.username }}{% endif %}</p></div><div class="flex gap-2"><span class="badge-neutral">{{ consultation.get_status_display }}</span><span class="badge-neutral">{{ consultation.get_payment_status_display }}</span></div></div>
+        <div class="mt-5 rounded-xl bg-ink-50 p-4 dark:bg-ink-900"><p class="text-xs font-bold uppercase tracking-wide text-ink-500">{% translate "Първоначално описание" %}</p><p class="mt-2 whitespace-pre-line text-sm">{{ consultation.initial_message }}</p></div>
+        {% if consultation.status == 'pending_payment' and not is_vet %}
+        <div class="mt-5 rounded-xl border border-brand-200 bg-brand-50/60 p-4 dark:border-brand-900 dark:bg-brand-950/30"><h2 class="font-bold">{% translate "Платена услуга · демо checkout" %}</h2><div class="mt-2 flex flex-wrap items-center gap-x-3 text-sm"><span>{% translate "Цена" %}: {{ consultation.demo_price_display }}</span><span class="text-ink-400">− {% translate "Демо отстъпка" %}: {{ consultation.demo_price_display }}</span><strong>{% translate "Общо" %}: $0.00</strong></div><p class="muted mt-2 text-xs">{% translate "Демонстрационна 100% отстъпка. Checkout-ът не събира пари; чатът се отваря след потвърждение от Stripe." %}</p><form method="post" action="{% url 'pets:consultation_checkout' consultation.pk %}" class="mt-4">{% csrf_token %}<button class="btn-primary" type="submit"><i class="fa-solid fa-lock" aria-hidden="true"></i> {% translate "Продължи към Stripe Checkout · $0.00" %}</button></form></div>
+        {% endif %}
+    </section>
+
+    {% if consultation.status == 'open' or consultation.status == 'closed' %}
+    <section class="card p-5 sm:p-6" aria-labelledby="chat-heading">
+        <div class="flex items-center justify-between gap-3"><div><h2 id="chat-heading" class="section-title">{% translate "Личен разговор" %}</h2><p class="muted mt-1 text-sm">{% translate "Съобщенията са видими само за собственика и избрания ветеринар." %}</p></div>{% if is_vet and consultation.status == 'open' %}<form method="post" action="{% url 'pets:consultation_close' consultation.pk %}">{% csrf_token %}<button type="submit" class="btn-secondary btn-sm">{% translate "Приключи чат" %}</button></form>{% endif %}</div>
+        <div class="mt-5 space-y-3">
+            {% for chat_message in chat_messages %}<article class="max-w-[90%] rounded-2xl p-4 {% if chat_message.sender_id == request.user.pk %}ml-auto bg-brand-600 text-white{% else %}bg-ink-100 text-ink-800 dark:bg-ink-800 dark:text-ink-100{% endif %}"><p class="mb-1 text-xs font-bold opacity-75">{{ chat_message.sender.get_full_name|default:chat_message.sender.username }} · {{ chat_message.created_at|date:"SHORT_DATETIME_FORMAT" }}</p><p class="whitespace-pre-line text-sm">{{ chat_message.body }}</p></article>{% empty %}<p class="muted rounded-xl bg-ink-50 p-4 text-center dark:bg-ink-900">{% translate "Разговорът е отворен. Изпратете първото съобщение." %}</p>{% endfor %}
+        </div>
+        {% if consultation.status == 'open' %}<form method="post" class="mt-5 space-y-3">{% csrf_token %}{% include "partials/field.html" with field=form.body %}<button class="btn-primary" type="submit"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> {% translate "Изпрати съобщение" %}</button></form>{% else %}<p class="muted mt-5 rounded-xl bg-ink-50 p-4 text-sm dark:bg-ink-900">{% translate "Тази консултация е приключена и чатът е само за преглед." %}</p>{% endif %}
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

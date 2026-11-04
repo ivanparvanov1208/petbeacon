@@ -13,9 +13,7 @@ from .forms import UserRegistrationForm, UserLoginForm, UserProfileUpdateForm
 from .models import UserProfile
 
 
-# Counters live in the cache, not the session: a session-scoped count resets
-# whenever cookies are cleared, which is exactly what a credential-stuffing
-# script would do.
+# Cache-based counters persist across browser sessions and cleared cookies.
 _MAX_ATTEMPTS = getattr(settings, 'LOGIN_MAX_ATTEMPTS', 5)
 _LOCKOUT_SECONDS = getattr(settings, 'LOGIN_LOCKOUT_SECONDS', 300)
 _ATTEMPTS_PREFIX = 'login-fail:'
@@ -83,8 +81,7 @@ def register_view(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
 
-            # Created by the post_save signal in accounts.models. `role` is left
-            # on the model default: only an admin grants it.
+            # The post_save signal creates the profile; only an admin assigns vet access.
             profile = UserProfile.objects.get_or_create(user=user)[0]
             profile.phone = form.cleaned_data.get('phone', '')
             profile.city = form.cleaned_data.get('city', '')
@@ -181,8 +178,7 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    # Named, not `_`: binding the get_or_create flag to `_` shadows the gettext
-    # `_` imported above and breaks the message below.
+    # Keep this variable name distinct from the gettext alias `_` used below.
     profile, _profile_created = UserProfile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':

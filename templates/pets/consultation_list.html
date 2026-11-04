@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% translate "Онлайн консултации | PetBeacon" %}{% endblock %}
+{% block content %}
+<div class="space-y-6">
+    <div class="card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div><h1 class="page-title">{% if is_vet %}{% translate "Консултации с клиенти" %}{% else %}{% translate "Моите консултации" %}{% endif %}</h1>
+            <p class="muted mt-1">{% if is_vet %}{% translate "Отговорете на собствениците и прегледайте досието на любимеца." %}{% else %}{% translate "Задайте въпрос на ветеринар и продължете разговора в личен чат." %}{% endif %}</p></div>
+        {% if not is_vet %}<a class="btn-primary" href="{% url 'pets:consultation_create' %}"><i class="fa-solid fa-plus" aria-hidden="true"></i> {% translate "Нова консултация" %}</a>{% endif %}
+    </div>
+    {% if consultations %}<div class="space-y-3">
+        {% for consultation in consultations %}<a href="{% url 'pets:consultation_detail' consultation.pk %}" class="card card-hover flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0"><p class="font-bold text-ink-900 dark:text-white">{{ consultation.subject }}</p><p class="muted mt-1 text-sm">{{ consultation.pet.name }} · {% if is_vet %}{{ consultation.owner.get_full_name|default:consultation.owner.username }}{% else %}{{ consultation.veterinarian.get_full_name|default:consultation.veterinarian.username }}{% endif %} · {{ consultation.updated_at|date:"SHORT_DATE_FORMAT" }}</p></div>
+            <div class="flex flex-wrap items-center gap-2"><span class="badge-neutral">{{ consultation.get_status_display }}</span><span class="badge-neutral">{{ consultation.get_payment_status_display }}</span></div>
+        </a>{% endfor %}
+    </div>{% else %}<div class="card p-8 text-center"><i class="fa-solid fa-comments mb-3 text-3xl text-brand-500" aria-hidden="true"></i><h2 class="font-bold">{% if is_vet %}{% translate "Няма нови консултации" %}{% else %}{% translate "Още нямате консултации" %}{% endif %}</h2><p class="muted mt-1">{% if is_vet %}{% translate "Заявките от стопани ще се появят тук." %}{% else %}{% translate "Заявете консултация, когато имате въпрос за здравето на любимеца." %}{% endif %}</p>{% if not is_vet %}<a class="btn-primary mt-4" href="{% url 'pets:consultation_create' %}">{% translate "Заяви консултация" %}</a>{% endif %}</div>{% endif %}
+</div>
+{% endblock %}

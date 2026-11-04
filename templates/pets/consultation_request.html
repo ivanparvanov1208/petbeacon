@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% translate "Заяви онлайн консултация | PetBeacon" %}{% endblock %}
+{% block content %}
+{% translate "Назад към консултациите" as back_label %}
+<div class="mx-auto max-w-2xl space-y-6">
+    {% translate "Заяви онлайн консултация" as page_title %}
+    {% include "partials/page_header.html" with title=page_title icon="fa-solid fa-comments" back_url=cancel_url back_label=back_label %}
+    <div class="card border-brand-200 bg-brand-50/60 p-5 dark:border-brand-900 dark:bg-brand-950/30">
+        <h2 class="font-bold">{% translate "Свържете се с ветеринар" %}</h2>
+        <p class="muted mt-1 text-sm">{% translate "Изберете любимец и ветеринар, след което опишете въпроса. Услугата е платена; за дипломната демонстрация сумата се покрива с 100% отстъпка в Stripe Checkout." %}</p>
+        <p class="mt-3 text-sm font-semibold">{% translate "Цена на услугата" %}: $10.00 <span class="mx-1 text-ink-400">→</span> {% translate "Демо общо за плащане" %}: <strong>$0.00</strong></p>
+    </div>
+    {% translate "Продължи към плащане" as submit_label %}
+    {% include "partials/form_open.html" with form=form submit_label=submit_label cancel_url=cancel_url %}
+        {% include "partials/field.html" with field=form.pet %}
+        {% include "partials/field.html" with field=form.veterinarian %}
+        {% include "partials/field.html" with field=form.subject %}
+        {% include "partials/field.html" with field=form.initial_message %}
+    {% include "partials/form_close.html" %}
+</div>
+{% endblock %}

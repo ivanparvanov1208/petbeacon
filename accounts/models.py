@@ -7,8 +7,7 @@ from django.utils.translation import gettext_lazy
 
 
 class UserProfile(models.Model):
-    # Only the code on the left is ever stored, so switching language never
-    # touches existing rows.
+    # Store stable role codes; translate only the labels shown to users.
     ROLE_OWNER = 'owner'
     ROLE_VET = 'vet'
 
@@ -47,6 +46,5 @@ class UserProfile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    # get_or_create, not create: User.save() also runs on every login to bump
-    # update_last_login, and an unconditional write cost an extra UPDATE each time.
+    # User.save() also runs during login, so get_or_create avoids a redundant write.
     UserProfile.objects.get_or_create(user=instance)

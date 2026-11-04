@@ -101,7 +101,7 @@
     {% if pets %}
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {% for pet in pets %}
-            <article class="card card-hover group flex flex-col overflow-hidden">
+            <article class="card card-hover group relative flex flex-col overflow-hidden">
 
                 <div class="relative h-44 shrink-0 overflow-hidden bg-ink-100 dark:bg-ink-800">
                     {% if pet.photo %}

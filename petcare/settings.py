@@ -9,11 +9,19 @@ from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --------------------------------------------------------------------------
-# SECURITY — Secret Key
-# Generate one with:
+# Load local development secrets; environment variables take precedence.
+_local_env_file = BASE_DIR / '.env'
+if _local_env_file.exists():
+    for _line in _local_env_file.read_text(encoding='utf-8').splitlines():
+        _line = _line.strip()
+        if not _line or _line.startswith('#') or '=' not in _line:
+            continue
+        _name, _value = _line.split('=', 1)
+        os.environ.setdefault(_name.strip(), _value.strip().strip('"').strip("'"))
+
+# Security
+# Generate a secret key with:
 #   python -c "from django.core.management.utils import get_random_secret_key as k; print(k())"
-# --------------------------------------------------------------------------
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
@@ -23,8 +31,7 @@ if not SECRET_KEY:
         raise ImproperlyConfigured(
             "DJANGO_SECRET_KEY environment variable must be set when DEBUG is False."
         )
-    # Development only: an ephemeral key means sessions are invalidated on every
-    # restart, which is preferable to shipping a hard-coded key to production.
+    # Keep the fallback development-only; production requires an environment key.
     SECRET_KEY = 'django-insecure-dev-only-key-do-not-use-in-production-0000'
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
@@ -48,9 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # Must sit after SessionMiddleware (it reads the language chosen by the
-    # `set_language` view) and before CommonMiddleware (so translated URLs
-    # resolve) and any middleware that renders content.
+    # LocaleMiddleware depends on sessions and must run before URL resolution.
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -69,8 +74,6 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                # Exposes LANGUAGES / LANGUAGE_CODE / LANGUAGE_BIDI to every
-                # template — this is what the header language switcher renders.
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -90,9 +93,7 @@ DATABASES = {
     }
 }
 
-# --------------------------------------------------------------------------
-# SECURITY — Password Validation (strong rules)
-# --------------------------------------------------------------------------
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -109,27 +110,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# --------------------------------------------------------------------------
-# SECURITY — Session & Cookie hardening
-# --------------------------------------------------------------------------
-SESSION_COOKIE_HTTPONLY = True          # JS cannot read the session cookie
-SESSION_COOKIE_SAMESITE = 'Lax'        # Blocks cross-site request forgery
-SESSION_COOKIE_AGE = 60 * 60 * 12      # 12-hour session lifetime
+# Session and CSRF cookies
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_AGE = 60 * 60 * 12
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-CSRF_COOKIE_HTTPONLY = False            # Must be False so JS AJAX can read it
+CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_USE_SESSIONS = False              # Keep default cookie-based CSRF
+CSRF_USE_SESSIONS = False
 
-# Only ever transmitted over HTTPS (automatically enabled when DEBUG is False).
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 
-# --------------------------------------------------------------------------
-# SECURITY — HTTP Headers
-# --------------------------------------------------------------------------
-X_FRAME_OPTIONS = 'DENY'                # Blocks all clickjacking
-SECURE_CONTENT_TYPE_NOSNIFF = True     # X-Content-Type-Options: nosniff
+# Security headers
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'same-origin'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
 
@@ -141,13 +137,8 @@ if not DEBUG:
     if os.environ.get('DJANGO_BEHIND_TLS_PROXY') == '1':
         SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# --------------------------------------------------------------------------
-# CACHES
-#
-# Used by the login rate limiter. The default local-memory backend is per
-# process; switch to Redis/Memcached (e.g. via DJANGO_CACHE_URL) before running
-# multiple workers or containers, otherwise the lockout counters are not shared.
-# --------------------------------------------------------------------------
+# Login throttling uses a process-local cache by default; configure a shared
+# cache with DJANGO_CACHE_URL when running multiple workers.
 if os.environ.get('DJANGO_CACHE_URL'):
     CACHES = {
         'default': {
@@ -156,38 +147,23 @@ if os.environ.get('DJANGO_CACHE_URL'):
         }
     }
 
-# --------------------------------------------------------------------------
-# SECURITY — File upload restrictions
-# --------------------------------------------------------------------------
-# Max upload size: 5 MB (enforced in forms)
-MAX_UPLOAD_SIZE_BYTES = 5 * 1024 * 1024  # 5 MB
+# File upload restrictions
+MAX_UPLOAD_SIZE_BYTES = 5 * 1024 * 1024
 ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp']
 ALLOWED_DOCUMENT_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'doc', 'docx', 'txt']
 
-# --------------------------------------------------------------------------
-# SECURITY — Login attempt throttling (simple cooloff via session)
-# --------------------------------------------------------------------------
-LOGIN_MAX_ATTEMPTS = 5              # After this many failures, lock for LOCKOUT seconds
-LOGIN_LOCKOUT_SECONDS = 300         # 5 minutes
+LOGIN_MAX_ATTEMPTS = 5
+LOGIN_LOCKOUT_SECONDS = 300
 
-# --------------------------------------------------------------------------
 # Internationalization
-#
-# Bulgarian is the source language: every msgid in locale/*/django.po holds
-# the Bulgarian text, so `msgfmt`-ing nothing still renders Bulgarian.
-# English lives in locale/en/LC_MESSAGES/django.mo.
-#
-# The catalogs are extracted and compiled without GNU gettext (unavailable on
-# Windows) via the bundled helper:
+# Bulgarian is the source catalog. Use the bundled commands to extract and
+# compile translations on Windows without GNU gettext:
 #   python manage.py i18n_extract && python manage.py i18n_compile
-# --------------------------------------------------------------------------
 LANGUAGE_CODE = 'bg'
 TIME_ZONE = 'Europe/Sofia'
 USE_I18N = True
 USE_TZ = True
 
-# Order matters: the first entry is what `LANGUAGE_CODE` falls back to and it
-# is the language the header switcher shows as active on a fresh session.
 LANGUAGES = [
     ('bg', 'Български'),
     ('en', 'English'),
@@ -195,22 +171,13 @@ LANGUAGES = [
 
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
-# --------------------------------------------------------------------------
-# Static & Media files
-#
-# The stylesheet is a *compiled* Tailwind bundle (static/css/app.css), built
-# from static/css/input.css with `npm run build`. There is no runtime CDN and
-# no runtime tailwind.config — colours, radii, shadows and component classes
-# are declared once in input.css.
-#
-# Collect the compiled bundle for production with:
+# Static and media files
+# Build the Tailwind bundle from static/css/input.css before collectstatic:
 #   npm ci && npm run build && python manage.py collectstatic
-# --------------------------------------------------------------------------
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Raise during deployment rather than silently shipping a missing stylesheet.
 if not DEBUG and not (BASE_DIR / 'static' / 'css' / 'app.css').exists():
     raise ImproperlyConfigured(
         "static/css/app.css is missing. Build it first: `npm ci && npm run build`."
@@ -219,9 +186,7 @@ if not DEBUG and not (BASE_DIR / 'static' / 'css' / 'app.css').exists():
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# --------------------------------------------------------------------------
 # Authentication redirects
-# --------------------------------------------------------------------------
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'pets:dashboard'
 LOGOUT_REDIRECT_URL = 'pets:home'

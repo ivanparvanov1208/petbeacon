@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -6,19 +8,27 @@ from django.db.models import Count, Q
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 from datetime import date, timedelta
-from .models import Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder
+import logging
+from .models import (
+    Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder,
+    Consultation, ConsultationMessage,
+)
 from .forms import (
     PetForm, VaccinationForm, MedicalRecordForm,
-    MedicationForm, VetVisitForm, ReminderForm
+    MedicationForm, VetVisitForm, ReminderForm,
+    ConsultationRequestForm, ConsultationMessageForm,
 )
+from accounts.models import UserProfile
 
 PETS_PER_PAGE = 12
 REMINDERS_PER_PAGE = 20
 
 UPCOMING_REMINDER_DAYS = 14
 DUE_SOON_VACCINATION_DAYS = 30
+logger = logging.getLogger(__name__)
 
 
 def _safe_next_url(request, fallback):
@@ -43,29 +53,26 @@ def home_view(request):
 
     features = [
         ('fa-solid fa-id-card', 'brand',
-         _('Пълен профил на любимеца'),
-         _('Порода, рождена дата, снимка, тегло, номер на микрочип, европейски паспорт, '
-           'режим на хранене и алергии.')),
+         _('Клинично досие на пациента'),
+         _('Основна информация, идентификация, алергии и важни особености за пациента.')),
         ('fa-solid fa-syringe', 'blue',
-         _('Ваксинационен календар'),
-         _('Записвайте поставените ваксини и крайните срокове за следващите дози, '
-           'с автоматични сигнали за наближаващи и просрочени.')),
+         _('Медицинска история'),
+         _('Прегледайте ваксинациите, диагнозите, процедурите и приложените изследвания.')),
         ('fa-solid fa-bell', 'purple',
-         _('Интелигентни напомняния'),
-         _('Ветеринарни прегледи, обезпаразитяване, прием на предписани медикаменти '
-           'и поръчка на храна.')),
+         _('Документиране на прегледи'),
+         _('Записвайте резултати, диагнози, лечение и препоръки след всяко посещение.')),
         ('fa-solid fa-file-medical', 'amber',
          _('Медицинска история'),
-         _('Хронология на прегледи, диагнози, манипулации, посетени клиники и разходи, '
-           'с прикачени резултати от изследвания.')),
+         _('Поддържайте подредена история на прегледите и разходите с прикачени резултати.')),
         ('fa-solid fa-pills', 'rose',
          _('Прием на лекарства'),
-         _('Дозировка, честота, начална и крайна дата и специфични указания за прием '
-           'с храна или на гладно.')),
+         _('Записвайте предписани медикаменти, дозировки, честота и указания за прием.')),
         ('fa-solid fa-print', 'emerald',
          _('Електронен здравен паспорт'),
-         _('Генерирайте готов за разпечатване и PDF файл здравен картон с един клик '
-           'преди посещение при ветеринарния лекар.')),
+         _('Подгответе обобщение на здравното досие за собственика и следващия преглед.')),
+        ('fa-solid fa-comments', 'purple',
+         _('Платена онлайн консултация'),
+         _('Свържете стопанина с избран ветеринар в личен чат, с checkout и история на разговора.')),
     ]
 
     return render(request, 'pets/home.html', {'features': features})
@@ -74,7 +81,27 @@ def home_view(request):
 @login_required
 def dashboard_view(request):
     today = date.today()
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
     user_pets = Pet.objects.filter(owner=request.user)
+
+    if profile.is_vet:
+        # Veterinarian accounts manage patient records registered under their account.
+        vet_visits = VetVisit.objects.filter(pet__owner=request.user)
+        followups = Reminder.objects.filter(
+            owner=request.user, is_completed=False, due_date__gte=today,
+            due_date__lte=today + timedelta(days=30),
+        )
+        context = {
+            'is_vet_dashboard': True,
+            'total_pets': user_pets.count(),
+            'pets': user_pets.order_by('-created_at', 'name')[:8],
+            'visit_count': vet_visits.count(),
+            'recent_visits': vet_visits.select_related('pet').order_by('-visit_date')[:8],
+            'followup_count': followups.count(),
+            'upcoming_followups': followups.select_related('pet').order_by('due_date')[:8],
+            'today': today,
+        }
+        return render(request, 'pets/vet_dashboard.html', context)
 
     base_reminders = Reminder.objects.filter(
         owner=request.user, is_completed=False
@@ -122,6 +149,200 @@ def dashboard_view(request):
         'today': today,
     }
     return render(request, 'pets/dashboard.html', context)
+
+
+@login_required
+def consultation_list_view(request):
+    profile, _created = UserProfile.objects.get_or_create(user=request.user)
+    if profile.is_vet:
+        consultations = Consultation.objects.filter(veterinarian=request.user)
+    else:
+        consultations = Consultation.objects.filter(owner=request.user)
+    return render(request, 'pets/consultation_list.html', {
+        'consultations': consultations.select_related('pet', 'owner', 'veterinarian'),
+        'is_vet': profile.is_vet,
+    })
+
+
+@login_required
+def consultation_create_view(request):
+    profile, _created = UserProfile.objects.get_or_create(user=request.user)
+    if profile.is_vet:
+        messages.error(request, _('Само стопанин може да заяви консултация.'))
+        return redirect('pets:consultation_list')
+    if request.method == 'POST':
+        form = ConsultationRequestForm(request.POST, owner=request.user)
+        if form.is_valid():
+            consultation = form.save(commit=False)
+            consultation.owner = request.user
+            consultation.status = Consultation.STATUS_PENDING_PAYMENT
+            consultation.payment_status = Consultation.PAYMENT_PENDING
+            consultation.save()
+            return redirect('pets:consultation_detail', pk=consultation.pk)
+    else:
+        form = ConsultationRequestForm(owner=request.user)
+    return render(request, 'pets/consultation_request.html', {
+        'form': form,
+        'cancel_url': reverse('pets:consultation_list'),
+    })
+
+
+def _stripe_client():
+    import os
+    import stripe
+    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY', '')
+    if not stripe.api_key:
+        raise RuntimeError('STRIPE_SECRET_KEY is not configured.')
+    return stripe
+
+
+@login_required
+@require_POST
+def consultation_checkout_view(request, pk):
+    consultation = get_object_or_404(Consultation, pk=pk, owner=request.user)
+    if consultation.status != Consultation.STATUS_PENDING_PAYMENT:
+        return redirect('pets:consultation_detail', pk=pk)
+    try:
+        stripe = _stripe_client()
+        coupon = stripe.Coupon.create(
+            percent_off=100,
+            duration='once',
+            name='PetBeacon demo 100% off',
+            metadata={'consultation_id': str(consultation.pk)},
+        )
+        success_url = request.build_absolute_uri(
+            reverse('pets:consultation_checkout_success', kwargs={'pk': pk})
+        ) + '?session_id={CHECKOUT_SESSION_ID}'
+        cancel_url = request.build_absolute_uri(
+            reverse('pets:consultation_detail', kwargs={'pk': pk})
+        )
+        session = stripe.checkout.Session.create(
+            mode='payment',
+            customer_email=request.user.email or None,
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'unit_amount': consultation.listed_price_cents,
+                    'product_data': {
+                        'name': 'Online veterinary consultation',
+                        'description': f"{consultation.subject} · {consultation.pet.name}",
+                    },
+                },
+                'quantity': 1,
+            }],
+            discounts=[{'coupon': coupon.id}],
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={'consultation_id': str(consultation.pk), 'owner_id': str(request.user.pk)},
+        )
+        consultation.stripe_session_id = session.id
+        consultation.save(update_fields=['stripe_session_id', 'updated_at'])
+        return redirect(session.url)
+    except Exception:
+        logger.exception('Could not create Stripe Checkout session for consultation %s.', pk)
+        messages.error(request, _('Неуспешно създаване на Stripe Checkout. Проверете тестовия Stripe ключ и опитайте отново.'))
+        return redirect('pets:consultation_detail', pk=pk)
+
+
+def _stripe_field(resource, name, default=None):
+    """Read a field from StripeObject resources or ordinary dictionaries."""
+    if isinstance(resource, dict):
+        return resource.get(name, default)
+    return getattr(resource, name, default)
+
+
+def _complete_consultation_from_session(session):
+    metadata = _stripe_field(session, 'metadata', {}) or {}
+    consultation_id = _stripe_field(metadata, 'consultation_id')
+    if not consultation_id:
+        return
+    consultation = Consultation.objects.filter(pk=consultation_id).first()
+    if not consultation or _stripe_field(session, 'id') != consultation.stripe_session_id:
+        return
+    payment_status = _stripe_field(session, 'payment_status')
+    if payment_status == 'paid':
+        consultation.payment_status = Consultation.PAYMENT_PAID
+    elif payment_status == 'no_payment_required':
+        consultation.payment_status = Consultation.PAYMENT_COMPED
+    else:
+        return
+    consultation.status = Consultation.STATUS_OPEN
+    consultation.save(update_fields=['payment_status', 'status', 'updated_at'])
+
+
+@login_required
+def consultation_checkout_success_view(request, pk):
+    consultation = get_object_or_404(Consultation, pk=pk, owner=request.user)
+    session_id = request.GET.get('session_id', '')
+    if session_id and session_id == consultation.stripe_session_id:
+        try:
+            stripe = _stripe_client()
+            session = stripe.checkout.Session.retrieve(session_id)
+            _complete_consultation_from_session(session)
+        except Exception:
+            messages.info(request, _('Плащането се потвърждава. Обновете страницата след малко.'))
+    return redirect('pets:consultation_detail', pk=pk)
+
+
+@csrf_exempt
+@require_POST
+def stripe_webhook_view(request):
+    import os
+    try:
+        stripe = _stripe_client()
+        event = stripe.Webhook.construct_event(
+            request.body,
+            request.META.get('HTTP_STRIPE_SIGNATURE', ''),
+            os.environ.get('STRIPE_WEBHOOK_SECRET', ''),
+        )
+    except Exception:
+        return HttpResponseBadRequest('Invalid Stripe webhook.')
+    if _stripe_field(event, 'type') == 'checkout.session.completed':
+        event_data = _stripe_field(event, 'data', {})
+        session = _stripe_field(event_data, 'object', {})
+        _complete_consultation_from_session(session)
+    return HttpResponse(status=200)
+
+
+@login_required
+def consultation_detail_view(request, pk):
+    consultation = get_object_or_404(
+        Consultation.objects.select_related('owner', 'veterinarian', 'pet'), pk=pk
+    )
+    if request.user.pk not in (consultation.owner_id, consultation.veterinarian_id):
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied
+    if request.method == 'POST':
+        form = ConsultationMessageForm(request.POST)
+        if form.is_valid():
+            if consultation.status != Consultation.STATUS_OPEN:
+                messages.error(request, _('Чатът не е отворен за съобщения.'))
+            else:
+                message = form.save(commit=False)
+                message.consultation = consultation
+                message.sender = request.user
+                message.save()
+                consultation.save(update_fields=['updated_at'])
+                return redirect('pets:consultation_detail', pk=pk)
+    else:
+        form = ConsultationMessageForm()
+    return render(request, 'pets/consultation_detail.html', {
+        'consultation': consultation,
+        'chat_messages': consultation.messages.select_related('sender'),
+        'form': form,
+        'is_vet': request.user.pk == consultation.veterinarian_id,
+    })
+
+
+@login_required
+@require_POST
+def consultation_close_view(request, pk):
+    consultation = get_object_or_404(Consultation, pk=pk, veterinarian=request.user)
+    consultation.status = Consultation.STATUS_CLOSED
+    consultation.closed_at = timezone.now()
+    consultation.save(update_fields=['status', 'closed_at', 'updated_at'])
+    messages.success(request, _('Консултацията е приключена.'))
+    return redirect('pets:consultation_detail', pk=pk)
 
 
 @login_required
@@ -580,8 +801,7 @@ def vet_visit_delete_view(request, pk):
 @login_required
 def reminder_list_view(request):
     today = date.today()
-    # select_related keeps the page at a fixed query count; the list test
-    # asserts on it.
+    # Load pet relations with the reminders to avoid per-row template queries.
     reminders = Reminder.objects.filter(owner=request.user).select_related('pet')
 
     status_filter = request.GET.get('status', 'all')

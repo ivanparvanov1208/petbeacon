@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% translate "Клинично табло | PetBeacon" %}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <section class="card flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-brand-600">{% translate "Ветеринарен кабинет" %}</p>
+            <h1 class="page-title mt-1">{% translate "Клинично табло" %}</h1>
+            <p class="muted mt-1">{% blocktranslate with day=today|date:"SHORT_DATE_FORMAT" %}Пациенти и последващи грижи към {{ day }}{% endblocktranslate %}</p>
+        </div>
+        <a href="{% url 'pets:pet_create' %}" class="btn-primary"><i class="fa-solid fa-user-plus" aria-hidden="true"></i> {% translate "Регистрирай пациент" %}</a>
+    </section>
+
+    <section class="card p-5" aria-labelledby="quick-actions-heading">
+        <h2 id="quick-actions-heading" class="section-title mb-3">{% translate "Бързи действия" %}</h2>
+        <div class="flex flex-wrap gap-2">
+            <a href="{% url 'pets:pet_list' %}" class="btn-secondary"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> {% translate "Намери пациент" %}</a>
+            <a href="{% url 'pets:reminder_create' %}" class="btn-secondary"><i class="fa-solid fa-calendar-plus" aria-hidden="true"></i> {% translate "Планирай последваща грижа" %}</a>
+        </div>
+        <p class="muted mt-3 text-sm">{% translate "Отворете досието на пациента, за да добавите преглед, медицински запис, ваксинация или лечение." %}</p>
+    </section>
+
+    <div class="grid gap-4 sm:grid-cols-3">
+        <a class="card card-hover p-5" href="{% url 'pets:pet_list' %}">
+            <p class="text-sm font-semibold text-ink-500">{% translate "Регистрирани пациенти" %}</p>
+            <p class="stat-value mt-2">{{ total_pets }}</p>
+        </a>
+        <a class="card card-hover p-5" href="{% url 'pets:pet_list' %}">
+            <p class="text-sm font-semibold text-ink-500">{% translate "Документирани посещения" %}</p>
+            <p class="stat-value mt-2">{{ visit_count }}</p>
+        </a>
+        <a class="card card-hover p-5" href="{% url 'pets:reminder_list' %}">
+            <p class="text-sm font-semibold text-ink-500">{% translate "Предстоящи последващи грижи" %}</p>
+            <p class="stat-value mt-2">{{ followup_count }}</p>
+        </a>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+        <section class="card p-5" aria-labelledby="patients-heading">
+            <div class="mb-4 flex items-center justify-between"><h2 id="patients-heading" class="section-title">{% translate "Последни пациенти" %}</h2><a class="text-sm font-semibold text-brand-700" href="{% url 'pets:pet_list' %}">{% translate "Всички пациенти" %}</a></div>
+            {% if pets %}<ul class="divide-y divide-ink-100 dark:divide-ink-800">
+                {% for pet in pets %}<li class="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"><div class="min-w-0"><a class="font-bold text-ink-900 hover:text-brand-700 dark:text-white" href="{% url 'pets:pet_detail' pet.pk %}">{{ pet.name }}</a><p class="muted text-sm">{{ pet.get_species_display }}{% if pet.breed %} · {{ pet.breed }}{% endif %}{% if pet.microchip_number %} · {% translate "Микрочип" %} {{ pet.microchip_number }}{% endif %}</p></div><div class="flex flex-wrap gap-2"><a class="btn-secondary btn-sm" href="{% url 'pets:pet_detail' pet.pk %}">{% translate "Отвори досие" %}</a><a class="btn-ghost btn-sm" href="{% url 'pets:vet_visit_create' pet.pk %}">{% translate "Добави преглед" %}</a><a class="btn-ghost btn-sm" href="{% url 'pets:medical_record_create' pet.pk %}">{% translate "Добави медицински запис" %}</a></div></li>{% endfor %}
+            </ul><a class="mt-4 inline-flex text-sm font-semibold text-brand-700 hover:underline" href="{% url 'pets:pet_list' %}">{% translate "Прегледай всички пациенти" %} →</a>{% else %}<div class="rounded-xl bg-ink-50 p-5 dark:bg-ink-900"><p class="font-semibold">{% translate "Започнете с първото пациентско досие" %}</p><p class="muted mt-1 text-sm">{% translate "Добавете основната информация, след което ще можете да документирате посещения и лечение." %}</p><a class="btn-primary btn-sm mt-4" href="{% url 'pets:pet_create' %}">{% translate "Регистрирай първи пациент" %}</a></div>{% endif %}
+        </section>
+        <section class="card p-5" aria-labelledby="visits-heading">
+            <h2 id="visits-heading" class="section-title mb-4">{% translate "Последни посещения" %}</h2>
+            {% if recent_visits %}<ul class="divide-y divide-ink-100 dark:divide-ink-800">
+                {% for visit in recent_visits %}<li class="py-3"><a class="font-semibold text-ink-900 hover:text-brand-700 dark:text-white" href="{% url 'pets:pet_detail' visit.pet.pk %}?tab=visits">{{ visit.pet.name }} · {{ visit.reason }}</a><p class="muted text-sm">{{ visit.visit_date|date:"SHORT_DATE_FORMAT" }} · {{ visit.clinic_name }}</p></li>{% endfor %}
+            </ul>{% else %}<p class="muted py-5">{% translate "Все още няма документирани посещения." %}</p>{% endif %}
+        </section>
+        <section class="card p-5" aria-labelledby="followups-heading">
+            <h2 id="followups-heading" class="section-title mb-4">{% translate "Предстоящи последващи грижи" %}</h2>
+            {% if upcoming_followups %}<ul class="divide-y divide-ink-100 dark:divide-ink-800">
+                {% for item in upcoming_followups %}<li class="flex items-center justify-between gap-3 py-3"><div><p class="font-semibold">{{ item.title }}</p><p class="muted text-sm">{% if item.pet %}{{ item.pet.name }} · {% endif %}{{ item.due_date|date:"SHORT_DATE_FORMAT" }}</p></div><a class="text-sm font-semibold text-brand-700" href="{% url 'pets:reminder_list' %}">{% translate "Преглед" %}</a></li>{% endfor %}
+            </ul>{% else %}<p class="muted py-5">{% translate "Няма планирани последващи грижи за следващите 30 дни." %}</p>{% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

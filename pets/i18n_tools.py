@@ -1,8 +1,7 @@
 
 from __future__ import annotations
 
-# A gettext work-alike in pure Python: GNU gettext is not available on
-# Windows, and Django needs both .po catalogues and compiled .mo files.
+# Pure-Python gettext tooling for Windows environments without GNU gettext.
 import ast
 import re
 import struct

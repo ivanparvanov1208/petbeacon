@@ -120,7 +120,6 @@
         <!-- ---------- Left column ---------- -->
         <div class="space-y-6 lg:col-span-7">
 
-            <!-- Today's tasks -->
             <section class="card overflow-hidden print-sheet" aria-labelledby="today-heading">
                 <header class="flex items-center justify-between gap-3 border-b border-ink-100 bg-ink-50/60 px-5 py-3.5 dark:border-ink-800 dark:bg-ink-800/40">
                     <div class="flex items-center gap-2.5">
@@ -174,7 +173,6 @@
                 {% endif %}
             </section>
 
-            <!-- Upcoming reminders -->
             <section class="card overflow-hidden print-sheet" aria-labelledby="upcoming-heading">
                 <header class="flex items-center justify-between gap-3 border-b border-ink-100 bg-ink-50/60 px-5 py-3.5 dark:border-ink-800 dark:bg-ink-800/40">
                     <div class="flex items-center gap-2.5">
@@ -223,7 +221,6 @@
                 {% endif %}
             </section>
 
-            <!-- Vaccinations due soon -->
             {% if vaccinations_due_soon %}
             <section class="card overflow-hidden print-sheet" aria-labelledby="vacc-heading">
                 <header class="flex items-center justify-between gap-3 border-b border-ink-100 bg-amber-50/60 px-5 py-3.5 dark:border-ink-800 dark:bg-amber-950/20">
@@ -309,7 +306,6 @@
                 {% endif %}
             </section>
 
-            <!-- Active medications -->
             {% if active_meds %}
             <section class="card p-5 print-sheet" aria-labelledby="meds-heading">
                 <h2 id="meds-heading" class="section-title mb-4">
@@ -332,7 +328,6 @@
             </section>
             {% endif %}
 
-            <!-- Recent vet visits -->
             {% if recent_visits %}
             <section class="card p-5 print-sheet" aria-labelledby="visits-heading">
                 <h2 id="visits-heading" class="section-title mb-4">

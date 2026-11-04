@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% translate "PetBeacon — Грижа и здраве за вашия домашен любимец" %}{% endblock %}
+{% block title %}{% translate "PetBeacon — система за ветеринарна практика" %}{% endblock %}
 
-{% block meta_description %}{% translate "PetBeacon е уеб платформа за грижа за домашни любимци: профили, ваксинационен календар, медицинска история, лекарства и интелигентни напомняния." %}{% endblock %}
+{% block meta_description %}{% translate "PetBeacon подпомага ветеринарната практика с пациентски досиета, медицинска история и проследяване на последващи грижи." %}{% endblock %}
 
 {% block content %}
 <div class="space-y-16 py-4 sm:py-8">
@@ -18,22 +18,22 @@
         <div class="relative z-10 max-w-3xl space-y-6 p-8 sm:p-12 lg:p-16">
             <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand-100 backdrop-blur">
                 <i class="fa-solid fa-shield-cat" aria-hidden="true"></i>
-                {% translate "Платформа за собственици на любимци" %}
+                {% translate "Система за ветеринарна практика" %}
             </span>
 
             <h1 class="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-                {% translate "Всичко за вашия любимец" %}
-                <span class="text-brand-300">{% translate "на едно сигурно място." %}</span>
+                {% translate "Пациентските досиета" %}
+                <span class="text-brand-300">{% translate "подредени за клиничната работа." %}</span>
             </h1>
 
             <p class="text-lg leading-relaxed text-brand-100/85">
-                {% translate "Профили, ваксинации, медицинска история, хранителен режим и ветеринарни визити — организирани така, че нищо важно да не се изгуби. Без риск от пропуснати ваксини или прегледи." %}
+                {% translate "Регистрирайте пациенти, документирайте прегледи и лечения и проследявайте последващите грижи. Стопаните могат да поддържат профили на своите любимци." %}
             </p>
 
             <div class="flex flex-wrap items-center gap-3 pt-2">
                 <a href="{% url 'accounts:register' %}" class="btn-lg inline-flex items-center gap-2 rounded-xl bg-white font-bold text-brand-900 shadow-md transition hover:-translate-y-0.5 hover:bg-brand-50">
                     <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
-                    {% translate "Започнете безплатно" %}
+                    {% translate "Вход за ветеринарен екип" %}
                 </a>
                 <a href="{% url 'accounts:login' %}" class="btn-lg inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 font-semibold text-white backdrop-blur transition hover:bg-white/20">
                     <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
@@ -43,7 +43,7 @@
 
             <!-- Demo credentials -->
             <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-5 text-xs text-brand-100/80">
-                <span class="rounded bg-white/15 px-2 py-0.5 font-bold uppercase tracking-wide text-white">{% translate "Демо профил" %}</span>
+                <span class="rounded bg-white/15 px-2 py-0.5 font-bold uppercase tracking-wide text-white">{% translate "Демо профил стопанин" %}</span>
                 <span class="inline-flex items-center gap-1.5">
                     <span class="text-brand-200/80">{% translate "Потребител:" %}</span>
                     <code class="rounded bg-black/25 px-1.5 py-0.5 font-mono text-brand-200">demo_owner</code>
@@ -59,10 +59,10 @@
     <section class="space-y-8">
         <div class="mx-auto max-w-2xl space-y-3 text-center">
             <h2 class="text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl dark:text-white">
-                {% translate "Създадено с внимание към любимците" %}
+                {% translate "Инструменти за клинична работа" %}
             </h2>
             <p class="muted">
-                {% translate "Всички необходими инструменти за организиране на здравето и ежедневието на кучета, котки, птици и други животни." %}
+                {% translate "Основните медицински данни и последващи грижи за различни видове пациенти са достъпни от едно досие." %}
             </p>
         </div>
 
@@ -90,13 +90,13 @@
             <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>
         </span>
         <h2 class="text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl dark:text-white">
-            {% translate "Готови ли сте да поемете пълен контрол над грижата?" %}
+            {% translate "Подгответе досиетата за следващия преглед" %}
         </h2>
         <p class="muted mx-auto mt-2 max-w-lg">
-            {% translate "Регистрирайте се за по-малко от минута и добавете първия си любимец днес." %}
+            {% translate "Ветеринарните профили се създават от администратора, за да се контролира достъпът до клиничните функции." %}
         </p>
         <div class="mt-7 flex flex-wrap justify-center gap-3">
-            <a href="{% url 'accounts:register' %}" class="btn-primary btn-lg">{% translate "Създайте безплатен профил" %}</a>
+            <a href="{% url 'accounts:login' %}" class="btn-primary btn-lg">{% translate "Вход" %}</a>
             <a href="{% url 'accounts:login' %}" class="btn-secondary btn-lg">{% translate "Вход с съществуващ акаунт" %}</a>
         </div>
     </section>

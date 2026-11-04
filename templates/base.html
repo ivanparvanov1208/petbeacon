@@ -63,7 +63,7 @@
                 <a href="{% url 'pets:pet_list' %}"
                    class="nav-link {% if 'pet' in request.resolver_match.url_name and 'reminder' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}nav-link-active{% endif %}"
                    {% if 'pet' in request.resolver_match.url_name and 'reminder' not in request.resolver_match.url_name and 'dashboard' not in request.resolver_match.url_name %}aria-current="page"{% endif %}>
-                    <i class="fa-solid fa-paw text-xs" aria-hidden="true"></i> {% translate "Любимци" %}
+                    <i class="fa-solid fa-paw text-xs" aria-hidden="true"></i>{% if user.profile.is_vet %} {% translate "Пациенти" %}{% else %} {% translate "Любимци" %}{% endif %}
                     {% if nav_total_pets %}
                         <span class="ml-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-ink-100 px-1.5 text-xs font-bold text-ink-600 dark:bg-ink-800 dark:text-ink-300">{{ nav_total_pets }}</span>
                     {% endif %}
@@ -77,12 +77,17 @@
                         <span class="ml-0.5 inline-flex h-5 min-w-5 animate-pulse items-center justify-center rounded-full px-1.5 text-xs font-bold {% if badge_overdue_count > 0 %}bg-rose-500 text-white{% else %}bg-amber-400 text-amber-950{% endif %}">{{ badge_urgent_total }}</span>
                     {% endif %}
                 </a>
+
+                <a href="{% url 'pets:consultation_list' %}"
+                   class="nav-link {% if 'consultation' in request.resolver_match.url_name %}nav-link-active{% endif %}"
+                   {% if 'consultation' in request.resolver_match.url_name %}aria-current="page"{% endif %}>
+                    <i class="fa-solid fa-comments text-xs" aria-hidden="true"></i> {% translate "Консултации" %}
+                </a>
             </nav>
             {% endif %}
 
             <div class="ml-auto flex items-center gap-1.5">
 
-                <!-- Theme toggle -->
                 <button type="button" id="themeToggle" class="btn-icon"
                         aria-label="{% translate 'Смяна на цветовата тема' %}"
                         title="{% translate 'Смяна на темата' %}"
@@ -95,7 +100,7 @@
 
                 {% if user.is_authenticated %}
                     <a href="{% url 'pets:pet_create' %}" class="btn-primary btn-sm hidden sm:inline-flex">
-                        <i class="fa-solid fa-plus" aria-hidden="true"></i> {% translate "Нов любимец" %}
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i>{% if user.profile.is_vet %} {% translate "Нов пациент" %}{% else %} {% translate "Нов любимец" %}{% endif %}
                     </a>
 
                     <div class="relative" id="userMenu">
@@ -149,7 +154,6 @@
                         </div>
                     </div>
 
-                    <!-- Mobile drawer toggle -->
                     <button type="button" id="mobileMenuBtn" class="btn-icon md:hidden"
                             aria-label="{% translate 'Отвори менюто' %}" aria-expanded="false" aria-controls="mobileMenu"
                             data-label-open="{% translate 'Отвори менюто' %}"
@@ -180,12 +184,15 @@
 
                 <a href="{% url 'pets:dashboard' %}" class="nav-link"><i class="fa-solid fa-gauge-high w-4 text-brand-600" aria-hidden="true"></i> {% translate "Табло" %}</a>
                 <a href="{% url 'pets:pet_list' %}" class="nav-link">
-                    <i class="fa-solid fa-paw w-4 text-brand-600" aria-hidden="true"></i> {% translate "Моите любимци" %}
+                    <i class="fa-solid fa-paw w-4 text-brand-600" aria-hidden="true"></i>{% if user.profile.is_vet %} {% translate "Пациенти" %}{% else %} {% translate "Моите любимци" %}{% endif %}
                     {% if nav_total_pets %}<span class="ml-auto badge-neutral">{{ nav_total_pets }}</span>{% endif %}
                 </a>
                 <a href="{% url 'pets:reminder_list' %}" class="nav-link">
                     <i class="fa-solid fa-bell w-4 text-brand-600" aria-hidden="true"></i> {% translate "Напомняния" %}
                     {% if badge_urgent_total > 0 %}<span class="ml-auto badge-danger">{{ badge_urgent_total }}</span>{% endif %}
+                </a>
+                <a href="{% url 'pets:consultation_list' %}" class="nav-link">
+                    <i class="fa-solid fa-comments w-4 text-brand-600" aria-hidden="true"></i> {% translate "Консултации" %}
                 </a>
                 <a href="{% url 'pets:pet_create' %}" class="nav-link text-brand-700 dark:text-brand-300"><i class="fa-solid fa-plus w-4" aria-hidden="true"></i> {% translate "Добави любимец" %}</a>
                 <a href="{% url 'accounts:profile' %}" class="nav-link"><i class="fa-regular fa-user w-4 text-ink-400" aria-hidden="true"></i> {% translate "Моят профил" %}</a>
