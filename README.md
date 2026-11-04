@@ -98,29 +98,18 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 ## 🚀 Бърз старт и инсталация
 
-### 1. Front-end зависимости (Node)
+Интерфейсът се стартира от Django заедно с приложението. За обичайно стартиране не е
+нужен отделен front-end сървър или Node.js.
 
-Стиловете се компилират от `static/css/input.css` в `static/css/app.css` с Tailwind CSS v4.
-
-```powershell
-npm install
-npm run build        # еднократна компилация
-npm run dev          # режим на следене (автоматична прекомпилация)
-```
-
-> `static/css/app.css` е **компилиран резултат**, но е и в Git, за да може проектът да
-> се стартира и без Node. След промяна в шаблон или в `input.css` изпълнете
-> `npm run build` и коммитайте новия `app.css`.
-
-### 2. Python зависимости
+### 1. Python зависимости и база данни
 
 ```powershell
 python -m pip install -r requirements.txt
 python manage.py migrate
-python manage.py load_sample_data   # по избор: примерни данни
+python manage.py load_sample_data   # по избор; зарежда демонстрационните профили и данни
 ```
 
-### 3. Стартиране на сървъра
+### 2. Стартиране на приложението
 
 Отворете терминал (PowerShell или Command Prompt) в директорията на проекта:
 
@@ -129,6 +118,20 @@ python manage.py runserver
 ```
 
 След това отворете браузъра на адрес: **`http://127.0.0.1:8000/`**
+
+### Незадължително: промени по стиловете
+
+Node.js е необходим само при редакция на стиловете. Tailwind CSS v4 компилира
+`static/css/input.css` до `static/css/app.css`; Django сервира готовия CSS файл.
+
+```powershell
+npm install
+npm run build        # компилира CSS веднъж
+npm run dev          # следи промените и компилира CSS автоматично
+```
+
+`npm run dev` не стартира уеб приложението. След промяна в шаблон или `input.css`
+изпълнете компилацията и запазете обновения `static/css/app.css` в Git.
 
 ---
 
