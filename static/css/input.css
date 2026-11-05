@@ -85,6 +85,11 @@
     html {
         -webkit-text-size-adjust: 100%;
         scroll-behavior: smooth;
+        color-scheme: light;
+    }
+
+    html.dark {
+        color-scheme: dark;
     }
 
     body {
@@ -109,6 +114,11 @@
 
     [aria-invalid="true"] {
         border-color: var(--color-rose-500);
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        accent-color: var(--color-brand-600);
     }
 
     ::selection {
