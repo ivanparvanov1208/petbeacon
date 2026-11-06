@@ -25,7 +25,7 @@ MANIFEST
 # --- Virtual environments ---
 .venv/
 venv/
-env/
+.env/
 ENV/
 env.bak/
 venv.bak/
@@ -104,6 +104,12 @@ docs/_build/
 
 # --- Packages ---
 node_modules/
+
+# Local Android build caches and SDK packages are machine-specific.
+android/.gradle-cache/
+android/.android-sdk/
+android/local.properties
+android/.android-home/
 
 # --- Database ---
 db.sqlite3

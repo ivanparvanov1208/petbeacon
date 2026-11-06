@@ -1,5 +1,5 @@
 {% extends "admin/base.html" %}
-{% load static %}
+{% load static i18n %}
 
 {% block extrastyle %}
     {{ block.super }}
@@ -9,6 +9,21 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block userlinks %}
+    <form method="post" action="{% url 'set_language' %}" class="petcare-admin-language-switcher" aria-label="{% translate 'Смяна на езика' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% for code, name in LANGUAGES %}
+            {% if code == LANGUAGE_CODE %}
+                <span aria-current="true" title="{{ name }}">{{ code|upper }}</span>
+            {% else %}
+                <button type="submit" name="language" value="{{ code }}" title="{{ name }}">{{ code|upper }}</button>
+            {% endif %}
+        {% endfor %}
+    </form>
+    {{ block.super }}
 {% endblock %}
 
 {% block branding %}

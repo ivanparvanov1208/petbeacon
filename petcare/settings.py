@@ -4,6 +4,7 @@ Django settings for PetBeacon project.
 
 from pathlib import Path
 import os
+from urllib.parse import parse_qs, unquote, urlparse
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -34,7 +35,7 @@ if not SECRET_KEY:
     # Keep the fallback development-only; production requires an environment key.
     SECRET_KEY = 'django-insecure-dev-only-key-do-not-use-in-production-0000'
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost,10.110.114.148').split(',')
 
 if not DEBUG and ALLOWED_HOSTS == ['']:
     raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS must be set when DEBUG is False.")
@@ -86,12 +87,36 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'petcare.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+_database_url = os.environ.get('DATABASE_URL', '').strip()
+if _database_url:
+    _database = urlparse(_database_url)
+    if _database.scheme not in {'postgres', 'postgresql', 'postgresql+psycopg'}:
+        raise ImproperlyConfigured('DATABASE_URL must use a PostgreSQL URL.')
+    _database_query = parse_qs(_database.query)
+    _database_options = {}
+    _sslmode = (_database_query.get('sslmode') or [os.environ.get('DJANGO_DB_SSLMODE', '')])[0]
+    if _sslmode:
+        _database_options['sslmode'] = _sslmode
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': unquote(_database.path.lstrip('/')),
+            'USER': unquote(_database.username or ''),
+            'PASSWORD': unquote(_database.password or ''),
+            'HOST': _database.hostname or '',
+            'PORT': _database.port or '',
+            'CONN_MAX_AGE': 60,
+            'CONN_HEALTH_CHECKS': True,
+            'OPTIONS': _database_options,
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% translate "Възникна неочаквана грешка | PetBeacon" %}</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon-32.png' %}">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body class="flex min-h-screen items-center justify-center bg-ink-50 px-4 text-ink-800 dark:bg-ink-950 dark:text-ink-200">
@@ -24,6 +26,18 @@
             <i class="fa-solid fa-house" aria-hidden="true"></i>
             {% translate "Към началната страница" %}
         </a>
+
+        <form method="post" action="{% url 'set_language' %}" class="mt-6 flex justify-center gap-2" aria-label="{% translate 'Смяна на езика' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ home_url|default:'/' }}">
+            {% for code, name in LANGUAGES %}
+                {% if code == CURRENT_LANGUAGE %}
+                    <span class="rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-800" aria-current="true">{{ name }}</span>
+                {% else %}
+                    <button type="submit" name="language" value="{{ code }}" class="rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm font-semibold text-ink-700 transition hover:bg-ink-50">{{ name }}</button>
+                {% endif %}
+            {% endfor %}
+        </form>
     </main>
 </body>
 </html>

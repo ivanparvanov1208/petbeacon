@@ -96,6 +96,33 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 ---
 
+## 📱 Android приложение (WebView)
+
+`android/` съдържа APK обвивка с Android WebView за съществуващия Django сайт.
+Така мобилният екран показва уеб интерфейса, преводите и функционалностите
+директно от проекта, а входът и сесията се управляват от Django. JavaScript,
+DOM storage и cookies са включени за работа на сайта; външни връзки като Stripe
+Checkout се отварят в браузъра.
+
+### Създаване на APK в Windows
+
+1. Инсталирайте Android Studio и Android SDK Platform 37, ако не са инсталирани.
+2. Стартирайте Django приложението в хостинг с HTTPS и PostgreSQL, или за Android
+   Emulator стартирайте локалния сървър с `python manage.py runserver 0.0.0.0:8000`.
+3. Отворете `android/` като проект в Android Studio или изпълнете от тази папка:
+
+```powershell
+$env:GRADLE_USER_HOME = Join-Path (Get-Location) '.gradle-cache'
+.\gradlew.bat :app:assembleDebug
+```
+
+APK файлът е `android/app/build/outputs/apk/debug/app-debug.apk`. При първо
+стартиране отваря автоматично `http://mc.holybluds.eu:9092/bg/`. Входът и
+сесията се управляват от Django. За HTTP е разрешен само домейнът
+`mc.holybluds.eu` в конфигурацията за мрежова сигурност на Android.
+
+---
+
 ## 🚀 Бърз старт и инсталация
 
 Интерфейсът се стартира от Django заедно с приложението. За обичайно стартиране не е
@@ -322,6 +349,7 @@ python manage.py loaddata ../petcare_backup.json
 ```text
 petcare_project/
 ├── petcare/                  # Настройки и главни маршрути (settings.py, urls.py)
+├── android/                  # Android WebView клиент за сайта
 ├── accounts/                 # Модул за автентикация, регистрация и профили
 │   ├── models.py             # UserProfile модел (вкл. роля) + post_save сигнал
 │   ├── forms.py              # Форми за регистрация, вход и профил

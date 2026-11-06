@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n petcare_tags %}
 <div class="relative hidden md:block" id="langMenu">
     <button type="button" id="langMenuButton" class="lang-trigger"
             aria-label="{% translate 'Смяна на езика' %}"
@@ -12,25 +12,21 @@
     </button>
 
     <div id="langMenuDropdown" class="lang-panel hidden">
-        <form method="POST" action="{% url 'set_language' %}">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <div class="overflow-hidden rounded-2xl border border-ink-200 bg-white p-1.5 shadow-lg dark:border-ink-800 dark:bg-ink-900">
-                <p class="px-3 pb-1 pt-1.5 text-[11px] font-bold uppercase tracking-wide text-ink-400">
-                    {% translate "Език" %}
-                </p>
-                {% for code, name in LANGUAGES %}
-                    {% if code == LANGUAGE_CODE %}
-                        <span class="lang-option lang-option-active" aria-current="true">
-                            <i class="fa-solid fa-check lang-check text-xs" aria-hidden="true"></i>{{ name }}
-                        </span>
-                    {% else %}
-                        <button type="submit" name="language" value="{{ code }}" class="lang-option">
-                            <i class="fa-solid fa-check text-xs opacity-0" aria-hidden="true"></i>{{ name }}
-                        </button>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </form>
+        <div class="overflow-hidden rounded-2xl border border-ink-200 bg-white p-1.5 shadow-lg dark:border-ink-800 dark:bg-ink-900">
+            <p class="px-3 pb-1 pt-1.5 text-[11px] font-bold uppercase tracking-wide text-ink-400">
+                {% translate "Език" %}
+            </p>
+            {% for code, name in LANGUAGES %}
+                {% if code == LANGUAGE_CODE %}
+                    <span class="lang-option lang-option-active" aria-current="true">
+                        <i class="fa-solid fa-check lang-check text-xs" aria-hidden="true"></i>{{ name }}
+                    </span>
+                {% else %}
+                    <a href="{% localized_url request.get_full_path code %}" lang="{{ code }}" hreflang="{{ code }}" class="lang-option">
+                        <i class="fa-solid fa-check text-xs opacity-0" aria-hidden="true"></i>{{ name }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 </div>

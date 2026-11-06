@@ -1,17 +1,14 @@
-{% load i18n %}
-<form method="POST" action="{% url 'set_language' %}"
-      class="lang-segmented mt-1.5"
-      role="group"
-      aria-label="{% translate 'Смяна на езика' %}">
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+{% load i18n petcare_tags %}
+<div class="lang-segmented mt-1.5"
+     role="group"
+     aria-label="{% translate 'Смяна на езика' %}">
     {% for code, name in LANGUAGES %}
         {% if code == LANGUAGE_CODE %}
             <span class="lang-segment lang-segment-active" aria-current="true">{{ name }}</span>
         {% else %}
-            <button type="submit" name="language" value="{{ code }}" class="lang-segment">
+            <a href="{% localized_url request.get_full_path code %}" lang="{{ code }}" hreflang="{{ code }}" class="lang-segment">
                 {{ name }}
-            </button>
+            </a>
         {% endif %}
     {% endfor %}
-</form>
+</div>

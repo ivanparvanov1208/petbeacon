@@ -124,6 +124,42 @@ a:hover {
     font-weight: 600;
 }
 
+.petcare-admin-language-switcher {
+    display: inline-flex;
+    gap: 0.25rem;
+    margin-right: 0.65rem;
+    vertical-align: middle;
+}
+
+.petcare-admin-language-switcher button,
+.petcare-admin-language-switcher span {
+    display: inline-flex;
+    min-width: 2rem;
+    min-height: 1.8rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.45rem;
+    border: 1px solid var(--petcare-admin-border);
+    border-radius: 0.5rem;
+    background: var(--petcare-admin-surface);
+    color: var(--petcare-admin-brand-dark);
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.petcare-admin-language-switcher span[aria-current="true"] {
+    border-color: var(--petcare-admin-brand);
+    background: var(--petcare-admin-brand-soft);
+    cursor: default;
+}
+
+.petcare-admin-language-switcher button:hover,
+.petcare-admin-language-switcher button:focus-visible {
+    background: var(--petcare-admin-brand-soft);
+    color: var(--petcare-admin-brand-dark);
+}
+
 #user-tools a:link,
 #user-tools a:visited {
     color: var(--petcare-admin-brand);

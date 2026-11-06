@@ -3,9 +3,15 @@ import copy
 
 from django import template
 from django.forms.boundfield import BoundField
+from django.urls import translate_url
 from django.utils.safestring import mark_safe
 
 register = template.Library()
+
+
+@register.simple_tag
+def localized_url(path, language_code):
+    return translate_url(path, language_code) or path
 
 
 @register.filter(name="add_class", is_safe=True)

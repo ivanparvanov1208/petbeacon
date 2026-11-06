@@ -121,6 +121,38 @@
         accent-color: var(--color-brand-600);
     }
 
+    select.field {
+        color-scheme: light;
+    }
+
+    select.field option {
+        background-color: white;
+        color: var(--color-ink-800);
+    }
+
+    select.field option:hover,
+    select.field option:focus,
+    select.field option:checked {
+        background-color: var(--color-brand-100) !important;
+        color: var(--color-brand-900) !important;
+    }
+
+    .dark select.field {
+        color-scheme: dark;
+    }
+
+    .dark select.field option {
+        background-color: var(--color-ink-900);
+        color: var(--color-ink-200);
+    }
+
+    .dark select.field option:hover,
+    .dark select.field option:focus,
+    .dark select.field option:checked {
+        background-color: var(--color-brand-800) !important;
+        color: white !important;
+    }
+
     ::selection {
         background-color: var(--color-brand-200);
         color: var(--color-brand-950);

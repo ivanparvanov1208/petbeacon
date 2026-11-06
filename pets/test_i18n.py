@@ -136,23 +136,20 @@ class LanguageSwitcherTests(TestCase):
 
     def test_switcher_is_rendered_for_anonymous_and_authenticated_users(self):
         html = self.client.get(reverse("pets:home")).content.decode()
-        self.assertIn(reverse("set_language"), html)
-        self.assertEqual(html.count('name="language" value="en"'), 2)
-        self.assertEqual(html.count('name="language" value="bg"'), 0)
+        self.assertEqual(html.count('href="/en/"'), 2)
+        self.assertEqual(html.count('hreflang="en"'), 2)
         self.assertIn("Подгответе досиетата за следващия преглед", html)
 
         user = User.objects.create_user(username="switcher", password="password123")
         self.client.force_login(user)
         html = self.client.get(reverse("pets:dashboard")).content.decode()
-        self.assertIn(reverse("set_language"), html)
-        self.assertEqual(html.count('name="language" value="en"'), 2)
-        self.assertEqual(html.count('name="language" value="bg"'), 0)
+        self.assertEqual(html.count('hreflang="en"'), 2)
 
     def test_switcher_marks_the_active_language_and_hides_it_from_tab_order(self):
         html = self.client.get("/en/").content.decode()
         self.assertIn('aria-current="true"', html)
-        self.assertEqual(html.count('name="language" value="bg"'), 2)
-        self.assertEqual(html.count('name="language" value="en"'), 0)
+        self.assertEqual(html.count('hreflang="bg"'), 2)
+        self.assertEqual(html.count('hreflang="en"'), 0)
         self.assertIn("Български", html)
 
     def test_switcher_preserves_the_current_path_in_next(self):
@@ -162,12 +159,11 @@ class LanguageSwitcherTests(TestCase):
         url = reverse("pets:pet_detail", kwargs={"pk": pet.pk})
 
         html = self.client.get(url).content.decode()
-        self.assertIn(f'value="{url}"', html)
+        self.assertIn(f'href="/en{url[3:]}"', html)
 
     def test_switcher_works_without_javascript(self):
         html = self.client.get("/bg/").content.decode()
-        self.assertIn(f'<form method="POST" action="{reverse("set_language")}">', html)
-        self.assertIn('type="submit" name="language"', html)
+        self.assertIn('href="/en/" lang="en" hreflang="en"', html)
 
     def test_bare_root_redirects_to_the_default_language_prefix(self):
         response = self.client.get("/", follow=False)
@@ -258,12 +254,13 @@ class TranslationRenderingTests(DefaultLanguageMixin, TestCase):
     def test_switcher_next_never_double_prefixes_the_language(self):
         self.client.force_login(self.user)
         for code in ("bg", "en"):
+            target_code = "en" if code == "bg" else "bg"
             for path in self._private_paths():
                 with self.subTest(path=path, lang=code):
                     html = self.client.get(f"/{code}{path}").content.decode()
-                    expected = f'value="/{code}{path}"'
+                    expected = f'href="/{target_code}{path}"'
                     self.assertIn(expected, html)
-                    self.assertNotIn(f"/{code}/{code}", html)
+                    self.assertNotIn(f'href="/{target_code}/{code}/', html)
 
     def test_model_choices_translate(self):
         pet = self.pet

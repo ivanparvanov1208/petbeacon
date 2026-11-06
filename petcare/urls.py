@@ -13,6 +13,8 @@ admin.site.site_header = _("PetBeacon Администрация")
 admin.site.site_title = _("PetBeacon Портал")
 admin.site.index_title = _("Управление на база данни за домашни любимци")
 
+handler500 = 'petcare.views.server_error'
+
 urlpatterns = [
 
     path('i18n/', include('django.conf.urls.i18n')),
