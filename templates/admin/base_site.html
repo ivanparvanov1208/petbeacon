@@ -8,22 +8,45 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,400&display=swap">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+{% endblock %}
+
+{% block responsive %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static 'css/admin.css' %}">
 {% endblock %}
 
+{% block welcome-msg %}{% endblock %}
+
 {% block userlinks %}
-    <form method="post" action="{% url 'set_language' %}" class="petcare-admin-language-switcher" aria-label="{% translate 'Смяна на езика' %}">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-        {% for code, name in LANGUAGES %}
-            {% if code == LANGUAGE_CODE %}
-                <span aria-current="true" title="{{ name }}">{{ code|upper }}</span>
-            {% else %}
-                <button type="submit" name="language" value="{{ code }}" title="{{ name }}">{{ code|upper }}</button>
+    <div class="petcare-admin-user-tools">
+        <div class="petcare-admin-user-meta">
+            <span class="petcare-admin-greeting">{% translate 'Welcome,' %} <strong>{% firstof user.get_short_name user.get_username %}</strong></span>
+            <form method="post" action="{% url 'set_language' %}" class="petcare-admin-language-switcher" aria-label="{% translate 'Смяна на езика' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                {% for code, name in LANGUAGES %}
+                    {% if code == LANGUAGE_CODE %}
+                        <span aria-current="true" title="{{ name }}">{{ code|upper }}</span>
+                    {% else %}
+                        <button type="submit" name="language" value="{{ code }}" title="{{ name }}">{{ code|upper }}</button>
+                    {% endif %}
+                {% endfor %}
+            </form>
+        </div>
+        <nav class="petcare-admin-user-links" aria-label="{% translate 'User navigation' %}">
+            {% if site_url %}<a href="{{ site_url }}">{% translate 'View site' %}</a>{% endif %}
+            {% if user.is_active and user.is_staff %}
+                {% url 'django-admindocs-docroot' as docsroot %}
+                {% if docsroot %}<a href="{{ docsroot }}">{% translate 'Documentation' %}</a>{% endif %}
             {% endif %}
-        {% endfor %}
-    </form>
-    {{ block.super }}
+            {% if user.has_usable_password %}<a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a>{% endif %}
+            <form id="logout-form" class="petcare-admin-logout" method="post" action="{% url 'admin:logout' %}">
+                {% csrf_token %}
+                <button type="submit">{% translate 'Log out' %}</button>
+            </form>
+            {% include "admin/color_theme_toggle.html" %}
+        </nav>
+    </div>
 {% endblock %}
 
 {% block branding %}
