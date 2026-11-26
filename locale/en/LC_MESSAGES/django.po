@@ -1977,3 +1977,153 @@ msgstr "from %(start)s"
 
 msgid "подредени за клиничната работа."
 msgstr "organized for clinical work."
+
+msgid "Welcome,"
+msgstr "Welcome,"
+
+msgid "User navigation"
+msgstr "User navigation"
+
+msgid "View site"
+msgstr "View site"
+
+msgid "Documentation"
+msgstr "Documentation"
+
+msgid "Change password"
+msgstr "Change password"
+
+msgid "Log out"
+msgstr "Log out"
+
+msgid "Отзив за ветеринар"
+msgstr "Veterinarian review"
+
+msgid "Отзиви за ветеринари"
+msgstr "Veterinarian reviews"
+
+msgid "Изпрати напомняне по имейл"
+msgstr "Send reminder by email"
+
+msgid "Език на известието"
+msgstr "Notification language"
+
+msgid "Оценка"
+msgstr "Rating"
+
+msgid "Коментар"
+msgstr "Comment"
+
+msgid "Отзив за %(vet)s от %(owner)s"
+msgstr "Review for %(vet)s by %(owner)s"
+
+msgid "%(name)s · няма отзиви"
+msgstr "%(name)s · no reviews"
+
+msgid "%(name)s · ★%(average).1f (%(count)d отзива)"
+msgstr "%(name)s · ★%(average).1f (%(count)d reviews)"
+
+msgid "Как премина консултацията?"
+msgstr "How was the consultation?"
+
+msgid "Можете да оставите отзив след приключване на консултацията."
+msgstr "You can leave a review after the consultation is complete."
+
+msgid "Благодарим за отзива ви!"
+msgstr "Thank you for your review!"
+
+msgid "Проверете оценката и опитайте отново."
+msgstr "Check the rating and try again."
+
+msgid "%(pet)s · срок: %(due)s"
+msgstr "%(pet)s · due %(due)s"
+
+msgid "Срок: %(due)s"
+msgstr "Due: %(due)s"
+
+msgid "Напомняне от PetBeacon"
+msgstr "PetBeacon reminder"
+
+msgid "Напомняне за вашия любимец"
+msgstr "A reminder for your pet"
+
+msgid "Здравейте! Предстои ви грижа за вашия любимец."
+msgstr "Hello! It is almost time for your pet's care."
+
+msgid "Категория"
+msgstr "Category"
+
+msgid "Срок"
+msgstr "Due"
+
+msgid "Отвори напомнянията"
+msgstr "Open reminders"
+
+msgid "Получавате това съобщение, защото имате включени имейл известия за напомняния в PetBeacon."
+msgstr "You received this email because reminder emails are enabled for you in PetBeacon."
+
+msgid "Грижата за любимеца ви, подредена на едно място."
+msgstr "Your pet's care, organized in one place."
+
+msgid "Вашият отзив"
+msgstr "Your review"
+
+msgid "Оценете ветеринаря"
+msgstr "Rate the veterinarian"
+
+msgid "Отзив може да се остави след приключена консултация."
+msgstr "You can review a veterinarian after a consultation is complete."
+
+msgid "Всички отзиви за ветеринаря"
+msgstr "All reviews for this veterinarian"
+
+msgid "Оценка: %(rating)s от 5"
+msgstr "Rating: %(rating)s out of 5"
+
+msgid "Можете да редактирате отзива си по-долу."
+msgstr "You can edit your review below."
+
+msgid "Изпрати отзива"
+msgstr "Submit review"
+
+msgid "Разгледай ветеринарите и отзивите"
+msgstr "Browse veterinarians and reviews"
+
+msgid "Отзиви от стопани"
+msgstr "Reviews from pet owners"
+
+msgid "отзива"
+msgstr "reviews"
+
+msgid "Все още нямате отзиви."
+msgstr "You do not have any reviews yet."
+
+msgid "Прегледай отзивите"
+msgstr "View reviews"
+
+msgid "Ветеринарен екип | PetBeacon"
+msgstr "Veterinarian team | PetBeacon"
+
+msgid "Намерете ветеринар"
+msgstr "Find a veterinarian"
+
+msgid "Разгледайте оценките от стопани и изберете ветеринар за онлайн консултация."
+msgstr "Browse pet owners' ratings and choose a veterinarian for an online consultation."
+
+msgid "Все още няма регистрирани ветеринари."
+msgstr "No veterinarians are registered yet."
+
+msgid "Отзиви за ветеринар | PetBeacon"
+msgstr "Veterinarian reviews | PetBeacon"
+
+msgid "Към ветеринарите"
+msgstr "Back to veterinarians"
+
+msgid "Все още няма отзиви за този ветеринар."
+msgstr "There are no reviews for this veterinarian yet."
+
+msgid "Първият отзив ще се появи след приключена консултация."
+msgstr "The first review will appear after a consultation is completed."
+
+msgid "Все още няма отзиви."
+msgstr "There are no reviews yet."

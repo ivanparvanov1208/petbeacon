@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -309,6 +310,16 @@ class Reminder(models.Model):
     is_completed = models.BooleanField(default=False, verbose_name=gettext_lazy("Изпълнено"))
     completed_at = models.DateTimeField(null=True, blank=True, verbose_name=gettext_lazy("Дата на изпълнение"))
     notes = models.TextField(blank=True, verbose_name=gettext_lazy("Бележки / детайли"))
+    email_notification_enabled = models.BooleanField(
+        default=True, verbose_name=gettext_lazy("Изпрати напомняне по имейл")
+    )
+    email_notification_sent_at = models.DateTimeField(null=True, blank=True, editable=False)
+    language = models.CharField(
+        max_length=2,
+        choices=[('bg', 'Български'), ('en', 'English')],
+        default='bg',
+        verbose_name=gettext_lazy("Език на известието"),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -330,6 +341,15 @@ class Reminder(models.Model):
         return _("%(title)s (%(date)s)") % {"title": self.title, "date": self.due_date}
 
     def save(self, *args, **kwargs):
+        if self.pk:
+            previous = type(self).objects.filter(pk=self.pk).values(
+                'owner_id', 'pet_id', 'title', 'due_date', 'due_time',
+                'is_completed', 'email_notification_enabled', 'language',
+            ).first()
+            if previous and any(previous[field] != getattr(self, field) for field in previous):
+                self.email_notification_sent_at = None
+                if kwargs.get('update_fields') is not None:
+                    kwargs['update_fields'] = set(kwargs['update_fields']) | {'email_notification_sent_at'}
         if self.is_completed:
             if self.completed_at is None:
                 self.completed_at = timezone.now()
@@ -429,3 +449,42 @@ class ConsultationMessage(models.Model):
 
     def __str__(self):
         return f"{self.sender.username}: {self.body[:60]}"
+
+
+class VetReview(models.Model):
+    RATING_CHOICES = [(value, str(value)) for value in range(1, 6)]
+
+    consultation = models.OneToOneField(
+        Consultation, on_delete=models.CASCADE, related_name='review'
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='vet_reviews_written'
+    )
+    veterinarian = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='vet_reviews_received'
+    )
+    rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, verbose_name=gettext_lazy("Оценка")
+    )
+    comment = models.TextField(
+        blank=True, max_length=2000, verbose_name=gettext_lazy("Коментар")
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = gettext_lazy("Отзив за ветеринар")
+        verbose_name_plural = gettext_lazy("Отзиви за ветеринари")
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(rating__gte=1) & models.Q(rating__lte=5),
+                name='vet_review_rating_1_to_5',
+            ),
+        ]
+
+    def __str__(self):
+        return _("Отзив за %(vet)s от %(owner)s") % {
+            'vet': self.veterinarian.get_full_name() or self.veterinarian.username,
+            'owner': self.owner.get_full_name() or self.owner.username,
+        }

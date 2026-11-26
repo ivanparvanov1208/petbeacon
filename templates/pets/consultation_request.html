@@ -10,6 +10,7 @@
         <h2 class="font-bold">{% translate "Свържете се с ветеринар" %}</h2>
         <p class="muted mt-1 text-sm">{% translate "Изберете любимец и ветеринар, след което опишете въпроса. Услугата е платена; за дипломната демонстрация сумата се покрива с 100% отстъпка в Stripe Checkout." %}</p>
         <p class="mt-3 text-sm font-semibold">{% translate "Цена на услугата" %}: $10.00 <span class="mx-1 text-ink-400">→</span> {% translate "Демо общо за плащане" %}: <strong>$0.00</strong></p>
+        <a class="mt-3 inline-flex text-sm font-semibold text-brand-700 hover:underline" href="{% url 'pets:vet_directory' %}">{% translate "Разгледай ветеринарите и отзивите" %} →</a>
     </div>
     {% translate "Продължи към плащане" as submit_label %}
     {% include "partials/form_open.html" with form=form submit_label=submit_label cancel_url=cancel_url %}

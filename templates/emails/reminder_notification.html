@@ -1,0 +1,38 @@
+{% load i18n %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% translate "Напомняне от PetBeacon" %}</title>
+</head>
+<body style="margin:0;padding:24px;background:#f4f7f7;color:#253239;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #dce8e6;border-radius:18px;overflow:hidden;">
+    <tr>
+      <td style="padding:22px 28px;background:#0f766e;color:#ffffff;">
+        <p style="margin:0;font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;">PetBeacon</p>
+        <h1 style="margin:8px 0 0;font-size:24px;line-height:1.3;">{% translate "Напомняне за вашия любимец" %}</h1>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:28px;">
+        <p style="margin:0 0 18px;font-size:16px;line-height:1.6;">{% translate "Здравейте! Предстои ви грижа за вашия любимец." %}</p>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f0fdfa;border:1px solid #b8e4dc;border-radius:12px;">
+          <tr><td style="padding:18px 20px;">
+            <p style="margin:0 0 6px;color:#0f766e;font-size:12px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;">{% translate "Напомняне" %}</p>
+            <p style="margin:0;color:#173b39;font-size:19px;font-weight:bold;line-height:1.4;">{{ reminder.title }}</p>
+            {% if pet_name %}<p style="margin:8px 0 0;color:#42615e;font-size:14px;">{% translate "Любимец" %}: {{ pet_name }}</p>{% endif %}
+            <p style="margin:6px 0 0;color:#42615e;font-size:14px;">{% translate "Категория" %}: {{ reminder_type }}</p>
+            <p style="margin:6px 0 0;color:#42615e;font-size:14px;">{% translate "Срок" %}: {{ due_text }}</p>
+          </td></tr>
+        </table>
+        <p style="margin:22px 0 0;">
+          <a href="{{ reminder_url }}" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#0f766e;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">{% translate "Отвори напомнянията" %}</a>
+        </p>
+        <p style="margin:24px 0 0;color:#71817f;font-size:12px;line-height:1.6;">{% translate "Получавате това съобщение, защото имате включени имейл известия за напомняния в PetBeacon." %}</p>
+      </td>
+    </tr>
+    <tr><td style="padding:16px 28px;background:#f8faf9;color:#82918f;font-size:12px;">{% translate "Грижата за любимеца ви, подредена на едно място." %}</td></tr>
+  </table>
+</body>
+</html>

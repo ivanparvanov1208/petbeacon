@@ -1,0 +1,12 @@
+{% load i18n %}{% translate "Напомняне от PetBeacon" %}
+
+{% translate "Здравейте! Предстои ви грижа за вашия любимец." %}
+
+{{ reminder.title }}
+{% if pet_name %}{% translate "Любимец" %}: {{ pet_name }}
+{% endif %}{% translate "Категория" %}: {{ reminder_type }}
+{% translate "Срок" %}: {{ due_text }}
+
+{% translate "Отвори напомнянията" %}: {{ reminder_url }}
+
+{% translate "Получавате това съобщение, защото имате включени имейл известия за напомняния в PetBeacon." %}

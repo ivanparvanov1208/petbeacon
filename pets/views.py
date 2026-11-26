@@ -1,25 +1,27 @@
+from datetime import date, datetime, time, timedelta
+from django.contrib.auth import get_user_model
+from django.db.models import Avg, Count, Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.utils.translation import gettext as _
+from django.utils.formats import date_format
+from django.utils.translation import gettext as _, get_language, override
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from datetime import date, timedelta
 import logging
 from .models import (
     Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder,
-    Consultation, ConsultationMessage,
+    Consultation, ConsultationMessage, VetReview,
 )
 from .forms import (
     PetForm, VaccinationForm, MedicalRecordForm,
     MedicationForm, VetVisitForm, ReminderForm,
-    ConsultationRequestForm, ConsultationMessageForm,
+    ConsultationRequestForm, ConsultationMessageForm, VetReviewForm,
 )
 from accounts.models import UserProfile
 
@@ -101,6 +103,10 @@ def dashboard_view(request):
             'upcoming_followups': followups.select_related('pet').order_by('due_date')[:8],
             'today': today,
         }
+        context['review_count'] = request.user.vet_reviews_received.count()
+        context['review_average'] = request.user.vet_reviews_received.aggregate(
+            average=Avg('rating')
+        )['average']
         return render(request, 'pets/vet_dashboard.html', context)
 
     base_reminders = Reminder.objects.filter(
@@ -180,7 +186,11 @@ def consultation_create_view(request):
             consultation.save()
             return redirect('pets:consultation_detail', pk=consultation.pk)
     else:
-        form = ConsultationRequestForm(owner=request.user)
+        initial = {}
+        requested_vet = request.GET.get('veterinarian')
+        if requested_vet and requested_vet.isdigit():
+            initial['veterinarian'] = int(requested_vet)
+        form = ConsultationRequestForm(owner=request.user, initial=initial)
     return render(request, 'pets/consultation_request.html', {
         'form': form,
         'cancel_url': reverse('pets:consultation_list'),
@@ -326,12 +336,76 @@ def consultation_detail_view(request, pk):
                 return redirect('pets:consultation_detail', pk=pk)
     else:
         form = ConsultationMessageForm()
+    review = VetReview.objects.filter(consultation=consultation).first()
+    review_form = VetReviewForm(instance=review) if review else VetReviewForm()
     return render(request, 'pets/consultation_detail.html', {
         'consultation': consultation,
         'chat_messages': consultation.messages.select_related('sender'),
         'form': form,
+        'review': review,
+        'review_form': review_form,
         'is_vet': request.user.pk == consultation.veterinarian_id,
     })
+
+
+@login_required
+def vet_directory_view(request):
+    profile, _created = UserProfile.objects.get_or_create(user=request.user)
+    if profile.is_vet:
+        return redirect('pets:dashboard')
+    User = get_user_model()
+    veterinarians = User.objects.filter(
+        is_active=True, profile__role=UserProfile.ROLE_VET,
+    ).annotate(
+        review_average=Avg('vet_reviews_received__rating'),
+        review_count=Count('vet_reviews_received__pk'),
+    ).order_by('first_name', 'last_name', 'username')
+    return render(request, 'pets/vet_directory.html', {
+        'veterinarians': veterinarians,
+    })
+
+
+@login_required
+def vet_reviews_view(request, vet_pk):
+    User = get_user_model()
+    veterinarian = get_object_or_404(
+        User.objects.filter(is_active=True, profile__role=UserProfile.ROLE_VET)
+        .annotate(
+            review_average=Avg('vet_reviews_received__rating'),
+            review_count=Count('vet_reviews_received__pk'),
+        ),
+        pk=vet_pk,
+    )
+    reviews = VetReview.objects.filter(veterinarian=veterinarian).select_related('owner')
+    return render(request, 'pets/vet_reviews.html', {
+        'veterinarian': veterinarian,
+        'reviews': reviews,
+    })
+
+
+@login_required
+@require_POST
+def consultation_review_view(request, pk):
+    consultation = get_object_or_404(
+        Consultation.objects.select_related('owner', 'veterinarian'),
+        pk=pk, owner=request.user,
+    )
+    if consultation.status != Consultation.STATUS_CLOSED:
+        messages.error(request, _('Можете да оставите отзив след приключване на консултацията.'))
+        return redirect('pets:consultation_detail', pk=pk)
+
+    review = VetReview.objects.filter(consultation=consultation).first()
+    form = VetReviewForm(request.POST, instance=review)
+    if form.is_valid():
+        review = form.save(commit=False)
+        review.consultation = consultation
+        review.owner = request.user
+        review.veterinarian = consultation.veterinarian
+        review.save()
+        messages.success(request, _('Благодарим за отзива ви!'))
+    else:
+        messages.error(request, _('Проверете оценката и опитайте отново.'))
+    return redirect('pets:consultation_detail', pk=pk)
 
 
 @login_required
@@ -535,6 +609,7 @@ def vaccination_create_view(request, pet_pk):
                     title=_("Ваксинация: %(name)s") % {"name": vac.name},
                     due_date=vac.next_due_date,
                     priority='high',
+                    language=get_language() or 'bg',
                     notes=_("Следваща доза за %(vaccine)s. Предишна поставена на %(date)s.")
                     % {"vaccine": vac.name, "date": vac.date_administered},
                 )
@@ -671,6 +746,7 @@ def medication_create_view(request, pet_pk):
                     % {"name": med.name, "dosage": med.dosage},
                     due_date=med.start_date,
                     priority='high',
+                    language=get_language() or 'bg',
                     notes=_("Честота: %(frequency)s. %(instructions)s")
                     % {"frequency": med.frequency, "instructions": med.instructions},
                 )
@@ -862,6 +938,42 @@ def reminder_list_view(request):
 
 
 @login_required
+def mobile_reminders_feed_view(request):
+    now = timezone.localtime()
+    reminders = Reminder.objects.filter(
+        owner=request.user,
+        is_completed=False,
+        due_date__gte=now.date(),
+    ).select_related('pet').order_by('due_date', 'due_time', 'pk')
+
+    items = []
+    for reminder in reminders:
+        due_time = reminder.due_time or time(9, 0)
+        due_at = timezone.make_aware(
+            datetime.combine(reminder.due_date, due_time), timezone.get_current_timezone()
+        )
+        if due_at <= now:
+            continue
+        with override(get_language() or 'bg'):
+            due_text = date_format(timezone.localtime(due_at), 'SHORT_DATETIME_FORMAT')
+            if reminder.pet:
+                body = _("%(pet)s · срок: %(due)s") % {
+                    'pet': reminder.pet.name, 'due': due_text,
+                }
+            else:
+                body = _("Срок: %(due)s") % {'due': due_text}
+        items.append({
+            'id': reminder.pk,
+            'title': reminder.title,
+            'body': body,
+            'dueAt': int(due_at.timestamp() * 1000),
+            'url': request.build_absolute_uri(reverse('pets:reminder_list')),
+        })
+
+    return JsonResponse({'accountId': request.user.pk, 'reminders': items})
+
+
+@login_required
 def reminder_create_view(request):
     initial_data = {'due_date': date.today()}
     pet_id = request.GET.get('pet')
@@ -873,6 +985,7 @@ def reminder_create_view(request):
         if form.is_valid():
             rem = form.save(commit=False)
             rem.owner = request.user
+            rem.language = get_language() or 'bg'
             rem.save()
             messages.success(request, _("Напомнянето '%(title)s' бе създадено успешно!") % {"title": rem.title})
             return redirect('pets:reminder_list')
@@ -894,7 +1007,9 @@ def reminder_update_view(request, pk):
     if request.method == 'POST':
         form = ReminderForm(request.POST, instance=rem, user=request.user)
         if form.is_valid():
-            form.save()
+            rem = form.save(commit=False)
+            rem.language = get_language() or 'bg'
+            rem.save()
             messages.success(request, _("Напомнянето '%(title)s' бе обновено!") % {"title": rem.title})
             return redirect('pets:reminder_list')
     else:

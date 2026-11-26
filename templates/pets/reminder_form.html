@@ -24,6 +24,10 @@
         {% include "partials/field.html" with field=form.notes %}
 
         <div class="sm:col-span-1">
+            {% include "partials/checkbox.html" with field=form.email_notification_enabled %}
+        </div>
+
+        <div class="sm:col-span-1">
             {% include "partials/checkbox.html" with field=form.is_completed %}
         </div>
 

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from .models import Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder
+from .models import Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder, VetReview
 
 
 admin.site.site_header = _("PetBeacon · Администрация")
@@ -118,3 +118,12 @@ class ReminderAdmin(admin.ModelAdmin):
     list_select_related = ('owner', 'pet')
     autocomplete_fields = ('owner', 'pet')
     readonly_fields = ('completed_at',)
+
+
+@admin.register(VetReview)
+class VetReviewAdmin(admin.ModelAdmin):
+    list_display = ('veterinarian', 'owner', 'rating', 'created_at', 'consultation')
+    list_filter = ('rating', 'created_at')
+    search_fields = ('veterinarian__username', 'owner__username', 'comment')
+    list_select_related = ('veterinarian', 'owner', 'consultation')
+    readonly_fields = ('consultation', 'owner', 'veterinarian', 'created_at', 'updated_at')

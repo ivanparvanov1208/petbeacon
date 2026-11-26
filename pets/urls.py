@@ -11,10 +11,14 @@ urlpatterns = [
     path('consultations/', views.consultation_list_view, name='consultation_list'),
     path('consultations/new/', views.consultation_create_view, name='consultation_create'),
     path('consultations/<int:pk>/', views.consultation_detail_view, name='consultation_detail'),
+    path('consultations/<int:pk>/review/', views.consultation_review_view, name='consultation_review'),
     path('consultations/<int:pk>/checkout/', views.consultation_checkout_view, name='consultation_checkout'),
     path('consultations/<int:pk>/checkout/success/', views.consultation_checkout_success_view, name='consultation_checkout_success'),
     path('consultations/<int:pk>/close/', views.consultation_close_view, name='consultation_close'),
     path('stripe/webhook/', views.stripe_webhook_view, name='stripe_webhook'),
+    path('veterinarians/', views.vet_directory_view, name='vet_directory'),
+    path('veterinarians/<int:vet_pk>/reviews/', views.vet_reviews_view, name='vet_reviews'),
+    path('mobile/reminders/feed/', views.mobile_reminders_feed_view, name='mobile_reminders_feed'),
     
     # Pets
     path('pets/', views.pet_list_view, name='pet_list'),

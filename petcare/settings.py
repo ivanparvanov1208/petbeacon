@@ -217,3 +217,16 @@ LOGIN_REDIRECT_URL = 'pets:dashboard'
 LOGOUT_REDIRECT_URL = 'pets:home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# SMTP settings for scheduled reminder emails. Keep the app password in the
+# local, git-ignored .env file; never commit it to the repository.
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() in {'1', 'true', 'yes'}
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() in {'1', 'true', 'yes'}
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+REMINDER_EMAIL_LEAD_HOURS = int(os.environ.get('REMINDER_EMAIL_LEAD_HOURS', '24'))
+APP_BASE_URL = os.environ.get('APP_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')

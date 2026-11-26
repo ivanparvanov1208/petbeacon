@@ -1,6 +1,7 @@
 from datetime import date
 
 from django import forms
+from django.db.models import Avg, Count
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
@@ -8,7 +9,7 @@ from PIL import Image, UnidentifiedImageError
 
 from .models import (
     Pet, Vaccination, MedicalRecord, Medication, VetVisit, Reminder,
-    Consultation, ConsultationMessage,
+    Consultation, ConsultationMessage, VetReview,
 )
 
 
@@ -288,7 +289,10 @@ class ReminderForm(forms.ModelForm):
 
     class Meta:
         model = Reminder
-        fields = ['pet', 'reminder_type', 'title', 'due_date', 'due_time', 'priority', 'notes', 'is_completed']
+        fields = [
+            'pet', 'reminder_type', 'title', 'due_date', 'due_time', 'priority',
+            'notes', 'is_completed', 'email_notification_enabled',
+        ]
         widgets = {
             'pet': forms.Select(attrs={'class': ''}),
             'reminder_type': forms.Select(attrs={'class': ''}),
@@ -297,6 +301,7 @@ class ReminderForm(forms.ModelForm):
             'due_time': forms.TimeInput(attrs={'class': '', 'type': 'time'}),
             'priority': forms.Select(attrs={'class': ''}),
             'is_completed': forms.CheckboxInput(attrs={'class': CHECKBOX_CLASSES}),
+            'email_notification_enabled': forms.CheckboxInput(attrs={'class': CHECKBOX_CLASSES}),
             'notes': forms.Textarea(attrs={'class': '', 'rows': 2, 'placeholder': gettext_lazy("Допълнителни детайли, час за запазване...")}),
         }
 
@@ -319,10 +324,20 @@ class ConsultationRequestForm(forms.ModelForm):
         self.fields['pet'].queryset = Pet.objects.filter(owner=owner).order_by('name')
         self.fields['veterinarian'].queryset = User.objects.filter(
             profile__role='vet', is_active=True
+        ).annotate(
+            review_average=Avg('vet_reviews_received__rating'),
+            review_count=Count('vet_reviews_received__pk'),
         ).order_by('first_name', 'last_name', 'username')
-        self.fields['veterinarian'].label_from_instance = lambda vet: (
-            vet.get_full_name() or vet.username
-        )
+
+        def veterinarian_label(vet):
+            name = vet.get_full_name() or vet.username
+            if vet.review_count:
+                return _("%(name)s · ★%(average).1f (%(count)d отзива)") % {
+                    'name': name, 'average': vet.review_average, 'count': vet.review_count,
+                }
+            return _("%(name)s · няма отзиви") % {'name': name}
+
+        self.fields['veterinarian'].label_from_instance = veterinarian_label
 
 
 class ConsultationMessageForm(forms.ModelForm):
@@ -333,5 +348,18 @@ class ConsultationMessageForm(forms.ModelForm):
             'body': forms.Textarea(attrs={
                 'class': '', 'rows': 3,
                 'placeholder': gettext_lazy("Напишете съобщение..."),
+            }),
+        }
+
+
+class VetReviewForm(forms.ModelForm):
+    class Meta:
+        model = VetReview
+        fields = ['rating', 'comment']
+        widgets = {
+            'rating': forms.RadioSelect,
+            'comment': forms.Textarea(attrs={
+                'class': '', 'rows': 4, 'maxlength': 2000,
+                'placeholder': gettext_lazy("Как премина консултацията?"),
             }),
         }

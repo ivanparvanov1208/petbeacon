@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% translate "Отзиви за ветеринар | PetBeacon" %}{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-3xl space-y-5">
+    <a class="text-sm font-semibold text-brand-700 hover:underline" href="{% url 'pets:vet_directory' %}">← {% translate "Към ветеринарите" %}</a>
+    <section class="card p-5 sm:p-6">
+        <p class="text-xs font-bold uppercase tracking-wider text-brand-600">{% translate "Отзиви от стопани" %}</p>
+        <h1 class="page-title mt-1">{{ veterinarian.get_full_name|default:veterinarian.username }}</h1>
+        {% if veterinarian.review_count %}
+        <p class="mt-2 text-lg font-bold text-amber-600">★ {{ veterinarian.review_average|floatformat:1 }} <span class="muted text-sm font-normal">({{ veterinarian.review_count }} {% translate "отзива" %})</span></p>
+        {% else %}<p class="muted mt-2">{% translate "Все още няма отзиви за този ветеринар." %}</p>{% endif %}
+    </section>
+    {% for review in reviews %}
+    {% translate "Стопанин" as owner_label %}
+    <article class="card p-5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+            <p class="font-semibold">{{ review.owner.first_name|default:owner_label }}</p>
+            <p class="text-lg text-amber-500" aria-label="{% blocktranslate with rating=review.rating %}Оценка: {{ rating }} от 5{% endblocktranslate %}">{% for _ in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</p>
+        </div>
+        {% if review.comment %}<p class="muted mt-3 whitespace-pre-line">{{ review.comment }}</p>{% endif %}
+        <p class="muted mt-3 text-xs">{{ review.created_at|date:"SHORT_DATE_FORMAT" }}</p>
+    </article>
+    {% empty %}
+    <div class="card p-6 text-center"><p class="muted">{% translate "Първият отзив ще се появи след приключена консултация." %}</p></div>
+    {% endfor %}
+    <a class="btn-primary" href="{% url 'pets:consultation_create' %}?veterinarian={{ veterinarian.pk }}">{% translate "Заяви консултация" %}</a>
+</div>
+{% endblock %}

@@ -38,6 +38,18 @@
         </a>
     </div>
 
+    <section class="card flex flex-wrap items-center justify-between gap-4 p-5" aria-labelledby="vet-reviews-heading">
+        <div>
+            <h2 id="vet-reviews-heading" class="section-title">{% translate "Отзиви от стопани" %}</h2>
+            {% if review_count %}
+                <p class="mt-1 text-sm font-semibold text-amber-600">★ {{ review_average|floatformat:1 }} <span class="muted font-normal">({{ review_count }} {% translate "отзива" %})</span></p>
+            {% else %}
+                <p class="muted mt-1 text-sm">{% translate "Все още нямате отзиви." %}</p>
+            {% endif %}
+        </div>
+        <a class="btn-secondary btn-sm" href="{% url 'pets:vet_reviews' request.user.pk %}">{% translate "Прегледай отзивите" %}</a>
+    </section>
+
     <div class="grid gap-6 lg:grid-cols-2">
         <section class="card p-5" aria-labelledby="patients-heading">
             <div class="mb-4 flex items-center justify-between"><h2 id="patients-heading" class="section-title">{% translate "Последни пациенти" %}</h2><a class="text-sm font-semibold text-brand-700" href="{% url 'pets:pet_list' %}">{% translate "Всички пациенти" %}</a></div>

@@ -377,5 +377,33 @@
 </script>
 
 {% block extra_scripts %}{% endblock %}
+{% if user.is_authenticated %}
+<script>
+(function () {
+    var bridge = window.PetBeaconAndroid;
+    if (!bridge) return;
+    if (typeof bridge.requestNotificationPermission === 'function') {
+        bridge.requestNotificationPermission();
+    }
+    fetch("{% url 'pets:mobile_reminders_feed' %}", { credentials: 'same-origin' })
+        .then(function (response) {
+            if (!response.ok) throw new Error('Reminder sync failed');
+            return response.json();
+        })
+        .then(function (payload) {
+            if (typeof bridge.syncReminders === 'function') {
+                bridge.syncReminders(JSON.stringify(payload));
+            }
+        })
+        .catch(function () {});
+})();
+</script>
+{% else %}
+<script>
+if (window.PetBeaconAndroid && typeof window.PetBeaconAndroid.clearReminders === 'function') {
+    window.PetBeaconAndroid.clearReminders();
+}
+</script>
+{% endif %}
 </body>
 </html>
