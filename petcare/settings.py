@@ -41,6 +41,7 @@ if not DEBUG and ALLOWED_HOSTS == ['']:
     raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS must be set when DEBUG is False.")
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # LocaleMiddleware depends on sessions and must run before URL resolution.
     'django.middleware.locale.LocaleMiddleware',
@@ -202,6 +204,18 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': (
+            'whitenoise.storage.CompressedStaticFilesStorage'
+            if not DEBUG
+            else 'django.contrib.staticfiles.storage.StaticFilesStorage'
+        ),
+    },
+}
 
 if not DEBUG and not (BASE_DIR / 'static' / 'css' / 'app.css').exists():
     raise ImproperlyConfigured(
