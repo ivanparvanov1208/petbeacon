@@ -1,0 +1,8 @@
+{% load i18n %}{% translate "Потвърдете имейл адреса си" %}
+
+{% blocktranslate with name=user.first_name|default:user.username %}Здравейте, {{ name }}! Благодарим ви, че се регистрирахте в PetBeacon.{% endblocktranslate %}
+
+{% translate "Потвърдете имейла си, за да активирате профила и да влезете." %}
+{{ verify_url }}
+
+{% translate "Връзката е валидна 24 часа. Ако не сте създали този профил, можете да игнорирате имейла." %}

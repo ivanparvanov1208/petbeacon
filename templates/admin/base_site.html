@@ -1,6 +1,8 @@
 {% extends "admin/base.html" %}
 {% load static i18n %}
 
+{% block stylesheet %}{% static 'css/admin-panel.css' %}{% endblock %}
+
 {% block extrastyle %}
     {{ block.super }}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,50 +13,59 @@
 {% endblock %}
 
 {% block responsive %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/admin-panel.css' %}">
+{% endblock %}
+
+{% block header %}
+    <header class="petcare-admin-header">
+        <div class="petcare-admin-branding">
+            <h1 class="petcare-admin-site-name">
+                <a href="{% url 'admin:index' %}">
+                    <span class="petcare-admin-brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></span>
+                    Pet<span class="petcare-admin-brand-accent">Beacon</span>
+                    <span class="petcare-admin-brand-badge">Admin</span>
+                </a>
+            </h1>
+        </div>
+        {% if has_permission %}
+            <input class="petcare-admin-menu-state" id="petcare-admin-menu-state" type="checkbox" aria-controls="petcare-admin-tools" aria-label="{% translate 'Меню за администрация' %}">
+            <label id="petcare-admin-menu-toggle" for="petcare-admin-menu-state" aria-hidden="true">
+                <span></span><span></span><span></span>
+            </label>
+            <div class="petcare-admin-tools" id="petcare-admin-tools">
+                <div class="petcare-admin-user-tools">
+                    <div class="petcare-admin-user-meta">
+                        <span class="petcare-admin-greeting">{% translate 'Welcome,' %} <strong>{% firstof user.get_short_name user.get_username %}</strong></span>
+                        <form method="post" action="{% url 'set_language' %}" class="petcare-admin-language-switcher" aria-label="{% translate 'Смяна на езика' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            {% for code, name in LANGUAGES %}
+                                {% if code == LANGUAGE_CODE %}
+                                    <span aria-current="true" title="{{ name }}">{{ code|upper }}</span>
+                                {% else %}
+                                    <button type="submit" name="language" value="{{ code }}" title="{{ name }}">{{ code|upper }}</button>
+                                {% endif %}
+                            {% endfor %}
+                        </form>
+                    </div>
+                    <nav class="petcare-admin-user-links" aria-label="{% translate 'User navigation' %}">
+                        {% if site_url %}<a href="{{ site_url }}">{% translate 'View site' %}</a>{% endif %}
+                        {% if user.is_active and user.is_staff %}
+                            {% url 'django-admindocs-docroot' as docsroot %}
+                            {% if docsroot %}<a href="{{ docsroot }}">{% translate 'Documentation' %}</a>{% endif %}
+                        {% endif %}
+                        {% if user.has_usable_password %}<a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a>{% endif %}
+                        <form id="logout-form" class="petcare-admin-logout" method="post" action="{% url 'admin:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit">{% translate 'Log out' %}</button>
+                        </form>
+                        {% include "admin/color_theme_toggle.html" %}
+                    </nav>
+                </div>
+            </div>
+        {% endif %}
+    </header>
 {% endblock %}
 
 {% block welcome-msg %}{% endblock %}
-
-{% block userlinks %}
-    <div class="petcare-admin-user-tools">
-        <div class="petcare-admin-user-meta">
-            <span class="petcare-admin-greeting">{% translate 'Welcome,' %} <strong>{% firstof user.get_short_name user.get_username %}</strong></span>
-            <form method="post" action="{% url 'set_language' %}" class="petcare-admin-language-switcher" aria-label="{% translate 'Смяна на езика' %}">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                {% for code, name in LANGUAGES %}
-                    {% if code == LANGUAGE_CODE %}
-                        <span aria-current="true" title="{{ name }}">{{ code|upper }}</span>
-                    {% else %}
-                        <button type="submit" name="language" value="{{ code }}" title="{{ name }}">{{ code|upper }}</button>
-                    {% endif %}
-                {% endfor %}
-            </form>
-        </div>
-        <nav class="petcare-admin-user-links" aria-label="{% translate 'User navigation' %}">
-            {% if site_url %}<a href="{{ site_url }}">{% translate 'View site' %}</a>{% endif %}
-            {% if user.is_active and user.is_staff %}
-                {% url 'django-admindocs-docroot' as docsroot %}
-                {% if docsroot %}<a href="{{ docsroot }}">{% translate 'Documentation' %}</a>{% endif %}
-            {% endif %}
-            {% if user.has_usable_password %}<a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a>{% endif %}
-            <form id="logout-form" class="petcare-admin-logout" method="post" action="{% url 'admin:logout' %}">
-                {% csrf_token %}
-                <button type="submit">{% translate 'Log out' %}</button>
-            </form>
-            {% include "admin/color_theme_toggle.html" %}
-        </nav>
-    </div>
-{% endblock %}
-
-{% block branding %}
-    <h1 id="site-name">
-        <a href="{% url 'admin:index' %}">
-            <span class="petcare-admin-brand-mark"><i class="fa-solid fa-paw" aria-hidden="true"></i></span>
-            Pet<span class="petcare-admin-brand-accent">Beacon</span>
-            <span class="petcare-admin-brand-badge">Admin</span>
-        </a>
-    </h1>
-{% endblock %}

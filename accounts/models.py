@@ -24,6 +24,11 @@ class UserProfile(models.Model):
         verbose_name=gettext_lazy("Роля"),
         help_text=gettext_lazy("Стопанин управлява любимците си, Ветеринар работи с медицинските им записи."),
     )
+    email_verified = models.BooleanField(
+        default=True,
+        editable=False,
+        verbose_name=gettext_lazy("Имейлът е потвърден"),
+    )
     phone = models.CharField(max_length=30, blank=True, verbose_name=gettext_lazy("Телефон за връзка"))
     city = models.CharField(max_length=100, blank=True, verbose_name=gettext_lazy("Град / Населено място"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=gettext_lazy("Дата на регистрация"))

@@ -14,6 +14,11 @@ _I = (
 
 
 class UserRegistrationForm(forms.ModelForm):
+    email = forms.EmailField(
+        label=gettext_lazy("Имейл адрес"),
+        required=True,
+        widget=forms.EmailInput(attrs={'class': _I, 'placeholder': 'name@example.com'}),
+    )
     password = forms.CharField(
         label=gettext_lazy("Парола"),
         widget=forms.PasswordInput(attrs={'class': _I, 'placeholder': gettext_lazy("Минимум 8 символа")}),
@@ -139,3 +144,10 @@ class UserProfileUpdateForm(forms.ModelForm):
         if email and User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError(_("Този имейл адрес вече се използва от друг профил."))
         return email
+
+
+class EmailVerificationResendForm(forms.Form):
+    email = forms.EmailField(
+        label=gettext_lazy("Имейл адрес"),
+        widget=forms.EmailInput(attrs={'class': _I, 'autocomplete': 'email'}),
+    )

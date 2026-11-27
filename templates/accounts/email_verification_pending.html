@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% translate "Потвърдете имейла си | PetBeacon" %}{% endblock %}
+
+{% block content %}
+<section class="card mx-auto my-10 max-w-xl p-7 text-center sm:p-10">
+    <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-2xl text-brand-700 dark:bg-brand-950/50 dark:text-brand-300">
+        <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
+    </span>
+    <h1 class="mt-5 text-2xl font-bold text-ink-900 dark:text-white">{% translate "Проверете пощата си" %}</h1>
+    {% if email_sent %}
+        <p class="muted mt-3">{% blocktranslate with address=email %}Изпратихме връзка за потвърждение до {{ address }}. Отворете я, за да активирате профила си.{% endblocktranslate %}</p>
+    {% else %}
+        <p class="muted mt-3">{% translate "Профилът е създаден, но имейлът не можа да бъде изпратен. Проверете пощенските настройки или опитайте да изпратите връзката отново." %}</p>
+    {% endif %}
+    <a class="btn-secondary mt-6" href="{% url 'accounts:resend_email_verification' %}">{% translate "Изпратете нова връзка" %}</a>
+</section>
+{% endblock %}

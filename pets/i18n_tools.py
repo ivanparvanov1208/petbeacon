@@ -295,7 +295,7 @@ _PY_ALIASES = {
 _PY_SOURCE_DIRS = ("pets", "accounts", "petcare")
 _PY_SOURCE_FILES = ("models.py", "forms.py", "views.py", "admin.py", "urls.py",
                     "apps.py", "context_processors.py", "i18n_tools.py",
-                    "templatetags/petcare_tags.py")
+                    "email_notifications.py", "templatetags/petcare_tags.py")
 
 _TEMPLATE_SOURCE_DIRS = ("templates",)
 

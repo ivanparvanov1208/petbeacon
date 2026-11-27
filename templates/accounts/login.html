@@ -51,6 +51,13 @@
             </button>
         </form>
 
+        <p class="mt-4 text-center text-sm text-ink-500">
+            {% translate "Не получихте имейл за потвърждение?" %}
+            <a href="{% url 'accounts:resend_email_verification' %}" class="font-semibold text-brand-700 hover:underline dark:text-brand-300">
+                {% translate "Изпратете нов" %}
+            </a>
+        </p>
+
         <div class="mt-6 border-t border-ink-100 pt-5 dark:border-ink-800">
             <p class="mb-2 text-center text-xs font-medium text-ink-400">{% translate "Искате ли да тествате веднага?" %}</p>
             <button type="button" data-demo-fill class="btn-secondary w-full"

@@ -1,15 +1,29 @@
+import hashlib
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core.signing import BadSignature, SignatureExpired
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language
 from django.utils.translation import ngettext
 from django.conf import settings
 from django.views.decorators.http import require_POST
 
-from .forms import UserRegistrationForm, UserLoginForm, UserProfileUpdateForm
+from .email_notifications import (
+    send_email_verification,
+    send_login_notification,
+    verify_email_token,
+)
+from .forms import (
+    EmailVerificationResendForm,
+    UserRegistrationForm,
+    UserLoginForm,
+    UserProfileUpdateForm,
+)
 from .models import UserProfile
 
 
@@ -85,15 +99,14 @@ def register_view(request):
             profile = UserProfile.objects.get_or_create(user=user)[0]
             profile.phone = form.cleaned_data.get('phone', '')
             profile.city = form.cleaned_data.get('city', '')
-            profile.save()
+            profile.email_verified = False
+            profile.save(update_fields=['phone', 'city', 'email_verified'])
 
-            login(request, user)
-            messages.success(
-                request,
-                _("Добре дошли в PetBeacon, %(name)s! Вашият профил бе създаден успешно.")
-                % {"name": user.first_name or user.username},
-            )
-            return redirect('pets:dashboard')
+            email_sent = send_email_verification(user, get_language() or 'bg')
+            return render(request, 'accounts/email_verification_pending.html', {
+                'email': user.email,
+                'email_sent': email_sent,
+            })
         else:
             messages.error(request, _("Моля, проверете въведените данни в полетата по-долу."))
     else:
@@ -127,8 +140,16 @@ def login_view(request):
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
+            profile, _created = UserProfile.objects.get_or_create(user=user)
+            if not profile.email_verified:
+                messages.error(
+                    request,
+                    _("Потвърдете имейл адреса си, преди да влезете в профила."),
+                )
+                return redirect('accounts:resend_email_verification')
             _clear_login_attempts(request, username)
             login(request, user)
+            send_login_notification(user, get_language() or 'bg')
             messages.success(
                 request,
                 _("Здравейте отново, %(name)s!") % {"name": user.first_name or user.username},
@@ -167,6 +188,53 @@ def login_view(request):
         form = UserLoginForm(request)
 
     return render(request, 'accounts/login.html', {'form': form})
+
+
+def verify_email_view(request):
+    token = request.GET.get('token', '')
+    try:
+        user = verify_email_token(token)
+    except (BadSignature, SignatureExpired, User.DoesNotExist, KeyError, TypeError, ValueError):
+        messages.error(request, _("Връзката за потвърждение е невалидна или е изтекла."))
+        return redirect('accounts:resend_email_verification')
+
+    profile, _created = UserProfile.objects.get_or_create(user=user)
+    if not profile.email_verified:
+        profile.email_verified = True
+        profile.save(update_fields=['email_verified'])
+        messages.success(request, _("Имейл адресът ви е потвърден. Вече можете да влезете."))
+    else:
+        messages.info(request, _("Имейл адресът ви вече е потвърден."))
+    return redirect('accounts:login')
+
+
+def resend_email_verification_view(request):
+    if request.method == 'POST':
+        form = EmailVerificationResendForm(request.POST)
+        if form.is_valid():
+            user = User.objects.filter(
+                email__iexact=form.cleaned_data['email'], is_active=True
+            ).first()
+            if user:
+                profile, _created = UserProfile.objects.get_or_create(user=user)
+                normalized_email = form.cleaned_data['email'].strip().casefold()
+                email_key = hashlib.sha256(normalized_email.encode('utf-8')).hexdigest()
+                may_send = cache.add(
+                    f'email-verification-resend:{email_key}', True, 60
+                )
+                if not profile.email_verified and may_send:
+                    send_email_verification(user, get_language() or 'bg')
+            # Keep the response the same whether the account exists or not.
+            messages.success(
+                request,
+                _("Ако има непотвърден профил с този адрес, ще получите имейл с инструкции."),
+            )
+            return redirect('accounts:login')
+    else:
+        form = EmailVerificationResendForm(initial={
+            'email': request.GET.get('email', ''),
+        })
+    return render(request, 'accounts/resend_email_verification.html', {'form': form})
 
 
 @require_POST

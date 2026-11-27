@@ -73,13 +73,14 @@ a:focus {
 }
 
 /* Brand and account navigation */
-#header {
+.petcare-admin-header {
     position: relative;
     z-index: 20;
     box-sizing: border-box;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
     gap: 1.5rem;
     width: 100%;
     min-height: 5rem;
@@ -90,23 +91,24 @@ a:focus {
     color: var(--admin-muted);
 }
 
-#branding {
+.petcare-admin-branding {
     display: flex;
     align-items: center;
     min-width: 0;
     min-height: 2.75rem;
+    flex: 0 1 auto;
 }
 
-#branding h1,
-#site-name {
+.petcare-admin-branding h1,
+.petcare-admin-site-name {
     margin: 0;
     font-size: 1.12rem;
     font-weight: 800;
     letter-spacing: -0.035em;
 }
 
-#site-name a:link,
-#site-name a:visited {
+.petcare-admin-site-name a:link,
+.petcare-admin-site-name a:visited {
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
@@ -115,8 +117,8 @@ a:focus {
     white-space: nowrap;
 }
 
-#site-name a:hover,
-#site-name a:focus {
+.petcare-admin-site-name a:hover,
+.petcare-admin-site-name a:focus {
     color: var(--admin-text);
 }
 
@@ -149,8 +151,15 @@ a:focus {
     text-transform: uppercase;
 }
 
-#user-tools {
+.petcare-admin-tools {
+    position: static !important;
+    inset: auto !important;
+    float: none !important;
+    clear: both;
+    align-self: center;
     min-width: 0;
+    max-width: 100%;
+    flex: 0 1 auto;
     margin: 0;
     padding: 0;
     color: var(--admin-muted);
@@ -162,10 +171,28 @@ a:focus {
     text-transform: none;
 }
 
+.petcare-admin-header > .petcare-admin-tools {
+    position: static !important;
+    inset: auto !important;
+    float: none !important;
+    align-self: center;
+    margin: 0;
+}
+
+#petcare-admin-menu-state {
+    display: none;
+}
+
+#petcare-admin-menu-toggle {
+    display: none;
+}
+
 .petcare-admin-user-tools {
-    display: grid;
-    justify-items: end;
-    gap: 0.55rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem 1rem;
 }
 
 .petcare-admin-user-meta,
@@ -254,7 +281,7 @@ a:focus {
     margin: 0;
 }
 
-#user-tools .petcare-admin-logout button {
+.petcare-admin-tools .petcare-admin-logout button {
     border: 1px solid var(--admin-border);
     border-radius: 0.6rem;
     background: var(--admin-surface);
@@ -266,7 +293,7 @@ a:focus {
     cursor: pointer;
 }
 
-#user-tools .petcare-admin-logout button:hover {
+.petcare-admin-tools .petcare-admin-logout button:hover {
     border-color: var(--admin-brand);
     background: var(--admin-brand-soft);
     color: var(--admin-brand-strong) !important;
@@ -702,24 +729,31 @@ div.help {
 
 /* Tablet */
 @media (max-width: 1024px) {
-    #header {
-        grid-template-columns: minmax(0, 1fr);
-        justify-items: stretch;
+    .petcare-admin-header {
+        flex-direction: column;
+        align-items: stretch;
         gap: 0.7rem;
         padding: 0.8rem 1.25rem;
     }
 
-    #branding,
-    #user-tools,
+    .petcare-admin-branding,
+    .petcare-admin-tools,
     .petcare-admin-user-tools {
         width: 100%;
     }
 
-    #user-tools {
+    .petcare-admin-tools {
+        position: static !important;
+        align-self: stretch;
+    }
+
+    .petcare-admin-tools {
         text-align: left;
     }
 
     .petcare-admin-user-tools {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
         justify-items: stretch;
     }
 
@@ -745,17 +779,108 @@ div.help {
 
 /* Phone */
 @media (max-width: 767px) {
-    #header {
-        position: relative;
-        gap: 0.65rem;
+    .petcare-admin-header {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        justify-content: initial;
+        gap: 0.65rem 0.75rem;
         padding: 0.75rem 1rem;
+        height: auto !important;
+        min-height: 0;
+        overflow: visible !important;
+        background: var(--admin-surface);
     }
 
-    #branding {
+    .petcare-admin-branding {
+        grid-column: 1;
+        width: auto;
         min-height: 2.5rem;
     }
 
-    #site-name {
+    #petcare-admin-menu-state {
+        position: absolute;
+        display: block !important;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        clip-path: inset(50%);
+    }
+
+    #petcare-admin-menu-toggle {
+        display: flex !important;
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+        width: 2.75rem;
+        height: 2.75rem;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.28rem;
+        padding: 0.55rem;
+        border: 1px solid var(--admin-border);
+        border-radius: 0.7rem;
+        background: var(--admin-surface-raised);
+        color: var(--admin-brand);
+        cursor: pointer;
+    }
+
+    #petcare-admin-menu-state:focus-visible + #petcare-admin-menu-toggle {
+        border-color: var(--admin-brand);
+        background: var(--admin-brand-soft);
+        outline: 2px solid rgb(40 117 104 / 20%);
+        outline-offset: 2px;
+    }
+
+    #petcare-admin-menu-toggle span {
+        display: block;
+        width: 1.15rem;
+        height: 2px;
+        border-radius: 2px;
+        background: currentColor;
+    }
+
+    #petcare-admin-menu-toggle:hover,
+    #petcare-admin-menu-toggle:focus-visible {
+        border-color: var(--admin-brand);
+        background: var(--admin-brand-soft);
+        outline: 2px solid rgb(40 117 104 / 20%);
+        outline-offset: 2px;
+    }
+
+    .petcare-admin-tools {
+        grid-column: 1 / -1;
+        display: none !important;
+        position: static !important;
+        inset: auto !important;
+        float: none !important;
+        width: 100%;
+        text-align: left;
+    }
+
+    #petcare-admin-menu-state:checked ~ .petcare-admin-tools {
+        display: block !important;
+        position: static !important;
+        inset: auto !important;
+        float: none !important;
+        align-self: stretch;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--admin-border);
+        width: 100%;
+        overflow: visible;
+    }
+
+    #petcare-admin-menu-state:checked ~ .petcare-admin-tools .petcare-admin-user-tools {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        justify-items: stretch;
+    }
+
+    .petcare-admin-site-name {
         font-size: 1.05rem;
     }
 
@@ -789,7 +914,7 @@ div.help {
 
     .petcare-admin-user-links > a,
     .petcare-admin-user-links .petcare-admin-logout,
-    #user-tools .petcare-admin-logout button,
+    .petcare-admin-tools .petcare-admin-logout button,
     .petcare-admin-user-links .theme-toggle {
         box-sizing: border-box;
         width: 100%;

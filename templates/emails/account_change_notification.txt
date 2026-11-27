@@ -1,0 +1,6 @@
+{% load i18n %}{% translate "Промяна в профила ви в PetBeacon" %}
+
+{% blocktranslate with name=user.first_name|default:user.username %}Здравейте, {{ name }}! Администраторът обнови информацията в профила ви в PetBeacon.{% endblocktranslate %}
+
+{% translate "Дата и час" %}: {{ changed_at }}
+{% translate "Ако не сте очаквали тази промяна, свържете се с администратора на PetBeacon." %}

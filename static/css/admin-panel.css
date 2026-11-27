@@ -1,0 +1,1549 @@
+:root {
+    color-scheme: light;
+    --panel-bg: #f3f6f5;
+    --panel-surface: #fff;
+    --panel-surface-raised: #f8faf9;
+    --panel-border: #dfe8e4;
+    --panel-text: #20332e;
+    --panel-muted: #687a74;
+    --panel-brand: #287568;
+    --panel-brand-strong: #1b5a50;
+    --panel-brand-soft: #e7f2ee;
+    --panel-shadow: 0 10px 28px rgb(29 64 54 / 7%);
+    --body-bg: var(--panel-surface);
+    --body-fg: var(--panel-text);
+    --body-quiet-color: var(--panel-muted);
+    --hairline-color: var(--panel-border);
+    --link-fg: var(--panel-brand);
+    --selected-row: var(--panel-brand-soft);
+    --darkened-bg: var(--panel-surface-raised);
+    --header-bg: var(--panel-surface);
+    --header-color: var(--panel-muted);
+    --header-link-color: var(--panel-brand);
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+    --panel-bg: #111a18;
+    --panel-surface: #1b2925;
+    --panel-surface-raised: #22332e;
+    --panel-border: #354940;
+    --panel-text: #e4eee9;
+    --panel-muted: #adbbb5;
+    --panel-brand: #83cbbb;
+    --panel-brand-strong: #a7dfd0;
+    --panel-brand-soft: #263d36;
+    --panel-shadow: 0 10px 28px rgb(0 0 0 / 18%);
+    --body-bg: var(--panel-surface);
+    --body-fg: var(--panel-text);
+    --body-quiet-color: var(--panel-muted);
+    --hairline-color: var(--panel-border);
+    --link-fg: var(--panel-brand);
+    --selected-row: var(--panel-brand-soft);
+    --darkened-bg: var(--panel-surface-raised);
+    --header-bg: var(--panel-surface);
+    --header-color: var(--panel-muted);
+    --header-link-color: var(--panel-brand);
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] {
+        color-scheme: dark;
+        --panel-bg: #111a18;
+        --panel-surface: #1b2925;
+        --panel-surface-raised: #22332e;
+        --panel-border: #354940;
+        --panel-text: #e4eee9;
+        --panel-muted: #adbbb5;
+        --panel-brand: #83cbbb;
+        --panel-brand-strong: #a7dfd0;
+        --panel-brand-soft: #263d36;
+        --panel-shadow: 0 10px 28px rgb(0 0 0 / 18%);
+        --body-bg: var(--panel-surface);
+        --body-fg: var(--panel-text);
+        --body-quiet-color: var(--panel-muted);
+        --hairline-color: var(--panel-border);
+        --link-fg: var(--panel-brand);
+        --selected-row: var(--panel-brand-soft);
+        --darkened-bg: var(--panel-surface-raised);
+        --header-bg: var(--panel-surface);
+        --header-color: var(--panel-muted);
+        --header-link-color: var(--panel-brand);
+    }
+}
+
+html,
+body {
+    max-width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background:
+        radial-gradient(ellipse at 92% 2%, rgb(85 164 143 / 10%), transparent 28rem),
+        radial-gradient(ellipse at 4% 35%, rgb(244 187 104 / 5%), transparent 24rem),
+        var(--panel-bg);
+    color: var(--panel-text);
+    font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.55;
+}
+
+#container {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    min-height: 100vh;
+    height: auto;
+}
+
+#main.main {
+    display: flex;
+    flex: 1 0 auto;
+    width: 100%;
+    min-width: 0;
+}
+
+#main,
+#content-start,
+#content,
+#content-main,
+#content-related {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+#main > #content-start {
+    display: block;
+    flex: 1 1 0;
+    width: 100%;
+    max-width: none;
+}
+
+#toggle-nav-sidebar {
+    box-sizing: border-box;
+    flex: 0 0 2.75rem;
+    width: 2.75rem;
+    min-height: 3.25rem;
+    border: 0;
+    border-right: 1px solid var(--panel-border);
+    background: var(--panel-surface);
+    color: var(--panel-brand);
+    cursor: pointer;
+}
+
+#nav-sidebar {
+    box-sizing: border-box;
+    flex: 0 0 0;
+    width: 0;
+    min-width: 0;
+    max-height: calc(100vh - 5rem);
+    margin: 0;
+    border: 0;
+    background: var(--panel-surface);
+    visibility: hidden;
+}
+
+.main.shifted > #nav-sidebar {
+    flex-basis: 16rem;
+    width: 16rem;
+    border-right: 1px solid var(--panel-border);
+    visibility: visible;
+}
+
+.main.shifted > #content-start {
+    max-width: none;
+}
+
+nav[aria-label="Breadcrumbs"] {
+    padding: 0.65rem clamp(1rem, 3vw, 2.5rem);
+    border: 0;
+    background: transparent;
+}
+
+.breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--panel-muted);
+    font-size: 0.78rem;
+    list-style: none;
+}
+
+.breadcrumbs li + li::before {
+    padding-right: 0.4rem;
+    color: var(--panel-muted);
+    content: "/";
+}
+
+.breadcrumbs a { color: var(--panel-brand); font-weight: 650; }
+
+#footer {
+    flex: 0 0 auto;
+    min-height: 1px;
+}
+
+.petcare-admin-header {
+    position: relative;
+    z-index: 20;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    width: 100%;
+    min-height: 5rem;
+    padding: 0.75rem clamp(1rem, 3vw, 2.5rem);
+    border-bottom: 1px solid color-mix(in srgb, var(--panel-brand) 24%, var(--panel-border));
+    background: linear-gradient(110deg, var(--panel-surface) 72%, var(--panel-brand-soft));
+    box-shadow: 0 8px 24px rgb(20 50 42 / 8%), inset 0 1px 0 rgb(255 255 255 / 28%);
+}
+
+.petcare-admin-branding {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    min-height: 2.75rem;
+}
+
+.petcare-admin-site-name {
+    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+}
+
+.petcare-admin-site-name a:link,
+.petcare-admin-site-name a:visited,
+.petcare-admin-site-name a:hover,
+.petcare-admin-site-name a:focus {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--panel-text);
+    text-decoration: none;
+}
+
+.petcare-admin-brand-mark {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 0.8rem;
+    background: linear-gradient(145deg, #65c2a7, #287568 58%, #205f54);
+    box-shadow: 0 5px 12px rgb(20 93 77 / 22%), inset 0 1px 0 rgb(255 255 255 / 35%);
+    color: #fff;
+    font-size: 1rem;
+}
+
+.petcare-admin-brand-accent {
+    margin-left: -0.55rem;
+    color: var(--panel-brand);
+}
+
+.petcare-admin-brand-badge {
+    margin-left: 0.15rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    background: var(--panel-brand-soft);
+    color: var(--panel-brand-strong);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.petcare-admin-tools {
+    position: static;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    color: var(--panel-muted);
+    font-size: 0.78rem;
+    text-align: right;
+}
+
+.petcare-admin-user-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem 1rem;
+}
+
+.petcare-admin-user-meta,
+.petcare-admin-user-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.45rem 0.55rem;
+    min-width: 0;
+}
+
+.petcare-admin-greeting {
+    color: var(--panel-muted);
+    white-space: nowrap;
+}
+
+.petcare-admin-greeting strong {
+    color: var(--panel-text);
+    font-weight: 750;
+}
+
+.petcare-admin-language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+.petcare-admin-language-switcher button,
+.petcare-admin-language-switcher span,
+.petcare-admin-user-links > a,
+.petcare-admin-logout button,
+.petcare-admin-user-links .theme-toggle {
+    box-sizing: border-box;
+    display: inline-flex;
+    min-height: 2.6rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--panel-border);
+    border-radius: 0.65rem;
+    background: var(--panel-surface);
+    color: var(--panel-brand) !important;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 750;
+    line-height: 1.2;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.petcare-admin-language-switcher span[aria-current="true"] {
+    border-color: var(--panel-brand);
+    background: var(--panel-brand-soft);
+    color: var(--panel-brand-strong) !important;
+    cursor: default;
+}
+
+.petcare-admin-language-switcher button:hover,
+.petcare-admin-user-links > a:hover,
+.petcare-admin-logout button:hover,
+.petcare-admin-user-links .theme-toggle:hover,
+.petcare-admin-language-switcher button:focus-visible,
+.petcare-admin-user-links > a:focus-visible,
+.petcare-admin-logout button:focus-visible,
+.petcare-admin-user-links .theme-toggle:focus-visible {
+    border-color: var(--panel-brand);
+    background: var(--panel-brand-soft);
+    color: var(--panel-brand-strong) !important;
+}
+
+.petcare-admin-logout {
+    display: inline-flex;
+    margin: 0;
+}
+
+.petcare-admin-logout button {
+    text-transform: none;
+}
+
+.petcare-admin-user-links .theme-toggle {
+    width: 2.6rem;
+    min-width: 2.6rem;
+    padding: 0.55rem;
+}
+
+.petcare-admin-user-links .theme-toggle svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+#petcare-admin-menu-state,
+#petcare-admin-menu-toggle {
+    display: none;
+}
+
+#nav-sidebar {
+    border-right: 1px solid var(--panel-border);
+    background: var(--panel-surface);
+}
+
+#nav-sidebar .current-app .section:link,
+#nav-sidebar .current-app .section:visited {
+    color: var(--panel-text);
+}
+
+#nav-sidebar .current-model {
+    border-radius: 0.55rem;
+    background: var(--panel-brand-soft);
+}
+
+#nav-sidebar .current-model a {
+    color: var(--panel-brand-strong);
+    font-weight: 700;
+}
+
+#toggle-nav-sidebar {
+    border-color: var(--panel-border);
+    background: var(--panel-surface);
+    color: var(--panel-brand);
+}
+
+#breadcrumbs {
+    padding: 0.65rem clamp(1rem, 3vw, 2.5rem);
+    border: 0;
+    background: transparent;
+    color: var(--panel-muted);
+    font-size: 0.78rem;
+}
+
+#breadcrumbs a {
+    color: var(--panel-brand);
+    font-weight: 650;
+}
+
+#content {
+    width: auto;
+    max-width: 1680px;
+    margin: 0 auto;
+    padding: 1.5rem clamp(1rem, 3vw, 2.5rem) 3rem;
+}
+
+.colM,
+.colMS,
+.colSM { margin: 0; }
+
+#content-main,
+#content-related {
+    float: none;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+}
+
+.titles-and-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+#content h1 {
+    margin: 0;
+    color: var(--panel-text);
+    font-size: clamp(1.45rem, 2.2vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+}
+
+#content h2,
+#content h3 {
+    color: var(--panel-text);
+}
+
+.dashboard #content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
+    align-content: start;
+    align-items: start;
+    gap: 1.4rem;
+}
+
+.dashboard #content > .titles-and-tools,
+.dashboard #content > .petcare-admin-welcome {
+    grid-column: 1 / -1;
+}
+
+.dashboard #content-main {
+    float: none;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+}
+
+.dashboard #content-related {
+    float: none;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+}
+
+.petcare-admin-welcome {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(14rem, 0.9fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    min-height: 19rem;
+    overflow: hidden;
+    isolation: isolate;
+    margin: 0;
+    padding: clamp(1.5rem, 3vw, 2.75rem);
+    border: 1px solid rgb(255 255 255 / 14%);
+    border-radius: 1.35rem;
+    background:
+        radial-gradient(ellipse at 85% 12%, rgb(128 202 178 / 25%), transparent 35%),
+        linear-gradient(125deg, #173d37 0%, #205e54 62%, #347c70 100%);
+    box-shadow: 0 22px 44px -23px rgb(25 72 61 / 72%), inset 0 1px 0 rgb(255 255 255 / 24%);
+    color: #fff;
+}
+
+.petcare-admin-welcome::before {
+    position: absolute;
+    z-index: -1;
+    top: -17rem;
+    right: 2%;
+    width: 35rem;
+    height: 35rem;
+    border: 1px solid rgb(255 255 255 / 12%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2.25rem rgb(255 255 255 / 3%), 0 0 0 4.9rem rgb(255 255 255 / 3%);
+    content: "";
+    pointer-events: none;
+}
+
+.petcare-admin-welcome__copy {
+    position: relative;
+    z-index: 2;
+    max-width: 44rem;
+}
+
+.petcare-admin-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.9rem;
+    padding: 0.42rem 0.7rem;
+    border: 1px solid rgb(221 246 237 / 24%);
+    border-radius: 999px;
+    background: rgb(8 40 36 / 24%);
+    color: #e0f2eb;
+    font-size: 0.68rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.petcare-admin-eyebrow span,
+.petcare-admin-signoff span {
+    color: #b4e1cf;
+}
+
+.petcare-admin-welcome h1 {
+    max-width: 16ch;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(2rem, 3.6vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.055em;
+    line-height: 1.08;
+    text-wrap: balance;
+}
+
+.petcare-admin-welcome__copy > p {
+    max-width: 38rem;
+    margin: 0.9rem 0 1.35rem;
+    color: #e0eee9;
+    font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+    line-height: 1.7;
+}
+
+.petcare-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+}
+
+.petcare-admin-button {
+    display: inline-flex;
+    min-height: 2.8rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    padding: 0.65rem 1rem;
+    border: 1px solid rgb(255 255 255 / 60%);
+    border-radius: 0.7rem;
+    background: #fff;
+    box-shadow: 0 5px 14px rgb(5 32 28 / 15%);
+    color: #205e54 !important;
+    font-size: 0.88rem;
+    font-weight: 750;
+    text-decoration: none !important;
+}
+
+.petcare-admin-button:hover {
+    background: #eaf7f1;
+    color: #173d37 !important;
+}
+
+.petcare-admin-button:focus-visible {
+    outline: 3px solid #f4bb68;
+    outline-offset: 3px;
+}
+
+.petcare-admin-signoff {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #e0eee9;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.petcare-admin-art {
+    position: relative;
+    display: grid;
+    width: min(100%, 20rem);
+    min-height: 16rem;
+    place-items: center;
+    justify-self: end;
+}
+
+.petcare-admin-art::before {
+    position: absolute;
+    width: min(78%, 15rem);
+    aspect-ratio: 1;
+    border: 1px solid rgb(255 255 255 / 44%);
+    border-radius: 42% 58% 55% 45% / 45% 43% 57% 55%;
+    background: linear-gradient(145deg, #b8e1d2, #70bca8 66%, #4b9c88);
+    box-shadow: 0 18px 30px rgb(5 32 28 / 22%), inset 0 2px 5px rgb(255 255 255 / 40%);
+    content: "";
+    transform: rotate(-9deg);
+}
+
+.petcare-admin-pet {
+    position: relative;
+    z-index: 1;
+    width: min(90%, 16.25rem);
+    filter: drop-shadow(0 12px 9px rgb(19 56 48 / 20%));
+}
+
+.petcare-admin-art__orbit,
+.petcare-admin-art__spark,
+.petcare-admin-art__label {
+    position: absolute;
+}
+
+.petcare-admin-art__orbit {
+    z-index: 0;
+    display: block;
+    border: 1px solid rgb(232 255 246 / 34%);
+    border-radius: 50%;
+}
+
+.petcare-admin-art__orbit--one { width: 93%; aspect-ratio: 1; }
+.petcare-admin-art__orbit--two { width: 108%; aspect-ratio: 1; border-style: dashed; opacity: 0.5; }
+.petcare-admin-art__spark { z-index: 2; color: #ccebdd; }
+.petcare-admin-art__spark--one { top: 8%; right: 11%; color: #f4cf91; font-size: 1.8rem; }
+.petcare-admin-art__spark--two { bottom: 12%; left: 1%; font-size: 1.4rem; }
+
+.petcare-admin-art__label {
+    z-index: 2;
+    right: 0;
+    bottom: 4%;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgb(255 255 255 / 45%);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 94%);
+    box-shadow: 0 6px 15px rgb(5 32 28 / 16%);
+    color: #205e54;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.petcare-admin-art__label span { color: #d69d54; }
+
+#content-main .module,
+#content-related .module {
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--panel-brand) 18%, var(--panel-border));
+    border-radius: 0.9rem;
+    background: linear-gradient(155deg, var(--panel-surface), var(--panel-surface-raised));
+    box-shadow: 0 12px 30px rgb(14 49 40 / 9%), inset 0 1px 0 rgb(255 255 255 / 22%);
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.dashboard #content-main .module:hover,
+.dashboard #content-related .module:hover {
+    border-color: color-mix(in srgb, var(--panel-brand) 42%, var(--panel-border));
+    box-shadow: 0 16px 34px rgb(14 49 40 / 13%), inset 0 1px 0 rgb(255 255 255 / 24%);
+}
+
+#content-main .module h2,
+#content-main .module caption,
+#content-related .module h2 {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--panel-border);
+    background: linear-gradient(100deg, var(--panel-surface-raised), color-mix(in srgb, var(--panel-brand-soft) 72%, var(--panel-surface-raised)));
+    color: var(--panel-text);
+    font-size: 0.88rem;
+    font-weight: 750;
+}
+
+#content-main .module table,
+#content-related .module table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.skip-to-content-link {
+    position: absolute;
+    z-index: 1000;
+    top: 0.5rem;
+    left: 0.5rem;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.skip-to-content-link:focus {
+    width: auto;
+    height: auto;
+    clip: auto;
+    clip-path: none;
+    padding: 0.65rem 0.9rem;
+    border-radius: 0.5rem;
+    background: var(--panel-surface-raised);
+    color: var(--panel-brand-strong);
+}
+
+.dashboard #content-main .module table {
+    table-layout: fixed;
+    text-align: left;
+}
+
+.dashboard #content-main .module table caption {
+    caption-side: top;
+    text-align: left;
+}
+
+.dashboard #content-main .module table th,
+.dashboard #content-main .module table td {
+    text-align: left;
+    overflow-wrap: normal;
+}
+
+.dashboard #content-main .module table thead th {
+    background: color-mix(in srgb, var(--panel-brand-soft) 54%, var(--panel-surface));
+    color: var(--panel-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+}
+
+.dashboard #content-main .module table tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--panel-brand-soft) 24%, var(--panel-surface));
+}
+
+.dashboard #content-main .module table tbody tr {
+    transition: background-color 140ms ease;
+}
+
+.dashboard #content-main .module table td:first-child a {
+    color: var(--panel-text);
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.dashboard #content-main .module table td:first-child a:hover {
+    color: var(--panel-brand-strong);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+}
+
+.dashboard #content-main .module table th:first-child,
+.dashboard #content-main .module table td:first-child {
+    width: 68%;
+}
+
+.dashboard #content-main .module table th:nth-child(2),
+.dashboard #content-main .module table td.addlink {
+    width: 14%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.dashboard #content-main .module table th:nth-child(3),
+.dashboard #content-main .module table td.changelink {
+    width: 18%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.dashboard #content-main .module table td.addlink a,
+.dashboard #content-main .module table td.changelink a {
+    display: inline-flex;
+    min-width: 4.6rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.58rem;
+    border: 1px solid color-mix(in srgb, var(--panel-brand) 24%, transparent);
+    border-radius: 999px;
+    background: var(--panel-brand-soft);
+    color: var(--panel-brand-strong);
+    font-size: 0.76rem;
+    font-weight: 750;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.dashboard #content-main .module table td.addlink a::before {
+    content: "+";
+    font-size: 1.05rem;
+    line-height: 0.8;
+}
+
+.dashboard #content-main .module table td.changelink a::before {
+    content: "↗";
+    font-size: 0.9rem;
+}
+
+.dashboard #content-main .module table td.addlink a:hover,
+.dashboard #content-main .module table td.changelink a:hover {
+    border-color: var(--panel-brand);
+    background: var(--panel-brand);
+    box-shadow: 0 4px 12px rgb(31 106 90 / 18%);
+    color: #fff;
+}
+
+#content-related .actionlist {
+    display: grid;
+    gap: 0.2rem;
+    margin: 0;
+    padding: 0.75rem 1rem 0.9rem 1.4rem;
+    list-style: none;
+}
+
+#content-related .actionlist li {
+    position: relative;
+    padding: 0.55rem 0.65rem;
+    border-bottom: 1px solid var(--panel-border);
+    border-radius: 0.45rem;
+    color: var(--panel-muted);
+    font-size: 0.82rem;
+}
+
+#content-related .actionlist li:last-child { border-bottom: 0; }
+
+#content-related .actionlist li::before {
+    position: absolute;
+    top: 0.92rem;
+    left: -0.78rem;
+    width: 0.42rem;
+    height: 0.42rem;
+    border: 2px solid var(--panel-surface);
+    border-radius: 50%;
+    background: var(--panel-brand);
+    box-shadow: 0 0 0 1px var(--panel-brand);
+    content: "";
+}
+
+.petcare-admin-user-links .theme-toggle {
+    flex: 0 0 2.6rem;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#content-main .module table th,
+#content-main .module table td,
+#content-related .module table th,
+#content-related .module table td {
+    padding: 0.72rem 1rem;
+    border-color: var(--panel-border);
+}
+
+#content-main .module table tr:hover,
+#content-related .module table tr:hover {
+    background: var(--panel-brand-soft);
+}
+
+#content-main .module a,
+#content-related .module a {
+    color: var(--panel-brand);
+    font-weight: 650;
+}
+
+#content-main .module a:hover,
+#content-related .module a:hover {
+    color: var(--panel-brand-strong);
+}
+
+#content-related .module { position: relative; }
+
+#recent-actions-module > h3 {
+    margin: 0;
+    padding: 0.8rem 1rem 0.35rem;
+    color: var(--panel-text);
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+#recent-actions-module > p {
+    margin: 0;
+    padding: 0.3rem 1rem 1rem;
+    color: var(--panel-muted);
+    font-size: 0.85rem;
+}
+
+#content-related .module::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(#70bca8, #f4bb68);
+    content: "";
+}
+
+.object-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0 0 0.85rem;
+    padding: 0;
+    list-style: none;
+}
+
+.object-tools li { float: none; margin: 0; }
+
+.object-tools a:link,
+.object-tools a:visited,
+.submit-row input,
+.button,
+input[type="submit"],
+a.button {
+    min-height: 2.5rem;
+    border: 1px solid var(--panel-brand);
+    border-radius: 0.6rem;
+    background: var(--panel-brand);
+    box-shadow: none;
+    color: #fff !important;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.object-tools a:hover,
+.submit-row input:hover,
+.button:hover,
+input[type="submit"]:hover,
+a.button:hover {
+    border-color: var(--panel-brand-strong);
+    background: var(--panel-brand-strong);
+    color: #fff !important;
+}
+
+.submit-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid var(--panel-border);
+    border-radius: 0.8rem;
+    background: var(--panel-surface);
+}
+
+.submit-row input { margin: 0; }
+
+input,
+select,
+textarea,
+.vTextField,
+.vURLField,
+.vIntegerField,
+.vDateField,
+.vTimeField {
+    max-width: 100%;
+    border-radius: 0.5rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--panel-brand);
+    outline: 2px solid rgb(40 117 104 / 18%);
+}
+
+fieldset.module {
+    min-width: 0;
+    margin: 0 0 1rem;
+    padding: 0;
+    border: 1px solid var(--panel-border);
+    border-radius: 0.9rem;
+    background: var(--panel-surface);
+    box-shadow: var(--panel-shadow);
+}
+
+fieldset.module > .fieldset-heading,
+fieldset.module > details > summary {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--panel-border);
+    background: var(--panel-surface-raised);
+    color: var(--panel-text);
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+fieldset.module > .form-row { padding: 0.9rem 1rem; }
+
+.form-row {
+    min-width: 0;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.form-row:last-child { border-bottom: 0; }
+
+.form-row label {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--panel-text);
+    font-weight: 700;
+}
+
+.form-row .flex-container { display: block; min-width: 0; }
+
+.form-row input:not([type="checkbox"]):not([type="radio"]),
+.form-row select,
+.form-row textarea,
+.form-row .readonly {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 2.65rem;
+}
+
+.form-row .readonly {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--panel-border);
+    border-radius: 0.5rem;
+    background: var(--panel-surface-raised);
+}
+
+.form-row .help,
+.form-row p.help {
+    display: block;
+    margin: 0.4rem 0;
+    color: var(--panel-muted);
+    font-size: 0.78rem;
+}
+
+.form-row .checkbox-row,
+.form-row .checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.form-row .checkbox-row label,
+.form-row .checkbox label { margin: 0; }
+
+.required label::after {
+    color: #c2413a;
+    content: " *";
+}
+
+.errorlist {
+    margin: 0.45rem 0;
+    padding: 0.55rem 0.75rem;
+    border-left: 3px solid #d75b50;
+    border-radius: 0.35rem;
+    background: rgb(215 91 80 / 9%);
+    color: #b53d34;
+    list-style: none;
+}
+
+.errornote {
+    margin: 0 0 1rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid #d75b50;
+    border-radius: 0.7rem;
+    background: rgb(215 91 80 / 9%);
+    color: #b53d34;
+    font-weight: 700;
+}
+
+.description,
+.inline-group .description {
+    margin: 0;
+    padding: 0.8rem 1rem;
+    color: var(--panel-muted);
+}
+
+.inline-group,
+.inline-related {
+    min-width: 0;
+    margin: 1rem 0;
+    overflow: hidden;
+    border: 1px solid var(--panel-border);
+    border-radius: 0.9rem;
+    background: var(--panel-surface);
+    box-shadow: var(--panel-shadow);
+}
+
+.inline-group h2,
+.inline-related h2 {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--panel-border);
+    background: var(--panel-surface-raised);
+    color: var(--panel-text);
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+.inline-group table,
+.inline-related table { width: 100%; border-collapse: collapse; }
+
+.inline-group th,
+.inline-group td,
+.inline-related th,
+.inline-related td {
+    padding: 0.65rem;
+    border-color: var(--panel-border);
+    vertical-align: top;
+}
+
+.login #content {
+    width: min(100%, 30rem);
+    margin: 3rem auto;
+    padding: 1.5rem;
+    border: 1px solid var(--panel-border);
+    border-radius: 1rem;
+    background: var(--panel-surface);
+    box-shadow: var(--panel-shadow);
+}
+
+.login #content-main,
+.login #login-form { width: 100%; }
+
+.login .form-row { padding: 0.75rem 0; border: 0; }
+.login .submit-row { margin-top: 1rem; border: 0; }
+
+.help,
+p.help,
+form .help,
+div.help { color: var(--panel-muted); }
+
+.messagelist li {
+    border: 1px solid var(--panel-border);
+    border-radius: 0.7rem;
+    box-shadow: var(--panel-shadow);
+}
+
+.messagelist li.success {
+    background: var(--panel-brand-soft);
+    color: var(--panel-brand-strong);
+}
+
+#changelist,
+#changelist .changelist-form-container,
+#changelist .changelist-form-container > div {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+}
+
+#changelist .results,
+#changelist-form .results {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+#changelist table { min-width: max-content; }
+
+#changelist-filter {
+    box-sizing: border-box;
+    max-width: 100%;
+    border-left: 1px solid var(--panel-border);
+    background: var(--panel-surface);
+}
+
+#changelist-search > div { max-width: 100%; }
+#changelist-search #searchbar { box-sizing: border-box; max-width: 100%; }
+
+@media (max-width: 1024px) {
+    .petcare-admin-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 0.8rem 1.25rem;
+    }
+
+    .petcare-admin-branding,
+    .petcare-admin-tools,
+    .petcare-admin-user-tools { width: 100%; }
+
+    .petcare-admin-user-tools {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: stretch;
+    }
+
+    .petcare-admin-user-meta,
+    .petcare-admin-user-links { justify-content: flex-start; }
+
+    #content { padding: 1.25rem 1.25rem 2.5rem; }
+
+    .main.shifted > #nav-sidebar { flex-basis: 14rem; width: 14rem; }
+
+    .petcare-admin-welcome { gap: 1.25rem; padding: 1.75rem; }
+
+    .petcare-admin-art { width: min(100%, 17rem); min-height: 14rem; }
+}
+
+@media (max-width: 767px) {
+    #main.main { display: block; }
+
+    #toggle-nav-sidebar,
+    #nav-sidebar { display: none !important; }
+
+    #main > #content-start { width: 100%; max-width: none; }
+
+    nav[aria-label="Breadcrumbs"] { padding: 0.6rem 1rem; }
+
+    .petcare-admin-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 0.65rem 0.75rem;
+        padding: 0.7rem 1rem;
+    }
+
+    .petcare-admin-branding { width: auto; min-height: 2.5rem; }
+
+    .petcare-admin-site-name { font-size: 1.02rem; }
+    .petcare-admin-brand-mark { width: 2.25rem; height: 2.25rem; }
+
+    #petcare-admin-menu-state {
+        position: absolute;
+        display: block;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    #petcare-admin-menu-toggle {
+        display: flex;
+        width: 2.75rem;
+        height: 2.75rem;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.28rem;
+        padding: 0.55rem;
+        border: 1px solid var(--panel-border);
+        border-radius: 0.7rem;
+        background: var(--panel-surface-raised);
+        color: var(--panel-brand);
+        cursor: pointer;
+    }
+
+    #petcare-admin-menu-toggle span {
+        display: block;
+        width: 1.15rem;
+        height: 2px;
+        border-radius: 2px;
+        background: currentColor;
+    }
+
+    #petcare-admin-menu-state:focus-visible + #petcare-admin-menu-toggle {
+        outline: 2px solid var(--panel-brand);
+        outline-offset: 2px;
+    }
+
+    .petcare-admin-tools { display: none; grid-column: 1 / -1; width: 100%; }
+
+    #petcare-admin-menu-state:checked ~ .petcare-admin-tools {
+        display: block;
+        grid-column: 1 / -1;
+        width: 100%;
+        padding-top: 0.8rem;
+        border-top: 1px solid var(--panel-border);
+        text-align: left;
+    }
+
+    #petcare-admin-menu-state:checked ~ .petcare-admin-tools .petcare-admin-user-tools {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: stretch;
+    }
+
+    .petcare-admin-user-meta { justify-content: space-between; }
+    .petcare-admin-greeting { white-space: normal; overflow-wrap: anywhere; }
+
+    .petcare-admin-user-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.45rem;
+        padding-top: 0.65rem;
+        border-top: 1px solid var(--panel-border);
+    }
+
+    .petcare-admin-user-links > a,
+    .petcare-admin-user-links .petcare-admin-logout,
+    .petcare-admin-user-links .theme-toggle,
+    .petcare-admin-logout button {
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        min-height: 2.75rem;
+        margin: 0;
+    }
+
+    #content { padding: 1rem 0.75rem 1.5rem; }
+
+    .titles-and-tools { gap: 0.65rem; }
+
+    .dashboard #content {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+    }
+
+    .dashboard #content-main,
+    .dashboard #content-related { grid-column: 1; }
+
+    .petcare-admin-welcome {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+        min-height: 0;
+        padding: 1.35rem;
+    }
+
+    .petcare-admin-welcome h1 {
+        max-width: 15ch;
+        font-size: clamp(1.85rem, 8vw, 2.5rem);
+    }
+
+    .petcare-admin-welcome__copy > p { max-width: 32rem; }
+
+    .petcare-admin-art {
+        position: absolute;
+        right: -4rem;
+        bottom: -5rem;
+        width: 13rem;
+        min-height: 13rem;
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    .petcare-admin-art__label,
+    .petcare-admin-signoff { display: none; }
+
+    #content-main,
+    #content-related {
+        float: none;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+    }
+
+    #content-main .module,
+    #content-related .module { max-width: 100%; overflow-x: auto; }
+
+    .dashboard #content-main .module table { min-width: 35rem; }
+
+    #changelist .actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    #changelist .actions select { min-width: 0; max-width: 100%; flex: 1 1 12rem; }
+
+    .aligned .form-row,
+    .aligned .form-row > div,
+    .form-row,
+    .form-row .field-box {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .form-row input:not([type="checkbox"]):not([type="radio"]),
+    .form-row select,
+    .form-row textarea,
+    .selector select,
+    .vLargeTextField,
+    .vXMLLargeTextField {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .selector,
+    .selector .selector-available,
+    .selector .selector-chosen {
+        box-sizing: border-box;
+        float: none;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 0.75rem;
+    }
+
+    .submit-row input { min-height: 2.75rem; flex: 1 1 8rem; }
+
+    #breadcrumbs { padding: 0.65rem 1rem; overflow-wrap: anywhere; }
+}
+
+@media (max-width: 380px) {
+    .petcare-admin-user-links { grid-template-columns: minmax(0, 1fr); }
+    .petcare-admin-user-links .theme-toggle { width: 100%; }
+    .petcare-admin-welcome { padding: 1.1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}
+
+.dashboard #content-main > .module {
+    margin: 0 0 10px;
+    border: 1px solid var(--panel-border);
+    border-radius: 1rem;
+    background: var(--panel-surface);
+    box-shadow: 0 8px 24px rgb(8 36 30 / 7%);
+}
+
+.dashboard #content-main > .module:hover {
+    border-color: color-mix(in srgb, var(--panel-brand) 30%, var(--panel-border));
+    box-shadow: 0 10px 28px rgb(8 36 30 / 10%);
+}
+
+.dashboard #content-main > .module caption {
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid var(--panel-border);
+    background: var(--panel-surface-raised);
+    box-shadow: inset 3px 0 var(--panel-brand);
+    color: var(--panel-text);
+    font-size: 0.92rem;
+    font-weight: 750;
+    letter-spacing: -0.015em;
+    text-transform: none;
+}
+
+.dashboard #content-main > .module caption a,
+.dashboard #content-main > .module caption a:hover {
+    color: var(--panel-text);
+}
+
+.dashboard #content-main > .module caption a::before {
+    display: none;
+    content: none;
+}
+
+.dashboard #content-main > .module table {
+    border-spacing: 0;
+}
+
+.dashboard #content-main > .module table thead th {
+    border-bottom: 1px solid var(--panel-border);
+    background: transparent;
+    color: var(--panel-muted);
+    font-size: 0.69rem;
+    letter-spacing: 0.06em;
+}
+
+.dashboard #content-main > .module table tbody tr:nth-child(even) {
+    background: transparent;
+}
+
+.dashboard #content-main > .module table tbody tr:hover {
+    background: var(--panel-brand-soft);
+}
+
+.dashboard #content-main > .module table tbody td {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    border-top: 0;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.dashboard #content-main > .module table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.dashboard #content-main > .module table tbody td:first-child {
+    border-left: 0;
+    border-radius: 0;
+}
+
+.dashboard #content-main > .module table tbody td:last-child {
+    border-right: 0;
+    border-radius: 0;
+}
+
+.dashboard #content-main > .module table td:first-child a,
+.dashboard #content-main > .module table td:first-child a:hover {
+    color: var(--panel-text);
+    font-weight: 700;
+}
+
+.dashboard #content-main > .module table td:first-child a::before {
+    display: none;
+    content: none;
+}
+
+.dashboard #content-main > .module table td.addlink a,
+.dashboard #content-main > .module table td.changelink a {
+    min-width: 5rem;
+    padding: 0.42rem 0.72rem;
+    border: 1px solid var(--panel-border);
+    border-radius: 0.65rem;
+    background: var(--panel-surface);
+    box-shadow: none;
+    color: var(--panel-brand-strong);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.dashboard #content-main > .module table td.addlink a:hover,
+.dashboard #content-main > .module table td.changelink a:hover {
+    border-color: color-mix(in srgb, var(--panel-brand) 50%, var(--panel-border));
+    background: var(--panel-brand-soft);
+    box-shadow: none;
+    color: var(--panel-brand-strong);
+}

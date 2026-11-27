@@ -50,6 +50,15 @@ msgstr "%(months)d mo"
 msgid "%(name)s | Профил на любимеца — PetBeacon"
 msgstr "%(name)s | Pet profile — PetBeacon"
 
+msgid "%(name)s · няма отзиви"
+msgstr "%(name)s · no reviews"
+
+msgid "%(name)s · ★%(average).1f (%(count)d отзива)"
+msgstr "%(name)s · ★%(average).1f (%(count)d reviews)"
+
+msgid "%(pet)s · срок: %(due)s"
+msgstr "%(pet)s · due %(due)s"
+
 msgid "%(pet)s при %(clinic)s на %(date)s"
 msgstr "%(pet)s at %(clinic)s on %(date)s"
 
@@ -80,6 +89,21 @@ msgstr "(required field)"
 msgid "15-цифрен код на микрочип"
 msgstr "15-digit microchip code"
 
+msgid "Change password"
+msgstr "Change password"
+
+msgid "Documentation"
+msgstr "Documentation"
+
+msgid "Log out"
+msgstr "Log out"
+
+msgid "New sign-in to your PetBeacon account"
+msgstr "New sign-in to your PetBeacon account"
+
+msgid "PetBeacon account information was updated"
+msgstr "PetBeacon account information was updated"
+
 msgid "PetBeacon · Администрация"
 msgstr "PetBeacon · Administration"
 
@@ -104,14 +128,35 @@ msgstr "PetBeacon — a platform for caring for pets: profiles, vaccinations, me
 msgid "PetBeacon — система за ветеринарна практика"
 msgstr "PetBeacon — Veterinary Practice System"
 
+msgid "User navigation"
+msgstr "User navigation"
+
+msgid "Verify your PetBeacon email address"
+msgstr "Verify your PetBeacon email address"
+
+msgid "View site"
+msgstr "View site"
+
+msgid "Welcome,"
+msgstr "Welcome,"
+
 msgid "Админ панел"
 msgstr "Admin panel"
 
 msgid "Адресът, който последвахте, не съществува или е бил преместен."
 msgstr "The address you followed does not exist or has been moved."
 
+msgid "Ако има непотвърден профил с този адрес, ще получите имейл с инструкции."
+msgstr "If an unverified account exists for this address, you will receive an email with instructions."
+
 msgid "Ако не знаете точната дата на раждане (напр. '2 години')"
 msgstr "If you do not know the exact date of birth (e.g. '2 years')"
+
+msgid "Ако не сте влизали в профила си, сменете паролата си и се свържете с администратора."
+msgstr "If you did not sign in, change your password and contact the administrator."
+
+msgid "Ако не сте очаквали тази промяна, свържете се с администратора на PetBeacon."
+msgstr "If you did not expect this change, contact the PetBeacon administrator."
 
 msgid "Активен прием в момента"
 msgstr "Currently being administered"
@@ -139,6 +184,9 @@ msgstr "Notes / side effects"
 
 msgid "Бележки или поносимост"
 msgstr "Notes or tolerance"
+
+msgid "Благодарим за отзива ви!"
+msgstr "Thank you for your review!"
 
 msgid "Бързи действия"
 msgstr "Quick actions"
@@ -173,8 +221,14 @@ msgstr "Vaccination “%(name)s” was updated successfully!"
 msgid "Ваксинацията '%(vaccine)s' бе добавена успешно за %(pet)s!"
 msgstr "Vaccination “%(vaccine)s” was added successfully for %(pet)s!"
 
+msgid "Вашият отзив"
+msgstr "Your review"
+
 msgid "Ветеринар"
 msgstr "Veterinarian"
+
+msgid "Ветеринарен екип | PetBeacon"
+msgstr "Veterinarian team | PetBeacon"
 
 msgid "Ветеринарен кабинет"
 msgstr "Veterinary clinic"
@@ -242,6 +296,12 @@ msgstr "Reptile"
 msgid "Влязъл като"
 msgstr "Signed in as"
 
+msgid "Връзката е валидна 24 часа. Ако не сте създали този профил, можете да игнорирате имейла."
+msgstr "This link is valid for 24 hours. If you did not create this account, you can ignore this email."
+
+msgid "Връзката за потвърждение е невалидна или е изтекла."
+msgstr "The verification link is invalid or has expired."
+
 msgid "Все още не сте добавили домашни любимци."
 msgstr "You have not added any pets yet."
 
@@ -253,6 +313,18 @@ msgstr "No vaccinations have been recorded for %(name)s yet."
 
 msgid "Все още няма документирани посещения."
 msgstr "No visits have been recorded yet."
+
+msgid "Все още няма отзиви за този ветеринар."
+msgstr "There are no reviews for this veterinarian yet."
+
+msgid "Все още няма отзиви."
+msgstr "There are no reviews yet."
+
+msgid "Все още няма регистрирани ветеринари."
+msgstr "No veterinarians are registered yet."
+
+msgid "Все още нямате отзиви."
+msgstr "You do not have any reviews yet."
 
 msgid "Все още нямате планирани напомняния. Добавете напомняне за ваксина, лекарство или преглед!"
 msgstr "You have no planned reminders yet. Add one for a vaccine, medication or check-up!"
@@ -268,6 +340,9 @@ msgstr "All categories"
 
 msgid "Всички любимци"
 msgstr "All pets"
+
+msgid "Всички отзиви за ветеринаря"
+msgstr "All reviews for this veterinarian"
 
 msgid "Всички пациенти"
 msgstr "All patients"
@@ -295,6 +370,9 @@ msgstr "Log in with an existing account"
 
 msgid "Въведете данните си за достъп до профила."
 msgstr "Enter your details to access your account."
+
+msgid "Въведете имейл адреса, използван при регистрацията."
+msgstr "Enter the email address used to register."
 
 msgid "Въведете потребителско име"
 msgstr "Enter your username"
@@ -343,6 +421,9 @@ msgstr[1] "Wrong username or password. %(count)d attempts left."
 msgid "Грижа за всеки любимец"
 msgstr "Care for every companion"
 
+msgid "Грижата за любимеца ви, подредена на едно място."
+msgstr "Your pet's care, organized in one place."
+
 msgid "Гризач"
 msgstr "Rodent"
 
@@ -372,6 +453,9 @@ msgstr "The details for %(name)s were updated successfully!"
 
 msgid "Данните на вашия профил бяха обновени успешно!"
 msgstr "Your profile details were updated successfully!"
+
+msgid "Дата и час"
+msgstr "Date and time"
 
 msgid "Дата на изпълнение"
 msgstr "Completion date"
@@ -484,9 +568,6 @@ msgstr "Add a new pet"
 msgid "Добре дошли в PetBeacon"
 msgstr "Welcome to PetBeacon"
 
-msgid "Добре дошли в PetBeacon, %(name)s! Вашият профил бе създаден успешно."
-msgstr "Welcome to PetBeacon, %(name)s! Your account was created successfully."
-
 msgid "Дозировка"
 msgstr "Dosage"
 
@@ -534,6 +615,9 @@ msgstr "EU passport no."
 
 msgid "Език"
 msgstr "Language"
+
+msgid "Език на известието"
+msgstr "Notification language"
 
 msgid "Електронен здравен паспорт"
 msgstr "Digital health passport"
@@ -631,8 +715,20 @@ msgstr "Requests from pet owners will appear here."
 msgid "Здравейте отново, %(name)s!"
 msgstr "Welcome back, %(name)s!"
 
+msgid "Здравейте! Предстои ви грижа за вашия любимец."
+msgstr "Hello! It is almost time for your pet's care."
+
 msgid "Здравейте, %(name)s!"
 msgstr "Hello, %(name)s!"
+
+msgid "Здравейте, %(name)s! Администраторът обнови информацията в профила ви в PetBeacon."
+msgstr "Hello, %(name)s! An administrator updated your PetBeacon account information."
+
+msgid "Здравейте, %(name)s! Благодарим ви, че се регистрирахте в PetBeacon."
+msgstr "Hello, %(name)s! Thank you for registering with PetBeacon."
+
+msgid "Здравейте, %(name)s! Успешно влязохте в PetBeacon."
+msgstr "Hello, %(name)s! You signed in to PetBeacon successfully."
 
 msgid "Здравен паспорт"
 msgstr "Health passport"
@@ -658,14 +754,41 @@ msgstr "Identification and photo"
 msgid "Изберете любимец и ветеринар, след което опишете въпроса. Услугата е платена; за дипломната демонстрация сумата се покрива с 100%% отстъпка в Stripe Checkout."
 msgstr "Select a pet and veterinarian, then describe your question. The service is paid; for the diploma demonstration, the cost is covered by a 100%% discount in Stripe Checkout."
 
+msgid "Известие за вход"
+msgstr "Sign-in notification"
+
 msgid "Изградено с Python & Django"
 msgstr "Built with Python & Django"
 
 msgid "Издаден чрез електронна система PetBeacon"
 msgstr "Issued via the PetBeacon online system"
 
+msgid "Изпратете нов"
+msgstr "Send a new one"
+
+msgid "Изпратете нова връзка"
+msgstr "Send a new link"
+
+msgid "Изпратете нова връзка за потвърждение"
+msgstr "Send a new verification link"
+
+msgid "Изпрати връзка"
+msgstr "Send link"
+
+msgid "Изпрати напомняне по имейл"
+msgstr "Send reminder by email"
+
+msgid "Изпрати отзива"
+msgstr "Submit review"
+
 msgid "Изпрати съобщение"
 msgstr "Send message"
+
+msgid "Изпратихме връзка за потвърждение до %(address)s. Отворете я, за да активирате профила си."
+msgstr "We sent a verification link to %(address)s. Open it to activate your account."
+
+msgid "Изпращане на връзка за потвърждение | PetBeacon"
+msgstr "Resend verification link | PetBeacon"
 
 msgid "Изпълнени"
 msgstr "Completed"
@@ -754,11 +877,23 @@ msgstr "Email"
 msgid "Имейл адрес"
 msgstr "Email address"
 
+msgid "Имейл адресът ви вече е потвърден."
+msgstr "Your email address is already verified."
+
+msgid "Имейл адресът ви е потвърден. Вече можете да влезете."
+msgstr "Your email address is verified. You can now sign in."
+
+msgid "Имейлът е потвърден"
+msgstr "Email verified"
+
 msgid "Инструменти за клинична работа"
 msgstr "Clinical tools"
 
 msgid "Искате ли да тествате веднага?"
 msgstr "Want to try it right away?"
+
+msgid "Как премина консултацията?"
+msgstr "How was the consultation?"
 
 msgid "Кастрация"
 msgstr "Neutered"
@@ -768,6 +903,9 @@ msgstr "Neutered / spayed"
 
 msgid "Кастриран/а"
 msgstr "Neutered"
+
+msgid "Категория"
+msgstr "Category"
 
 msgid "Клиника"
 msgstr "Clinic"
@@ -783,6 +921,9 @@ msgstr "Clinical dashboard"
 
 msgid "Клинично табло | PetBeacon"
 msgstr "Clinical dashboard | PetBeacon"
+
+msgid "Коментар"
+msgstr "Comment"
 
 msgid "Констатации и диагноза"
 msgstr "Findings and diagnosis"
@@ -816,6 +957,9 @@ msgstr "The end date cannot be before the start date."
 
 msgid "Куче"
 msgstr "Dog"
+
+msgid "Към ветеринарите"
+msgstr "Back to veterinarians"
 
 msgid "Към консултациите"
 msgstr "View consultations"
@@ -910,6 +1054,9 @@ msgstr "The medical record “%(title)s” was added successfully!"
 msgid "Медицинският запис '%(title)s' бе изтрит."
 msgstr "The medical record “%(title)s” was deleted."
 
+msgid "Меню за администрация"
+msgstr "Admin navigation menu"
+
 msgid "Микрочип"
 msgstr "Microchip"
 
@@ -919,8 +1066,14 @@ msgstr "Microchip: %(number)s"
 msgid "Минимум 8 символа"
 msgstr "At least 8 characters"
 
+msgid "Можете да оставите отзив след приключване на консултацията."
+msgstr "You can leave a review after the consultation is complete."
+
 msgid "Можете да прикачите рентгенова снимка, епикриза, кръвни изследвания и др."
 msgstr "You can attach an X-ray, an epicrisis report, blood test results and more."
+
+msgid "Можете да редактирате отзива си по-долу."
+msgstr "You can edit your review below."
 
 msgid "Моите домашни любимци"
 msgstr "My pets"
@@ -985,6 +1138,9 @@ msgstr "Back to %(name)s's profile"
 msgid "Назначено лечение и процедури"
 msgstr "Prescribed treatment and procedures"
 
+msgid "Намерете ветеринар"
+msgstr "Find a veterinarian"
+
 msgid "Намери пациент"
 msgstr "Find a patient"
 
@@ -993,6 +1149,12 @@ msgstr "Write a message..."
 
 msgid "Напомняне"
 msgstr "Reminder"
+
+msgid "Напомняне за вашия любимец"
+msgstr "A reminder for your pet"
+
+msgid "Напомняне от PetBeacon"
+msgstr "PetBeacon reminder"
 
 msgid "Напомняне: <strong>%(title)s</strong>"
 msgstr "Reminder: <strong>%(title)s</strong>"
@@ -1083,6 +1245,9 @@ msgstr "Not provided"
 
 msgid "Не е посочена"
 msgstr "Not specified"
+
+msgid "Не получихте имейл за потвърждение?"
+msgstr "Did not receive the verification email?"
 
 msgid "Не са въведени бележки за хранителния режим на любимеца."
 msgstr "No notes have been added about this pet's diet."
@@ -1288,11 +1453,41 @@ msgstr "Open menu"
 msgid "Отвори менюто на потребителя: %(name)s"
 msgstr "Open the user menu: %(name)s"
 
+msgid "Отвори напомнянията"
+msgstr "Open reminders"
+
 msgid "Отговорете на собствениците и прегледайте досието на любимеца."
 msgstr "Reply to pet owners and review the pet’s record."
 
+msgid "Отзив за %(vet)s от %(owner)s"
+msgstr "Review for %(vet)s by %(owner)s"
+
+msgid "Отзив за ветеринар"
+msgstr "Veterinarian review"
+
+msgid "Отзив може да се остави след приключена консултация."
+msgstr "You can review a veterinarian after a consultation is complete."
+
+msgid "Отзиви за ветеринар | PetBeacon"
+msgstr "Veterinarian reviews | PetBeacon"
+
+msgid "Отзиви за ветеринари"
+msgstr "Veterinarian reviews"
+
+msgid "Отзиви от стопани"
+msgstr "Reviews from pet owners"
+
 msgid "Отказ"
 msgstr "Cancel"
+
+msgid "Оценете ветеринаря"
+msgstr "Rate the veterinarian"
+
+msgid "Оценка"
+msgstr "Rating"
+
+msgid "Оценка: %(rating)s от 5"
+msgstr "Rating: %(rating)s out of 5"
 
 msgid "Още нямате консултации"
 msgstr "You do not have any consultations yet"
@@ -1384,6 +1579,9 @@ msgstr "Sex"
 msgid "Поле"
 msgstr "Field"
 
+msgid "Получавате това съобщение, защото имате включени имейл известия за напомняния в PetBeacon."
+msgstr "You received this email because reminder emails are enabled for you in PetBeacon."
+
 msgid "Попълни данни за демо профил на ветеринар"
 msgstr "Fill in the demo veterinarian account details"
 
@@ -1411,6 +1609,21 @@ msgstr "Administered:"
 msgid "Поставени и предстоящи ваксинации"
 msgstr "Administered and upcoming vaccinations"
 
+msgid "Потвърдете имейл адреса си"
+msgstr "Verify your email address"
+
+msgid "Потвърдете имейл адреса си, преди да влезете в профила."
+msgstr "Verify your email address before signing in."
+
+msgid "Потвърдете имейла си | PetBeacon"
+msgstr "Verify your email | PetBeacon"
+
+msgid "Потвърдете имейла си, за да активирате профила и да влезете."
+msgstr "Verify your email to activate your account and sign in."
+
+msgid "Потвърди имейл"
+msgstr "Verify email"
+
 msgid "Потвърди паролата"
 msgstr "Confirm password"
 
@@ -1437,6 +1650,9 @@ msgstr "View all"
 
 msgid "Прегледай всички пациенти"
 msgstr "View all patients"
+
+msgid "Прегледай отзивите"
+msgstr "View reviews"
 
 msgid "Прегледайте ваксинациите, диагнозите, процедурите и приложените изследвания."
 msgstr "Review vaccinations, diagnoses, procedures, and attached test results."
@@ -1525,11 +1741,20 @@ msgstr "Reason / diagnosis / procedure"
 msgid "Причина за посещението"
 msgstr "Reason for the visit"
 
+msgid "Проверете оценката и опитайте отново."
+msgstr "Check the rating and try again."
+
+msgid "Проверете пощата си"
+msgstr "Check your inbox"
+
 msgid "Продължи към Stripe Checkout · $0.00"
 msgstr "Continue to Stripe Checkout · $0.00"
 
 msgid "Продължи към плащане"
 msgstr "Continue to checkout"
+
+msgid "Промяна в профила ви"
+msgstr "A change to your account"
 
 msgid "Просрочена"
 msgstr "Overdue"
@@ -1555,14 +1780,26 @@ msgstr "The account is temporarily locked"
 msgid "Профилът е временно заключен за %(minutes)d минути поради твърде много неуспешни опити."
 msgstr "The account is temporarily locked for %(minutes)d minutes because of too many failed attempts."
 
+msgid "Профилът е създаден, но имейлът не можа да бъде изпратен. Проверете пощенските настройки или опитайте да изпратите връзката отново."
+msgstr "Your account was created, but the email could not be sent. Check the email settings or try sending the link again."
+
 msgid "Профилът на %(name)s бе изтрит успешно."
 msgstr "The profile of %(name)s was deleted successfully."
 
 msgid "Птица"
 msgstr "Bird"
 
+msgid "Първият отзив ще се появи след приключена консултация."
+msgstr "The first review will appear after a consultation is completed."
+
 msgid "Първоначално описание"
 msgstr "Initial description"
+
+msgid "Разгледай ветеринарите и отзивите"
+msgstr "Browse veterinarians and reviews"
+
+msgid "Разгледайте оценките от стопани и изберете ветеринар за онлайн консултация."
+msgstr "Browse pet owners' ratings and choose a veterinarian for an online consultation."
 
 msgid "Разговорът е отворен. Изпратете първото съобщение."
 msgstr "The consultation is open. Send the first message."
@@ -1735,6 +1972,12 @@ msgstr "Special notes and temperament"
 msgid "Специфични указания"
 msgstr "Specific instructions"
 
+msgid "Срок"
+msgstr "Due"
+
+msgid "Срок: %(due)s"
+msgstr "Due: %(due)s"
+
 msgid "Стандартен режим на хранене."
 msgstr "Standard feeding routine."
 
@@ -1848,6 +2091,9 @@ msgstr "Temperature, coat condition, teeth, lymph nodes..."
 
 msgid "Тип напомняне"
 msgstr "Reminder type"
+
+msgid "Това е автоматично известие за сигурността на профила ви."
+msgstr "This is an automated security notice for your account."
 
 msgid "Това потребителско име вече е заето."
 msgstr "That username is already taken."
@@ -1975,155 +2221,8 @@ msgstr "BGN"
 msgid "от %(start)s"
 msgstr "from %(start)s"
 
-msgid "подредени за клиничната работа."
-msgstr "organized for clinical work."
-
-msgid "Welcome,"
-msgstr "Welcome,"
-
-msgid "User navigation"
-msgstr "User navigation"
-
-msgid "View site"
-msgstr "View site"
-
-msgid "Documentation"
-msgstr "Documentation"
-
-msgid "Change password"
-msgstr "Change password"
-
-msgid "Log out"
-msgstr "Log out"
-
-msgid "Отзив за ветеринар"
-msgstr "Veterinarian review"
-
-msgid "Отзиви за ветеринари"
-msgstr "Veterinarian reviews"
-
-msgid "Изпрати напомняне по имейл"
-msgstr "Send reminder by email"
-
-msgid "Език на известието"
-msgstr "Notification language"
-
-msgid "Оценка"
-msgstr "Rating"
-
-msgid "Коментар"
-msgstr "Comment"
-
-msgid "Отзив за %(vet)s от %(owner)s"
-msgstr "Review for %(vet)s by %(owner)s"
-
-msgid "%(name)s · няма отзиви"
-msgstr "%(name)s · no reviews"
-
-msgid "%(name)s · ★%(average).1f (%(count)d отзива)"
-msgstr "%(name)s · ★%(average).1f (%(count)d reviews)"
-
-msgid "Как премина консултацията?"
-msgstr "How was the consultation?"
-
-msgid "Можете да оставите отзив след приключване на консултацията."
-msgstr "You can leave a review after the consultation is complete."
-
-msgid "Благодарим за отзива ви!"
-msgstr "Thank you for your review!"
-
-msgid "Проверете оценката и опитайте отново."
-msgstr "Check the rating and try again."
-
-msgid "%(pet)s · срок: %(due)s"
-msgstr "%(pet)s · due %(due)s"
-
-msgid "Срок: %(due)s"
-msgstr "Due: %(due)s"
-
-msgid "Напомняне от PetBeacon"
-msgstr "PetBeacon reminder"
-
-msgid "Напомняне за вашия любимец"
-msgstr "A reminder for your pet"
-
-msgid "Здравейте! Предстои ви грижа за вашия любимец."
-msgstr "Hello! It is almost time for your pet's care."
-
-msgid "Категория"
-msgstr "Category"
-
-msgid "Срок"
-msgstr "Due"
-
-msgid "Отвори напомнянията"
-msgstr "Open reminders"
-
-msgid "Получавате това съобщение, защото имате включени имейл известия за напомняния в PetBeacon."
-msgstr "You received this email because reminder emails are enabled for you in PetBeacon."
-
-msgid "Грижата за любимеца ви, подредена на едно място."
-msgstr "Your pet's care, organized in one place."
-
-msgid "Вашият отзив"
-msgstr "Your review"
-
-msgid "Оценете ветеринаря"
-msgstr "Rate the veterinarian"
-
-msgid "Отзив може да се остави след приключена консултация."
-msgstr "You can review a veterinarian after a consultation is complete."
-
-msgid "Всички отзиви за ветеринаря"
-msgstr "All reviews for this veterinarian"
-
-msgid "Оценка: %(rating)s от 5"
-msgstr "Rating: %(rating)s out of 5"
-
-msgid "Можете да редактирате отзива си по-долу."
-msgstr "You can edit your review below."
-
-msgid "Изпрати отзива"
-msgstr "Submit review"
-
-msgid "Разгледай ветеринарите и отзивите"
-msgstr "Browse veterinarians and reviews"
-
-msgid "Отзиви от стопани"
-msgstr "Reviews from pet owners"
-
 msgid "отзива"
 msgstr "reviews"
 
-msgid "Все още нямате отзиви."
-msgstr "You do not have any reviews yet."
-
-msgid "Прегледай отзивите"
-msgstr "View reviews"
-
-msgid "Ветеринарен екип | PetBeacon"
-msgstr "Veterinarian team | PetBeacon"
-
-msgid "Намерете ветеринар"
-msgstr "Find a veterinarian"
-
-msgid "Разгледайте оценките от стопани и изберете ветеринар за онлайн консултация."
-msgstr "Browse pet owners' ratings and choose a veterinarian for an online consultation."
-
-msgid "Все още няма регистрирани ветеринари."
-msgstr "No veterinarians are registered yet."
-
-msgid "Отзиви за ветеринар | PetBeacon"
-msgstr "Veterinarian reviews | PetBeacon"
-
-msgid "Към ветеринарите"
-msgstr "Back to veterinarians"
-
-msgid "Все още няма отзиви за този ветеринар."
-msgstr "There are no reviews for this veterinarian yet."
-
-msgid "Първият отзив ще се появи след приключена консултация."
-msgstr "The first review will appear after a consultation is completed."
-
-msgid "Все още няма отзиви."
-msgstr "There are no reviews yet."
+msgid "подредени за клиничната работа."
+msgstr "organized for clinical work."

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core import mail
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import translation
@@ -188,11 +189,14 @@ class RegistrationViewTests(TestCase):
         cache.clear()
         self.client = Client()
 
-    def test_registration_creates_user_and_logs_in(self):
+    def test_registration_creates_unverified_user_and_sends_confirmation(self):
         response = self.client.post(reverse('accounts:register'), registration_payload())
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(User.objects.filter(username='newuser').exists())
-        self.assertTrue(self.client.session.get('_auth_user_id'))
+        self.assertEqual(response.status_code, 200)
+        user = User.objects.get(username='newuser')
+        self.assertFalse(user.profile.email_verified)
+        self.assertFalse(self.client.session.get('_auth_user_id'))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('email/verify/', mail.outbox[0].alternatives[0][0])
 
     def test_weak_password_is_rejected_end_to_end(self):
         response = self.client.post(reverse('accounts:register'), registration_payload(

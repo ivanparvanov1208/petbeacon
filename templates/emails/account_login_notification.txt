@@ -1,0 +1,6 @@
+{% load i18n %}{% translate "Известие за вход в PetBeacon" %}
+
+{% blocktranslate with name=user.first_name|default:user.username %}Здравейте, {{ name }}! Успешно влязохте в PetBeacon.{% endblocktranslate %}
+
+{% translate "Дата и час" %}: {{ login_time }}
+{% translate "Ако не сте влизали в профила си, сменете паролата си и се свържете с администратора." %}
